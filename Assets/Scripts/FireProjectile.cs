@@ -3,7 +3,7 @@ using UnityEngine;
 public class FireProjectile : MonoBehaviour
 {
     [SerializeField] private GameObject ballPrefab;  // Assign your ball prefab in the inspector
-    [SerializeField] private Transform spawnPoint;   // Where the ball spawns (e.g., in front of the player)
+    [SerializeField] private Transform spawnPoint;   // Where the ball spawns 
 
     void Update()
     {
