@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
+  - FireBall
+  - TowerBase
+  - Enemy
   layers:
   - Default
   - TransparentFX

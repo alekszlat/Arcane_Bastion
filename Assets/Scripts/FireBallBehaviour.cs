@@ -8,8 +8,7 @@ public class FireBallBehaviour : MonoBehaviour
     [SerializeField] float explosionRadius = 5f;
     [SerializeField] float explosionForce = 100f;
     [SerializeField] float explosionUpwardModifier = 1f;
-    [SerializeField] LayerMask groundLayer;
-
+    private float fbDamage = 2f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,28 +17,25 @@ public class FireBallBehaviour : MonoBehaviour
         rb.linearVelocity = transform.forward * speed;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        ApplyExplosionPhysic();
-    }
-
     void ApplyExplosionPhysic()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
         foreach (Collider nearbyObjects in colliders)
         {
-            Rigidbody rbNearObject = nearbyObjects.GetComponent<Rigidbody>();
-            if (rbNearObject != null)
-            {
-                rbNearObject.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpwardModifier, ForceMode.Impulse);
+            EnemyBehaviour enemy = nearbyObjects.GetComponent<EnemyBehaviour>();
+            if (enemy != null) {
+                enemy.ExplosionPhysic(explosionForce, transform, explosionRadius, explosionUpwardModifier, fbDamage);
             }
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        if(other.CompareTag("Enemy") || other.CompareTag("Ground"))
+        {
+            ApplyExplosionPhysic();
+            Destroy(gameObject);
+        }
     }
 }

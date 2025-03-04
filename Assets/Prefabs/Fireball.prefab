@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 8269288663382676493}
   m_Layer: 0
   m_Name: Fireball
-  m_TagString: Untagged
+  m_TagString: FireBall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,10 +157,7 @@ MonoBehaviour:
   speed: 100
   explosionRadius: 5
   explosionForce: 100
-  explosionUpwardModifier: 1
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  explosionUpwardModifier: 2
 --- !u!54 &8269288663382676493
 Rigidbody:
   m_ObjectHideFlags: 0
