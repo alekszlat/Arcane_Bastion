@@ -1,32 +1,52 @@
 using System;
 using UnityEngine;
-
+public interface IDamageable
+{
+    void attack(ref float towerHealth);
+}
 public class TowerBehaviour : MonoBehaviour
 {
-    private float health;
-
+    private static float towerHealth;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        health = 10f;
-        Debug.Log(health);
+        towerHealth = 10f;
+        Debug.Log("in tower class "+towerHealth);
     }
+    private void OnTriggerEnter(Collider other)
+    {
+       if(other.CompareTag("Arrow"))
+        {
+            IDamageable damageable = other.GetComponentInParent<IDamageable>(); 
 
+
+            checkIfTowerIsAttacked(damageable);
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
+    
         if (other.CompareTag("Enemy"))
         {
-            EnemyBehaviour enemyBehaviour = other.GetComponent<EnemyBehaviour>();
-            if (health <= 0)
-            {
-                Debug.Log("Tower is destroyd!");
-            }
-            else
-            {
-                enemyBehaviour.attack(ref health);
-            }
-
+            IDamageable damageable = other.GetComponentInParent<IDamageable>(); // използвайте GetComponentInParent ако компонентът е на родител
+           
+               
+            checkIfTowerIsAttacked(damageable);
         }
+    }
+    public void checkIfTowerIsAttacked(IDamageable damageable) {
+
+        if (towerHealth <= 0)
+        {
+            Debug.Log("Tower is destroyd!");
+        }
+        else
+        {
+            damageable.attack(ref towerHealth);
+        }
+
+
     }
 }

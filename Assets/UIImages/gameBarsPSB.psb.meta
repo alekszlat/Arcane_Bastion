@@ -1,0 +1,528 @@
+fileFormatVersion: 2
+guid: d9d66d013ec11b2428fe295ed0b609c1
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: b2a9591990af98743ba3ff7cf1000886, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 1
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 9
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: f4a9ee7beae25e544af0df3ef2b95f90
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+    spritePosition: {x: 0, y: 0}
+  multiSpriteImportData: []
+  layeredSpriteImportData:
+  - name: Layer 7
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 95
+      y: 253
+      width: 277
+      height: 22
+    spriteID: 5827eb6ad10798c4c8eab28e9985e566
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 95, y: 253}
+    spritePosition: {x: 111, y: 62}
+  - name: Layer 6
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 27, y: 7, z: 28, w: 6}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 167
+      width: 306
+      height: 35
+    spriteID: d50653826c4d00c41b3d34b0ba30b56e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 167}
+    spritePosition: {x: 95, y: 55}
+  - name: TryBar
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 210
+      width: 220
+      height: 35
+    spriteID: 41443de408695764b88e035982d7a6af
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 210}
+    spritePosition: {x: 68, y: 198}
+  - name: Layer 5
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 232
+      y: 210
+      width: 191
+      height: 22
+    spriteID: 24d375c862444b2498c2ed28f8ee4720
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 232, y: 210}
+    spritePosition: {x: 84, y: 205}
+  - name: HealthBorder
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 34, y: 7, z: 33, w: 7}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 467
+      height: 37
+    spriteID: 21f6c18a58790144a8605b16ebd908ad
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+    spritePosition: {x: 78, y: 121}
+  - name: Layer 3
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 33, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 94
+      width: 438
+      height: 29
+    spriteID: af28c5eec2b212c4fbb12b80e2bbc21e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 94}
+    spritePosition: {x: 76, y: 127}
+  - name: ManaIcon
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 11, y: 15, z: 11, w: 15}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 349
+      width: 69
+      height: 76
+    spriteID: b9f6fa6ac732d5f4697b875f702fbcbc
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 349}
+    spritePosition: {x: 488, y: 229}
+  - name: ManaFill
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 29, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 131
+      width: 411
+      height: 28
+    spriteID: f072d93d7569ee34eb51db47b82f27cf
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 131}
+    spritePosition: {x: 71, y: 252}
+  - name: ManaBorder
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 49
+      width: 426
+      height: 37
+    spriteID: e875a864e8184f847b3b6766f64ac588
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 49}
+    spritePosition: {x: 68, y: 249}
+  - name: Triangle Border
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 18, y: 33, z: 18, w: 33}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 253
+      width: 83
+      height: 88
+    spriteID: fc3648f83b6a96b4eb8568ca8f277b68
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 253}
+    spritePosition: {x: 481, y: 223}
+  spriteImportData: []
+  rigSpriteImportData: []
+  sharedRigSpriteImportData: []
+  mosaicSpriteImportData: []
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: WebGL
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  mosaicLayers: 1
+  characterMode: 1
+  documentPivot: {x: 0, y: 0}
+  documentAlignment: 7
+  importHiddenLayers: 0
+  layerMappingOption: 2
+  generatePhysicsShape: 0
+  paperDollMode: 0
+  keepDupilcateSpriteName: 1
+  padding: 4
+  spriteSizeExpand: 0
+  skeletonAssetReferenceID: 
+  pipeline: {instanceID: 0}
+  pipelineVersion: 
+  spritePackingTag: 
+  resliceFromLayer: 0
+  pSDLayerImportSetting: []
+  psdLayers:
+  - name: BarMid
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: d2efab20abf6af047ba940e5aafe26ea
+    layerID: 71
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: Layer 7
+    spriteName: Layer 7
+    isGroup: 0
+    parentIndex: 0
+    spriteID: 5827eb6ad10798c4c8eab28e9985e566
+    layerID: 74
+    mosaicPosition: {x: 95, y: 253}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Layer 6
+    spriteName: Layer 6
+    isGroup: 0
+    parentIndex: 0
+    spriteID: d50653826c4d00c41b3d34b0ba30b56e
+    layerID: 70
+    mosaicPosition: {x: 4, y: 167}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: BarWeaj
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 4c6986ed397d0d942afddd9c47cd1c3d
+    layerID: 61
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: TryBar
+    spriteName: TryBar
+    isGroup: 0
+    parentIndex: 3
+    spriteID: 41443de408695764b88e035982d7a6af
+    layerID: 64
+    mosaicPosition: {x: 4, y: 210}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Layer 5
+    spriteName: Layer 5
+    isGroup: 0
+    parentIndex: 3
+    spriteID: 24d375c862444b2498c2ed28f8ee4720
+    layerID: 68
+    mosaicPosition: {x: 232, y: 210}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Enemy health bar Strong
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 49d410247f6ca71439d7b179f3f57b05
+    layerID: 52
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: HealthBorder
+    spriteName: HealthBorder
+    isGroup: 0
+    parentIndex: 6
+    spriteID: 21f6c18a58790144a8605b16ebd908ad
+    layerID: 31
+    mosaicPosition: {x: 4, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Layer 3
+    spriteName: Layer 3
+    isGroup: 0
+    parentIndex: 6
+    spriteID: af28c5eec2b212c4fbb12b80e2bbc21e
+    layerID: 58
+    mosaicPosition: {x: 4, y: 94}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Mana
+    spriteName: 
+    isGroup: 1
+    parentIndex: -1
+    spriteID: 724c7343bfe540f489dd9d575f715cac
+    layerID: 56
+    mosaicPosition: {x: 0, y: 0}
+    flatten: 0
+    isImported: 0
+    isVisible: 1
+  - name: ManaIcon
+    spriteName: ManaIcon
+    isGroup: 0
+    parentIndex: 9
+    spriteID: b9f6fa6ac732d5f4697b875f702fbcbc
+    layerID: 51
+    mosaicPosition: {x: 4, y: 349}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: ManaFill
+    spriteName: ManaFill
+    isGroup: 0
+    parentIndex: 9
+    spriteID: f072d93d7569ee34eb51db47b82f27cf
+    layerID: 8
+    mosaicPosition: {x: 4, y: 131}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: ManaBorder
+    spriteName: ManaBorder
+    isGroup: 0
+    parentIndex: 9
+    spriteID: e875a864e8184f847b3b6766f64ac588
+    layerID: 7
+    mosaicPosition: {x: 4, y: 49}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Triangle Border
+    spriteName: Triangle Border
+    isGroup: 0
+    parentIndex: 9
+    spriteID: fc3648f83b6a96b4eb8568ca8f277b68
+    layerID: 44
+    mosaicPosition: {x: 4, y: 253}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  mosaicPSDLayers: []
+  rigPSDLayers: []
+  sharedRigPSDLayers: []
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  spriteSizeExpandChanged: 0
+  generateGOHierarchy: 0
+  textureAssetName: 
+  prefabAssetName: 
+  spriteLibAssetName: 
+  skeletonAssetName: 
+  secondarySpriteTextures: []

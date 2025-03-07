@@ -8,6 +8,8 @@ TagManager:
   - FireBall
   - TowerBase
   - Enemy
+  - Arrow
+  - Target
   layers:
   - Default
   - TransparentFX
