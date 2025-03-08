@@ -35,7 +35,7 @@ public class SkeletonEnemy : EnemyBehaviour
     public void shootArrows() {
         if (canShootArrows)
         {
-         
+            
             GameObject arrow= Instantiate(arrowPrefab, new Vector3(transform.position.x,transform.position.y+1.5f,transform.position.z), Quaternion.identity);
             arrow.transform.LookAt(target);
             StartCoroutine(shootingCooldown());
