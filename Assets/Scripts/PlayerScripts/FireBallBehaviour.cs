@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class FireBallBehaviour : MonoBehaviour
 {
-    private Rigidbody rb;
+
     [SerializeField] float speed = 20f;
     [SerializeField] float explosionRadius = 5f;
     [SerializeField] float explosionForce = 100f;
     [SerializeField] float explosionUpwardModifier = 1f;
     private float fbDamage = 2f;
+    private Rigidbody rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

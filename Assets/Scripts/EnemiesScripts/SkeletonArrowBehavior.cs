@@ -4,7 +4,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class SkeletonArrowBehavior : MonoBehaviour, IDamageable
 {
-    private Transform TowerPos;
+    private Transform towerPos;
     public int speed;
     private Rigidbody rb;
     public float arrowDamage = 1.5f;
@@ -13,14 +13,13 @@ public class SkeletonArrowBehavior : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        TowerPos = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+        towerPos = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
       
     }
     void Start()
     {
-    
-        
+      
     }
 
     // Update is called once per frame
@@ -30,11 +29,11 @@ public class SkeletonArrowBehavior : MonoBehaviour, IDamageable
     }
     public void ShootArrow()
     {
-
-      Vector3 dir = (TowerPos.position-transform.position).normalized;
-       // rb.linearVelocity = new Vector3(dir.x, 3f, dir.z);
-        rb.linearVelocity = (dir + Vector3.up * 0.2f) * speed; 
-
+      Vector3 dir = (towerPos.position-transform.position).normalized;
+        // rb.linearVelocity = new Vector3(dir.x, 3f, dir.z);
+     
+        rb.linearVelocity = (dir + Vector3.up * 0.2f) * speed;
+   
 
     }
 

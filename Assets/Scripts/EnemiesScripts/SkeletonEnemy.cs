@@ -1,14 +1,24 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 public class SkeletonEnemy : EnemyBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-   
+
     public GameObject arrowPrefab;
     private bool canShootArrows=true;
-    public float damage=3;
+  
+  
+
+
+    private void Awake()
+    {
+    
+    }
+
+
     public float shootingInterval = 2;
     public override void setEnemyDestination()
     {
@@ -31,13 +41,20 @@ public class SkeletonEnemy : EnemyBehaviour
         }
     
     }
+   
     
+
     public void shootArrows() {
-        if (canShootArrows)
+        Vector3 targetDirection = (target.position - transform.position).normalized;
+        if (canShootArrows&&!isEnemyHit)
         {
-            
-            GameObject arrow= Instantiate(arrowPrefab, new Vector3(transform.position.x,transform.position.y+1.5f,transform.position.z), Quaternion.identity);
-            arrow.transform.LookAt(target);
+            GameObject arrow = Instantiate(
+                arrowPrefab,transform.position+targetDirection*1.2f + Vector3.up * 1.5f,
+                Quaternion.LookRotation(targetDirection) * Quaternion.Euler(0, 90, 0) // Добавяме 90 градуса по оста Y
+            );
+
+
+
             StartCoroutine(shootingCooldown());
             Destroy(arrow, 3f);
         }

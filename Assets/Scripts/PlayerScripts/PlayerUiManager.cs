@@ -2,9 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class PlayerUiManager : MonoBehaviour
 {
-    public Image fireBallSkillBackground;
-    public Image crystalSkillBackground;
-    public Image electricitySkillBackground;
+    
+    [SerializeField] Image fireBallSkillBackground;
+    [SerializeField] Image crystalSkillBackground;
+    [SerializeField] Image electricitySkillBackground;
     private PlayerController playerController;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,23 +22,30 @@ public class PlayerUiManager : MonoBehaviour
     }
     public void areAbilitiesCooldownUi()
     {
- 
-      float fireBallCooldown= PlayerController.fireBallCooldown.timer;
-      float fireBallTimer = PlayerController.fireBallCooldown.cooldownTime;
-      abilityUiCooldown(fireBallCooldown, fireBallTimer, fireBallSkillBackground,fireBallTimer*3);
-     
+
+      float fireBallTimer = PlayerController.fireBallSkill.timer;
+      float fireBallCooldown = PlayerController.fireBallSkill.cooldownTime;
+        float electricityTimer = PlayerController.electricitySkill.timer;
+        float electricityCooldown = PlayerController.electricitySkill.cooldownTime;
+        float cristalTimer = PlayerController.crystalSkill.timer;
+        float cristalCooldown = PlayerController.crystalSkill.cooldownTime;
+
+
+        abilityUiCooldown(fireBallTimer, fireBallCooldown, fireBallSkillBackground, fireBallCooldown * 3);
+        abilityUiCooldown(electricityTimer, electricityCooldown, electricitySkillBackground, electricityCooldown * 3);
+        abilityUiCooldown(cristalTimer, cristalCooldown, crystalSkillBackground, cristalCooldown * 3);
 
     }
-    private void abilityUiCooldown(float maxCooldown, float currentCooldown,Image abilityImage,float animationSpeed)
+    
+    private void abilityUiCooldown(float curentCooldownTimer, float maxCooldown, Image abilityImage,float animationSpeed)
     { //update cooldwoln
 
-        float fillCooldown = Mathf.Clamp01(maxCooldown/currentCooldown);
+        float fillCooldown = Mathf.Clamp01(curentCooldownTimer / maxCooldown);
       
 
         if (fillCooldown > 1)
         {
             abilityImage.fillAmount = 1;
-         
         }
         else
         {

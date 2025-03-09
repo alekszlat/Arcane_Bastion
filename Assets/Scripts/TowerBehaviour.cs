@@ -27,7 +27,7 @@ public class TowerBehaviour : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-    
+        
         if (other.CompareTag("Enemy"))
         {
             IDamageable damageable = other.GetComponentInParent<IDamageable>(); // използвайте GetComponentInParent ако компонентът е на родител

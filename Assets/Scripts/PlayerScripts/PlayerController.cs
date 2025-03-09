@@ -2,15 +2,20 @@ using NUnit.Framework.Constraints;
 using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.UI;
- public class AbilityCooldown
+ public class Abilities
 {
     public bool canUse;
     public float cooldownTime;
     public float timer;
-     public AbilityCooldown(bool canUse,float cooldownTime) {
+    public int manaCost;
+    bool isUnlocked;
+     public Abilities(bool canUse,float cooldownTime,int manaCost,bool isUnlocked) {
+        this.isUnlocked = isUnlocked;
         this.canUse = canUse;
         this.cooldownTime = cooldownTime;
         timer = cooldownTime;
+        this.manaCost = manaCost;
+
     }
 }
 public class PlayerController : MonoBehaviour
@@ -20,13 +25,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce = 5f; // Force applied when jumping
     [SerializeField] float raycastDistance = 1.1f; // Distance to check for ground
     [SerializeField] LayerMask groundLayer; // Layer to identify ground objects
-
     [SerializeField] private GameObject ballPrefab;  // Assign your ball prefab in the inspector
     [SerializeField] private Transform spawnPoint;   // Where the ball spawns 
     private float horizontalInput;
     private float verticalInput;
-    public static AbilityCooldown fireBallCooldown = new AbilityCooldown(true, 2);
-    public static AbilityCooldown elecrticityCooldown = new AbilityCooldown(false, 3);
+    public static Abilities fireBallSkill = new Abilities(true, 2,2,true);
+    public static Abilities electricitySkill = new Abilities(true,6 ,4, true);
+    public static Abilities crystalSkill = new Abilities(true, 15 ,5, true);
 
 
     private Rigidbody rb;
@@ -57,13 +62,28 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallCooldown.canUse)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.canUse)
         {
             ThrowFireBall();
-            fireBallCooldown.canUse = false;
-            fireBallCooldown.timer = fireBallCooldown.cooldownTime;
+            fireBallSkill.canUse = false;
+            fireBallSkill.timer = fireBallSkill.cooldownTime;
         }
-        abilityCooldownTimer(fireBallCooldown);
+        if(Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.canUse)
+        {
+            //missing mechanic
+            electricitySkill.canUse = false;
+            electricitySkill.timer = electricitySkill.cooldownTime;
+        }
+        if (Input.GetKeyDown(KeyCode.E) && crystalSkill.canUse)
+        {
+            //missing mechanic
+            crystalSkill.canUse = false;
+            crystalSkill.timer = crystalSkill.cooldownTime;
+        }
+        abilityCooldownTimer(fireBallSkill);
+        abilityCooldownTimer(electricitySkill);
+        abilityCooldownTimer(crystalSkill);
+
     }
 
     bool IsGrounded()
@@ -92,7 +112,7 @@ public class PlayerController : MonoBehaviour
             GameObject ball = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
         }
     }
-    public void abilityCooldownTimer(AbilityCooldown ability)
+    public void abilityCooldownTimer(Abilities ability)
     {
         if (ability.canUse) return;
         ability.timer -= Time.deltaTime;
@@ -100,7 +120,7 @@ public class PlayerController : MonoBehaviour
         if (ability.timer <= 0f)
         {
             ability.canUse = true;
-
+           
         }
     }
   

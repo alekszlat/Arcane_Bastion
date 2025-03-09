@@ -13,16 +13,18 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 {
     [SerializeField] protected Transform target;
     [SerializeField] LayerMask layerGround;
+    [SerializeField] GameObject canvas;
+    [SerializeField] Image healthBar;
+    [SerializeField] float maxHealth = 5;
+    [SerializeField] float attackDamage = 2f;
+    [SerializeField] float attackInterval = 4f;
+    [SerializeField] protected int isHitCooldown = 3;
     protected NavMeshAgent agent;
     private Rigidbody rb;
-    public GameObject canvas;
-    public Image healthBar;
     private float timer;
     private float health;
-    public float maxHealth = 5;
-    public float attackDamage = 2f;
-    public float attackInterval = 4f;
-    bool isEnemyHit=false;
+    protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
+   
   
   
     
@@ -80,7 +82,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     //Applying explosion on the enemy
     public void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
     {
-        StartCoroutine(isHit(3));
+        StartCoroutine(isHit(isHitCooldown));//activates bool isHit=true for isHitCooldown(3) seconds
 
         if (agent != null)
         {
@@ -101,7 +103,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         }
 
         Invoke(nameof(ResetAI), 3.2f);//3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
-        Debug.Log(isEnemyHit);
+   
     }
 
   
@@ -109,7 +111,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     void ResetAI()
     {
 
-        RaycastHit hitGround;
+       // RaycastHit hitGround;//if needed
 
         if (raycast(Vector3.down,3)|| raycast(Vector3.up,3)|| raycast(Vector3.back,3)|| raycast(Vector3.forward,3))//raycasts to check if enemy is on ground
         {
@@ -149,7 +151,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         if(!agent.enabled) return;
         agent.isStopped = false;
     }
-    IEnumerator isHit(float hitDuration)//enemy isHit for hitDuration
+    public virtual IEnumerator isHit(float hitDuration)//enemy isHit for hitDuration
     {
         isEnemyHit = true;//bool
 

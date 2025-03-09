@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 3138523281642351472}
   - component: {fileID: 3539173330005689536}
   - component: {fileID: 3810937151127525538}
-  - component: {fileID: 5893184394048610600}
+  - component: {fileID: 7476677166906465320}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Arrow
@@ -137,14 +137,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754460031920050054}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9999996, z: -0, w: -0.000929388}
+  m_LocalRotation: {x: 0.5025567, y: 0.49743038, z: -0.49743024, w: 0.5025565}
   m_LocalPosition: {x: 2.439, y: 8.308, z: 33.87}
   m_LocalScale: {x: 1, y: 0.08368937, z: 0.092810765}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8845027173560471588}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180.106, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: -180, z: 450.587}
 --- !u!33 &2196861131869435641
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -246,7 +246,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5893184394048610600
+--- !u!114 &7476677166906465320
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
