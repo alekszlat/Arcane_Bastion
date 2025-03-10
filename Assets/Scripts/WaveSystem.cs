@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
-enum waveSpawnerType
+enum WaveSpawnerType
 {
     GoblinSpawner,
     SkeletonSpawner,
@@ -11,32 +11,45 @@ enum waveSpawnerType
     MixedSpawner
 }
 
+public class EnemySpawn
+{
+    GameObject enemyPrefab;
+    int enemyCount;
+    EnemySpawn(GameObject enemyPrefab,int enemyCount)
+    {
+        this.enemyPrefab = enemyPrefab;
+        this.enemyCount = enemyCount;
+    }
+
+}
 public class WaveSystem : MonoBehaviour
 {
-    private GameManager gameManager;
-    private int sumOfEnemiesCount;
-
+  
     [SerializeField] GameObject goblin;
     [SerializeField] GameObject skeleton;
     [SerializeField] GameObject troll;
     public static WaveSystem instance;
+    private GameManager gameManager;
+    private int sumOfEnemiesCount;
+    WaveSpawnerType waveSpawnerType;
 
     private void Awake()
     {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
     }
-
+  
     void Start()
     {
-      
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
     }
 
@@ -49,8 +62,19 @@ public class WaveSystem : MonoBehaviour
    
     public void spawnWaves()
     {
+        if (waveSpawnerType == WaveSpawnerType.GoblinSpawner)
+        {
 
-     //   StartCoroutine(spawnEnemiesCoroutine());
+        }
+        if(waveSpawnerType == WaveSpawnerType.SkeletonSpawner)
+        {
+
+        }
+        if (waveSpawnerType == WaveSpawnerType.TrollSpawner)
+        {
+
+        }
+        //   StartCoroutine(spawnEnemiesCoroutine());
     }
     public IEnumerator spawnEnemiesCoroutine(GameObject enemyPrefab,int enemyCount, float spawningCooldown)
     {

@@ -11,7 +11,7 @@ public enum enemyStates
 }
 public class EnemyBehaviour : MonoBehaviour,IDamageable
 {
-    [SerializeField] protected Transform target;
+   
     [SerializeField] LayerMask layerGround;
     [SerializeField] GameObject canvas;
     [SerializeField] Image healthBar;
@@ -19,18 +19,23 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] float attackDamage = 2f;
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
+    protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;
     private float timer;
     private float health;
     protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
-   
-  
-  
-    
+
+
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-   public virtual void  Start()
+    private void Awake()
+    {
+        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+    }
+    public virtual void  Start()
     {
         health = maxHealth;
         agent = GetComponent<NavMeshAgent>();

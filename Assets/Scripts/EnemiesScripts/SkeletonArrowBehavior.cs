@@ -29,6 +29,7 @@ public class SkeletonArrowBehavior : MonoBehaviour, IDamageable
     }
     public void ShootArrow()
     {
+
       Vector3 dir = (towerPos.position-transform.position).normalized;
         // rb.linearVelocity = new Vector3(dir.x, 3f, dir.z);
      

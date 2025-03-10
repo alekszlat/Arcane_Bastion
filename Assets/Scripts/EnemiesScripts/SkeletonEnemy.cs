@@ -15,7 +15,7 @@ public class SkeletonEnemy : EnemyBehaviour
 
     private void Awake()
     {
-    
+        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
     }
 
 
