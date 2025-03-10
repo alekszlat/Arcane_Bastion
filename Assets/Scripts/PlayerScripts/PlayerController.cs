@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
+
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
@@ -123,5 +124,17 @@ public class PlayerController : MonoBehaviour
            
         }
     }
-  
+
+    public Abilities getFireBallAbility()
+    {
+        return fireBallSkill;
+    }
+    public Abilities getElectricityAbility()
+    {
+        return electricitySkill;
+    }
+    public Abilities getCristalAbility()
+    {
+        return crystalSkill;
+    }
 }

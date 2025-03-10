@@ -30,20 +30,25 @@ public class GameManager : MonoBehaviour
         if (this.gameState == gameState) return;
 
         this.gameState = gameState;
-        //gameState няма .Paused и тк не можем от там да ги accessnem ,трябва от самия енъм и така да правим проверки
+      
         if (gameState == GameState.Paused)
         {
             isPaused = true;
-            Time.timeScale = 0f; // Спира времето
+            Time.timeScale = 0f; // stops time,pauses game for time.deltaTime scripts
         }
         else if (gameState == GameState.Gameplay)
         {
             isPaused = false;
-            Time.timeScale = 1f; // Възстановява времето
+            Time.timeScale = 1f; // unpauses
+        }
+        if (gameState == GameState.SpawningWaves)//когато и
+        {
+         //  WaveSystem.instance.StartWaveSpawning();
         }
 
     }
-    public GameState getGameState()
+   
+public GameState getGameState()
     {
         return gameState;
     }

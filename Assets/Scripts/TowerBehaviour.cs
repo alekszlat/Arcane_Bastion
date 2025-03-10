@@ -21,9 +21,10 @@ public class TowerBehaviour : MonoBehaviour
         {
             IDamageable damageable = other.GetComponentInParent<IDamageable>(); 
 
-
             checkIfTowerIsAttacked(damageable);
+            Destroy(other.gameObject);
         }
+
     }
     private void OnTriggerStay(Collider other)
     {
@@ -34,6 +35,7 @@ public class TowerBehaviour : MonoBehaviour
            
                
             checkIfTowerIsAttacked(damageable);
+         
         }
     }
     public void checkIfTowerIsAttacked(IDamageable damageable) {

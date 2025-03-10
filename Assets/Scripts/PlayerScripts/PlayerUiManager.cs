@@ -12,7 +12,7 @@ public class PlayerUiManager : MonoBehaviour
     private void Awake()
     {
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-      
+       
     }
 
     // Update is called once per frame
@@ -22,19 +22,12 @@ public class PlayerUiManager : MonoBehaviour
     }
     public void areAbilitiesCooldownUi()
     {
-
-      float fireBallTimer = PlayerController.fireBallSkill.timer;
-      float fireBallCooldown = PlayerController.fireBallSkill.cooldownTime;
-        float electricityTimer = PlayerController.electricitySkill.timer;
-        float electricityCooldown = PlayerController.electricitySkill.cooldownTime;
-        float cristalTimer = PlayerController.crystalSkill.timer;
-        float cristalCooldown = PlayerController.crystalSkill.cooldownTime;
-
-
-        abilityUiCooldown(fireBallTimer, fireBallCooldown, fireBallSkillBackground, fireBallCooldown * 3);
-        abilityUiCooldown(electricityTimer, electricityCooldown, electricitySkillBackground, electricityCooldown * 3);
-        abilityUiCooldown(cristalTimer, cristalCooldown, crystalSkillBackground, cristalCooldown * 3);
-
+         
+       
+      
+       abilitiesAnimation(playerController.getFireBallAbility(), fireBallSkillBackground);
+        abilitiesAnimation(playerController.getElectricityAbility(), electricitySkillBackground);
+        abilitiesAnimation(playerController.getCristalAbility(), crystalSkillBackground);
     }
     
     private void abilityUiCooldown(float curentCooldownTimer, float maxCooldown, Image abilityImage,float animationSpeed)
@@ -52,7 +45,13 @@ public class PlayerUiManager : MonoBehaviour
             abilityImage.fillAmount = Mathf.MoveTowards(abilityImage.fillAmount, fillCooldown, animationSpeed * Time.deltaTime);
         }
         
-    
 
+    }
+    public void abilitiesAnimation(Abilities ability,Image image)//refactoring code
+    {
+        float abilityTimer = ability.timer;
+        float abilityCooldown = ability.cooldownTime;
+
+        abilityUiCooldown(abilityTimer, abilityCooldown, image, abilityCooldown * 3);
     }
 }

@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 969845000709944892}
   - component: {fileID: 5455120176416746443}
-  - component: {fileID: 4832830691339814752}
+  - component: {fileID: 1728485437639925174}
   - component: {fileID: 6980975015037039790}
   - component: {fileID: 6609103964400241754}
   m_Layer: 0
@@ -134,7 +134,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4832830691339814752
+--- !u!114 &1728485437639925174
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5925436254648143663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfe5771c5c119884e857c567ca3928b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 64ff513c62e41cf409a014caaf511dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
@@ -152,7 +152,7 @@ MonoBehaviour:
     m_Bits: 8
   canvas: {fileID: 7702844595750501171}
   healthBar: {fileID: 1531856405860554246}
-  maxHealth: 40
+  maxHealth: 12
   attackDamage: 8
   attackInterval: 6
   isHitCooldown: 2

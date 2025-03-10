@@ -49,7 +49,7 @@ public class SkeletonEnemy : EnemyBehaviour
         if (canShootArrows&&!isEnemyHit)
         {
             GameObject arrow = Instantiate(
-                arrowPrefab,transform.position+targetDirection*1.2f + Vector3.up * 1.5f,
+                arrowPrefab,transform.position+targetDirection*1.2f + Vector3.up * 1.8f,
                 Quaternion.LookRotation(targetDirection) * Quaternion.Euler(0, 90, 0) // Добавяме 90 градуса по оста Y
             );
 

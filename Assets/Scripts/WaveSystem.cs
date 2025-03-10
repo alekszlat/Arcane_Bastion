@@ -19,15 +19,23 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] GameObject goblin;
     [SerializeField] GameObject skeleton;
     [SerializeField] GameObject troll;
-    
-    
+    public static WaveSystem instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
-       
-        
-     
-        
+      
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
     }
@@ -38,15 +46,11 @@ public class WaveSystem : MonoBehaviour
 
     }
 
+   
     public void spawnWaves()
     {
-        GameState gameState = gameManager.getGameState();
-        if (gameState == GameState.SpawningWaves)
-        {
-          //  StartCoroutine(spawnEnemiesCoroutine(go, enemyType, spawningCooldown));
 
-
-        }
+     //   StartCoroutine(spawnEnemiesCoroutine());
     }
     public IEnumerator spawnEnemiesCoroutine(GameObject enemyPrefab,int enemyCount, float spawningCooldown)
     {
