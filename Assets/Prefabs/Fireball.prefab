@@ -155,9 +155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
-  explosionRadius: 5
+  explosionRadius: 10
   explosionForce: 100
-  explosionUpwardModifier: 2
+  explosionUpwardModifier: 5
 --- !u!54 &8269288663382676493
 Rigidbody:
   m_ObjectHideFlags: 0
