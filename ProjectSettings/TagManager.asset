@@ -8,6 +8,13 @@ TagManager:
   - FireBall
   - TowerBase
   - Enemy
+<<<<<<< Updated upstream
+=======
+  - Arrow
+  - Target
+  - GameManager
+  - WaveSystem
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
