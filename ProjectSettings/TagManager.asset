@@ -11,6 +11,7 @@ TagManager:
   - Arrow
   - Target
   - GameManager
+  - WaveSystem
   layers:
   - Default
   - TransparentFX
