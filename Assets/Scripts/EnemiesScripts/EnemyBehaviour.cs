@@ -177,25 +177,23 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     {
         return Physics.Raycast(transform.position, raycastWay, raycastLenght);
     }
-    public bool raycast(Vector3 raycastWay)//raycast to check if enemy is on ground
-    {
-       return raycast(raycastWay, 1.1f);
-    }
-    public bool raycast(Vector3 raycastWay, RaycastHit hitGround)
-    {
-        return Physics.Raycast(transform.position, raycastWay, out hitGround, 1.5f, layerGround);//raycast ,just incase we ned to save the hitGround ray 
-    }
-    public Transform getTarget()
-    {
-        return target;
-    }
+
     private void OnDestroy()
     {
-        // Ако WaveSystem все още съществува, намаляваме брояча
         if (waveSystem != null && waveSystem.gameObject != null)
         {
             waveSystem.enemyDeath();
         }
+    }
+
+    public float GetMaxHealth()
+    {
+        return health;
+    }
+
+    public void SetMaxHealth(float newMaxHealth)
+    {
+        health = newMaxHealth;
     }
 
 }
