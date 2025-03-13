@@ -1,10 +1,10 @@
+using UnityEditor.Playables;
 using UnityEngine;
 
 public enum GameState
 {
     Paused,
     Gameplay,
-    SpawningWaves,
     PreWave,
     Death
 }
@@ -13,16 +13,34 @@ public class GameManager : MonoBehaviour
     public static bool isPaused = false;
     public static GameManager instance;
     public GameState gameState;
+    private WaveSystem waveSystem;
+
+    private float preWaveTimer = 10f;
     private void Awake()
     {
-        gameState = GameState.Gameplay;
-        if (instance == null)
-        {
-            instance = this;
+        gameState = GameState.PreWave;
+        waveSystem = GameObject.FindGameObjectWithTag("WaveSystem").GetComponent<WaveSystem>();
 
-            DontDestroyOnLoad(gameObject);
+
+    }
+    public void Update()
+    {
+        timerStates();
+        Debug.Log(gameState);
+
+    }
+
+    public void timerStates()
+    {
+        if (gameState == GameState.PreWave)
+        {
+            preWaveTimer -= Time.deltaTime;
+            if (preWaveTimer <= 0f)
+            {
+                waveSystem.spawnWaves();
+                setGameState(GameState.Gameplay);
+            }
         }
-        else { Destroy(gameObject); }
 
     }
     public void setGameState(GameState gameState)
@@ -30,7 +48,7 @@ public class GameManager : MonoBehaviour
         if (this.gameState == gameState) return;
 
         this.gameState = gameState;
-      
+
         if (gameState == GameState.Paused)
         {
             isPaused = true;
@@ -41,14 +59,15 @@ public class GameManager : MonoBehaviour
             isPaused = false;
             Time.timeScale = 1f; // unpauses
         }
-        if (gameState == GameState.SpawningWaves)//когато и
+        else if (gameState == GameState.PreWave)
         {
-         //  WaveSystem.instance.StartWaveSpawning();
+            preWaveTimer = 20f;
         }
 
+
     }
-   
-public GameState getGameState()
+
+    public GameState getGameState()
     {
         return gameState;
     }

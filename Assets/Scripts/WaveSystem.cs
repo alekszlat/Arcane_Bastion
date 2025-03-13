@@ -3,53 +3,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
-enum WaveSpawnerType
-{
-    GoblinSpawner,
-    SkeletonSpawner,
-    TrollSpawner,
-    MixedSpawner
-}
 
 public class EnemySpawn
 {
-    GameObject enemyPrefab;
-    int enemyCount;
-    EnemySpawn(GameObject enemyPrefab,int enemyCount)
+    private GameObject enemyPrefab;
+    private int enemyCount;
+    public EnemySpawn(GameObject enemyPrefab, int enemyCount)
     {
         this.enemyPrefab = enemyPrefab;
         this.enemyCount = enemyCount;
     }
-
+    public GameObject getEnemyPrefab()
+    {
+        return enemyPrefab;
+    }
+    public int getEnemyCount()
+    {
+        return enemyCount;
+    }
+    public void setEnemyCount(int enemyCount)
+    {
+        this.enemyCount = enemyCount;
+    }
 }
 public class WaveSystem : MonoBehaviour
 {
-  
     [SerializeField] GameObject goblin;
     [SerializeField] GameObject skeleton;
     [SerializeField] GameObject troll;
-    public static WaveSystem instance;
+    [SerializeField] int skeletonSpawnChance;
+    [SerializeField] int goblinSpawnChance;
+    [SerializeField] int trollSpawnChance;
+    EnemySpawn goblinClass;
+    EnemySpawn skeletonClass;
+    EnemySpawn trollClass;
     private GameManager gameManager;
-    private int sumOfEnemiesCount;
-    WaveSpawnerType waveSpawnerType;
+    private int waveNum = 1;
+    private int enemiesCount;
+
+    private int deadEnemies = 0;
+
 
     private void Awake()
     {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        DontDestroyOnLoad(this.gameObject);
 
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        goblinClass = new EnemySpawn(goblin, 4);
+        skeletonClass = new EnemySpawn(skeleton, 2);
+        trollClass = new EnemySpawn(troll, 2);
+   
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
-  
+
     void Start()
     {
+        //
 
     }
 
@@ -57,39 +65,77 @@ public class WaveSystem : MonoBehaviour
     void Update()
     {
 
+
     }
 
-   
+
+
+    public void enemyDeath()
+    {
+        deadEnemies++;
+        Debug.Log("Dead enemies: " + deadEnemies);
+
+        if (deadEnemies == enemiesCount)
+        {
+            waveNum++;
+            Debug.Log("wave num " + waveNum);
+            Debug.Log("pre wave");
+            gameManager.setGameState(GameState.PreWave);
+            deadEnemies = 0;
+        }
+    }
+    public EnemySpawn chooseRandomEnemy()
+    {
+        int spawnChance = goblinSpawnChance + skeletonSpawnChance + trollSpawnChance + 1;
+        int rand = UnityEngine.Random.Range(1, spawnChance);
+
+        if (rand <= goblinSpawnChance)
+        {
+       
+            return goblinClass;
+        }
+        else if (rand <= skeletonSpawnChance)
+        {
+      
+            return skeletonClass;
+        }
+        else
+        {
+         
+            return trollClass;
+        }
+    }
+
+
     public void spawnWaves()
     {
-        if (waveSpawnerType == WaveSpawnerType.GoblinSpawner)
-        {
+        EnemySpawn chosenEnemy = chooseRandomEnemy();
+        enemiesCount = chosenEnemy.getEnemyCount(); // Инициализирайте тук
 
-        }
-        if(waveSpawnerType == WaveSpawnerType.SkeletonSpawner)
+        if (enemiesCount <= 0)
         {
-
+            Debug.LogError("enemiesCount is not set or is invalid!");
+            return;
         }
-        if (waveSpawnerType == WaveSpawnerType.TrollSpawner)
-        {
 
-        }
-        //   StartCoroutine(spawnEnemiesCoroutine());
+        StartCoroutine(spawnEnemiesCoroutine(chosenEnemy, 2f));
     }
-    public IEnumerator spawnEnemiesCoroutine(GameObject enemyPrefab,int enemyCount, float spawningCooldown)
+    public IEnumerator spawnEnemiesCoroutine(EnemySpawn enemy, float spawningCooldown)
     {
-            for (int i = 0; i < enemyCount; i++) // Спауним 'count' пъти този враг
+        for (int i = 0; i < enemy.getEnemyCount(); i++)
+        {
+            Vector3 spawnPosition = transform.position + new Vector3(8 * i, 0, 10);
+            if (i % 2 == 0)
             {
-                Vector3 spawnPosition = transform.position + new Vector3(i, 0, 0) * 2;
-                if (i % 2 == 0)
-                {
-                    spawnPosition += new Vector3(0, 0, 2);
-                }
-                Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                spawnPosition += new Vector3(10, 0, 8 * i);
+            }
 
-                // Изчаква определеното време преди да спауни следващия враг
-                yield return new WaitForSeconds(spawningCooldown);
-            
+            Instantiate(enemy.getEnemyPrefab(), spawnPosition, Quaternion.identity);
+
+
+            yield return new WaitForSeconds(spawningCooldown);
+
         }
     }
+
 }

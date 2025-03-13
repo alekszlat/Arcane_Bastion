@@ -25,6 +25,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     private float timer;
     private float health;
     protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
+    private WaveSystem waveSystem;
 
 
 
@@ -33,7 +34,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+         waveSystem = GameObject.FindGameObjectWithTag("WaveSystem")?.GetComponent<WaveSystem>();
     }
     public virtual void  Start()
     {
@@ -104,6 +107,10 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     
         if (health <= 0)
         {
+            if (waveSystem != null)
+            {
+               waveSystem.enemyDeath();
+            }
             Destroy(gameObject);
         }
 
@@ -182,6 +189,13 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     {
         return target;
     }
+    private void OnDestroy()
+    {
+        // Ако WaveSystem все още съществува, намаляваме брояча
+        if (waveSystem != null && waveSystem.gameObject != null)
+        {
+            waveSystem.enemyDeath();
+        }
+    }
 
-  
 }
