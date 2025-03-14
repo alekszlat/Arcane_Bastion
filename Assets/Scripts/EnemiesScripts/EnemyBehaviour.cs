@@ -16,7 +16,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] GameObject canvas;
     [SerializeField] Image healthBar;
     [SerializeField] float maxHealth = 5;
-    [SerializeField] float attackDamage = 2f;
+    [SerializeField] float attackDamage = 2f;//enemy attack damage
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
     protected Transform target;
@@ -28,15 +28,11 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     private WaveSystem waveSystem;
 
 
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
-         waveSystem = GameObject.FindGameObjectWithTag("WaveSystem")?.GetComponent<WaveSystem>();
+        waveSystem = GameObject.FindGameObjectWithTag("WaveSystem")?.GetComponent<WaveSystem>();
     }
     public virtual void  Start()
     {
@@ -59,7 +55,6 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         setEnemyDestination();
         isEnemyHealthBarVisable();
      
-      
     }
     public virtual void setEnemyDestination()
     {
@@ -71,9 +66,13 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     public void isEnemyHealthBarVisable()//if enemy is hit healthbar is visable
     {
         if (!isEnemyHit) return;
-  
-            canvas.SetActive(true);
-            updateHealthBar(maxHealth, health);
+        canvas.SetActive(true);
+        float enemyHeight = gameObject.transform.localScale.y+2.5f;
+        canvas.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y+enemyHeight, gameObject.transform.position.z);//making the ui stay above the enemy by getting the enemy height
+        Vector3 targetDirection = (target.position - gameObject.transform.position).normalized;
+        canvas.transform.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+       //look rotation accepts vector3
+        updateHealthBar(maxHealth, health);
         
     }
 
@@ -85,10 +84,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
         healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);//"animation for health"
     
-
     }
     //Applying explosion on the enemy
-    public void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
+    public virtual void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
     {
         StartCoroutine(isHit(isHitCooldown));//activates bool isHit=true for isHitCooldown(3) seconds
 
@@ -109,7 +107,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             if (waveSystem != null)
             {
-               waveSystem.enemyDeath();
+               waveSystem.enemyDeath();//if an enemy dies waveSystem v.1 gets this enemy's count
             }
             Destroy(gameObject);
         }
@@ -118,11 +116,8 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
    
     }
 
-  
-
     void ResetAI()
     {
-
        // RaycastHit hitGround;//if needed
 
         if (raycast(Vector3.down,3)|| raycast(Vector3.up,3)|| raycast(Vector3.back,3)|| raycast(Vector3.forward,3))//raycasts to check if enemy is on ground
@@ -141,7 +136,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     }
 
-    public void attack(ref float towerHealth)
+    public void attack(ref float towerHealth)//implemented by IDamagable
     {
         timer -= Time.deltaTime;
 
@@ -149,7 +144,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             timer = attackInterval;
             towerHealth -= attackDamage;
-            Debug.Log("enemy beh "+ towerHealth);
+     
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -163,7 +158,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         if(!agent.enabled) return;
         agent.isStopped = false;
     }
-    public virtual IEnumerator isHit(float hitDuration)//enemy isHit for hitDuration
+    public virtual IEnumerator isHit(float hitDuration)//if enemy is hit  isEnemyHit = true for duration for hitDurationhitDurationg
     {
         isEnemyHit = true;//bool
 
@@ -178,14 +173,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         return Physics.Raycast(transform.position, raycastWay, raycastLenght);
     }
 
-    private void OnDestroy()
-    {
-        if (waveSystem != null && waveSystem.gameObject != null)
-        {
-            waveSystem.enemyDeath();
-        }
-    }
-
+ 
     public float GetMaxHealth()
     {
         return health;

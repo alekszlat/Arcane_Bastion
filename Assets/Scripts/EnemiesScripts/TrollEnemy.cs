@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TrollEnemy : EnemyBehaviour
+public class TrollEnemy : EnemyBehaviour//extends basic enemy behavior
 {
     
    

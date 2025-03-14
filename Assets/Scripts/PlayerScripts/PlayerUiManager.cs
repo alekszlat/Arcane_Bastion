@@ -18,23 +18,18 @@ public class PlayerUiManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        areAbilitiesCooldownUi();
+        areAbilitiesOnCooldownUi();
     }
-    public void areAbilitiesCooldownUi()
+    public void areAbilitiesOnCooldownUi()//couldown for enemy ui  abilities
     {
-         
-       
-      
-       abilitiesAnimation(playerController.getFireBallAbility(), fireBallSkillBackground);
+        abilitiesAnimation(playerController.getFireBallAbility(), fireBallSkillBackground);
         abilitiesAnimation(playerController.getElectricityAbility(), electricitySkillBackground);
         abilitiesAnimation(playerController.getCristalAbility(), crystalSkillBackground);
     }
     
-    private void abilityUiCooldown(float curentCooldownTimer, float maxCooldown, Image abilityImage,float animationSpeed)
-    { //update cooldwoln
-
+    private void abilityUiCooldown(float curentCooldownTimer, float maxCooldown, Image abilityImage,float animationSpeed)//the logic for the ui animation
+    {
         float fillCooldown = Mathf.Clamp01(curentCooldownTimer / maxCooldown);
-      
 
         if (fillCooldown > 1)
         {
@@ -44,10 +39,8 @@ public class PlayerUiManager : MonoBehaviour
         {
             abilityImage.fillAmount = Mathf.MoveTowards(abilityImage.fillAmount, fillCooldown, animationSpeed * Time.deltaTime);
         }
-        
-
     }
-    public void abilitiesAnimation(Abilities ability,Image image)//refactoring code
+    public void abilitiesAnimation(Abilities ability,Image image)//sets the Ui for abilities
     {
         float abilityTimer = ability.timer;
         float abilityCooldown = ability.cooldownTime;

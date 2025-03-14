@@ -2,48 +2,44 @@ using System.Collections;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class SkeletonArrowBehavior : MonoBehaviour, IDamageable
+public class SkeletonArrowBehavior : MonoBehaviour, IDamageable//implements IDamagable witch is an interface used for enemies to deal damage to tower,
 {
+    [SerializeField] float arrowDamage = 1.5f;
+    [SerializeField] int speed;
     private Transform towerPos;
-    public int speed;
     private Rigidbody rb;
-    public float arrowDamage = 1.5f;
-
-   
+    private Vector3 towerDir;
+    
 
     private void Awake()
     {
         towerPos = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
-      
-    }
-    void Start()
-    {
-      
-    }
 
-    // Update is called once per frame
+    }
     void Update()
     {
-        ShootArrow();
+       ShootArrow();
+      
     }
     public void ShootArrow()
     {
-
-      Vector3 dir = (towerPos.position-transform.position).normalized;
-        // rb.linearVelocity = new Vector3(dir.x, 3f, dir.z);
-     
-        rb.linearVelocity = (dir + Vector3.up * 0.2f) * speed;
-   
-
+        towerDir = (towerPos.position-transform.position).normalized;// the direction from arrow to the tower
+        rb.linearVelocity = (towerDir + Vector3.up * 0.2f) * speed;
     }
-
-    public void attack(ref float towerHealth)
+    public void attack(ref float towerHealth)//implemented by IDamagable
     {
-            towerHealth -= arrowDamage;
-        Debug.Log(towerHealth);
-       
+       towerHealth -= arrowDamage;
+       Debug.Log(towerHealth);
     }
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Enemy"))
+        {    
+            Destroy(gameObject);
+        }
+    }
+   
+   
 
 }

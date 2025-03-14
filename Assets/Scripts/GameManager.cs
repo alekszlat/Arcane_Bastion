@@ -1,7 +1,7 @@
 using UnityEditor.Playables;
 using UnityEngine;
 
-public enum GameState
+public enum GameState //used for diffrent game states
 {
     Paused,
     Gameplay,
@@ -10,9 +10,9 @@ public enum GameState
 }
 public class GameManager : MonoBehaviour
 {
-    public static bool isPaused = false;
-    public static GameManager instance;
-    public GameState gameState;
+    [SerializeField] static bool isPaused = false;
+    [SerializeField] static GameManager instance;
+    [SerializeField] GameState gameState;
     private WaveSystem waveSystem;
 
     private float preWaveTimer = 10f;
@@ -20,24 +20,21 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.PreWave;
         waveSystem = GameObject.FindGameObjectWithTag("WaveSystem").GetComponent<WaveSystem>();
-
-
     }
     public void Update()
     {
         timerStates();
         Debug.Log(gameState);
-
     }
 
-    public void timerStates()
+    public void timerStates()//has to be in update because its a timer
     {
         if (gameState == GameState.PreWave)
         {
             preWaveTimer -= Time.deltaTime;
             if (preWaveTimer <= 0f)
             {
-                waveSystem.spawnWaves();
+                waveSystem.spawnWaves();//spawns waves from wave system when the cooldown ends
                 setGameState(GameState.Gameplay);
             }
         }
@@ -52,24 +49,18 @@ public class GameManager : MonoBehaviour
         if (gameState == GameState.Paused)
         {
             isPaused = true;
-            Time.timeScale = 0f; // stops time,pauses game for time.deltaTime scripts
+            Time.timeScale = 0f; // stops time,pauses game for funcions using time.delta time and ones in fixedUpdate
         }
         else if (gameState == GameState.Gameplay)
         {
             isPaused = false;
-            Time.timeScale = 1f; // unpauses
+            Time.timeScale = 1f; //normal game speed
         }
         else if (gameState == GameState.PreWave)
         {
-            preWaveTimer = 20f;
+            preWaveTimer = 10f;//resets timer when we are in preWave
         }
-
-
     }
-
-    public GameState getGameState()
-    {
-        return gameState;
-    }
+  
 
 }

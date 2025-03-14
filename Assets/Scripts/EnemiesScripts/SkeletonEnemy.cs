@@ -3,81 +3,65 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
-public class SkeletonEnemy : EnemyBehaviour
+public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-    public GameObject arrowPrefab;
+    [SerializeField] GameObject arrowPrefab;
+    [SerializeField] float shootingInterval = 2;//time before skeleton can shoot
     private bool canShootArrows=true;
-  
-  
-
-
+    private SkeletonArrowBehavior skeletonArrow;
+    private LayerMask enemyLayer;
     private void Awake()
     {
+       
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+        enemyLayer = 1 << LayerMask.NameToLayer("Enemy");// turns layer into bit layer mask
     }
 
-
-    public float shootingInterval = 2;
     public override void setEnemyDestination()
     {
         float distance = Vector3.Distance(transform.position, target.position);
-        if (distance >= 30) { 
+        if (distance >= 30) { //if distance is >30 enemy moves to target 
             agent.enabled = true; 
         }
-        if (distance < 30&&raycast(Vector3.down,1.1f))
+        if (distance < 30 && raycast(Vector3.down,1.1f))//skeleton stops moving and starts shooting if distance<30
         {
-            agent.enabled = false;
-           
+            agent.enabled = false;   
             shootArrows();
-
         }
 
         if (agent != null && agent.enabled == true)
         {
-          
-          agent.SetDestination(target.position); // Задaва новата дестинация
+          agent.SetDestination(target.position); //sets destination to target
         }
     
     }
-   
-    
+    public override void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
+    {
+        base.ExplosionPhysic(eForce, ePosition, eRadius, eUpwardModifier, eDamage);
+    }
 
     public void shootArrows() {
         Vector3 targetDirection = (target.position - transform.position).normalized;
-        if (canShootArrows&&!isEnemyHit)
+
+        if (canShootArrows&&!isEnemyHit&&!isAlliedEnemyInFront())//can shoot enemy hasn't been hit soon,the shooting cooldown has reset, no enemies in front
         {
             GameObject arrow = Instantiate(
                 arrowPrefab,transform.position+targetDirection*1.2f + Vector3.up * 1.8f,
-                Quaternion.LookRotation(targetDirection) * Quaternion.Euler(0, 90, 0) // Добавяме 90 градуса по оста Y
+                Quaternion.LookRotation(targetDirection) * Quaternion.Euler(0, 90, 0) //used so the arrow faces the tower in the correct axis
             );
 
-
-
-            StartCoroutine(shootingCooldown());
-            Destroy(arrow, 3f);
+            StartCoroutine(shootingCooldown());//after shoting arrow skeleton has to wait "shootingInterval" seconds
+            Destroy(arrow, 3f);//arrow gets destroyed after 3 seconds
         }
     }
-    IEnumerator shootingCooldown()
+    IEnumerator shootingCooldown() 
     {
         canShootArrows = false;
         yield return new WaitForSeconds(shootingInterval);
         canShootArrows = true;
     }
-
-    public Vector3 getSkeletonPosition()
+    public bool isAlliedEnemyInFront()//checks if allied enemy is infront
     {
-        return gameObject.transform.position;
+        return Physics.Raycast(transform.position,transform.TransformDirection(Vector3.forward),40, enemyLayer);
     }
-    public bool getCanShootArrows()
-    {
-        return canShootArrows;
-    }
-    public void setCanShootArrows(bool canShootArrows)
-    {
-        this.canShootArrows=canShootArrows;
-    }
-
-
 }

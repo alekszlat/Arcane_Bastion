@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5901848699636455272}
   - component: {fileID: 4035914784361904999}
   - component: {fileID: 1479800954039820046}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 925030005324957912}
   - component: {fileID: 3392205584852337216}
   - component: {fileID: 306009074570268662}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HealthBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 604415718758257278}
   - component: {fileID: 5830252229167919086}
   - component: {fileID: 1661095407624735650}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Goblin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -249,7 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025006cec94ec2543957e8e86fb05369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   layerGround:
     serializedVersion: 2
     m_Bits: 8
@@ -267,7 +266,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7124208112448136819}
   serializedVersion: 4
-  m_Mass: 30
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -320,7 +319,7 @@ GameObject:
   - component: {fileID: 8926251199143604905}
   - component: {fileID: 139195218502925858}
   - component: {fileID: 2955785418173902366}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +405,7 @@ GameObject:
   - component: {fileID: 9041953201354832353}
   - component: {fileID: 610681489053765105}
   - component: {fileID: 1147633991344090597}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
