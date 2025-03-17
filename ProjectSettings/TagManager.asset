@@ -12,6 +12,7 @@ TagManager:
   - Target
   - GameManager
   - WaveSystem
+  - WaveSystemV2
   layers:
   - Default
   - TransparentFX

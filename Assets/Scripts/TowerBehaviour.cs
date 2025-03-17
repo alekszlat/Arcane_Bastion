@@ -12,7 +12,6 @@ public class TowerBehaviour : MonoBehaviour
     void Start()
     {
         towerHealth = 10f; //start tower health
-        Debug.Log("in tower class "+towerHealth);
     }
     private void OnTriggerEnter(Collider other)
     {

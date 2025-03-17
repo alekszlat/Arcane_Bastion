@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         timerStates();
-        Debug.Log(gameState);
     }
 
     public void timerStates()//has to be in update because its a timer
@@ -35,6 +34,7 @@ public class GameManager : MonoBehaviour
             if (preWaveTimer <= 0f)
             {
                 waveSystem.spawnWaves();//spawns waves from wave system when the cooldown ends
+                Debug.Log("PreWave timer ended. Calling spawnWaves().");
                 setGameState(GameState.Gameplay);
             }
         }
@@ -62,5 +62,4 @@ public class GameManager : MonoBehaviour
         }
     }
   
-
 }

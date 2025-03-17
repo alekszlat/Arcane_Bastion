@@ -130,8 +130,8 @@ GameObject:
   - component: {fileID: 36339853}
   - component: {fileID: 36339852}
   m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
+  m_Name: WaveManagerV2
+  m_TagString: WaveSystemV2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -150,20 +150,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves:
   - name: Wave 1
-    delay: 5
     actions:
     - name: Goblins
-      delay: 0
+      delay: 3
       prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
       spawnCount: 10
-    - name: Skeleton
-      delay: 2
-      prefab: {fileID: 4967630902765573891, guid: 55c08da177963794fa43550a8aa097fe, type: 3}
-      spawnCount: 3
-    - name: Troll
+    - name: Skeletons
       delay: 3
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
+      prefab: {fileID: 4967630902765573891, guid: 55c08da177963794fa43550a8aa097fe, type: 3}
       spawnCount: 5
+    - name: Trolls
+      delay: 1
+      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
+      spawnCount: 3
   towerPos: {fileID: 102487675}
 --- !u!4 &36339853
 Transform:
@@ -2526,7 +2525,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1762499055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2696,6 +2695,52 @@ Transform:
   - {fileID: 1231453831}
   m_Father: {fileID: 1029469225}
   m_LocalEulerAnglesHint: {x: 0.769, y: 0, z: 0}
+--- !u!1 &2024809006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2024809008}
+  - component: {fileID: 2024809007}
+  m_Layer: 0
+  m_Name: GameManagerV2
+  m_TagString: GameManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2024809007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2024809006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045ee385e42299c4d82eed1624fdc8e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameState: 0
+  preWaveTimer: 3
+--- !u!4 &2024809008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2024809006}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.3858047, y: 6.144634, z: 26.68817}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2033833794
 GameObject:
   m_ObjectHideFlags: 0
@@ -2785,4 +2830,5 @@ SceneRoots:
   - {fileID: 821441788}
   - {fileID: 463091749}
   - {fileID: 1762499056}
+  - {fileID: 2024809008}
   - {fileID: 36339853}

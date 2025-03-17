@@ -15,7 +15,6 @@ public class WaveAction
 public class Wave
 {
     public string name;
-    public float delay;
     public List<WaveAction> actions;
 }
 
@@ -30,80 +29,70 @@ public class WaveSystemV2 : MonoBehaviour
     private int waveRepeatCount = 0; // Track how many times the last wave has been repeated
     private int enemyCount = 0; // Track enemy count 
     private int maxEnemyCount = 0; // Get the max count of enemies
-    private float waveDelay = 0; // Get the delay from the first action
-
-    // Get delay between waves
 
     public Transform towerPos; //Save tower position 
 
-    IEnumerator SpawnLoop()
+    public delegate void WaveStartedHandler();
+    public static event WaveStartedHandler OnWaveStarted;
+
+    public delegate void WaveCompletedHandler();
+    public static event WaveCompletedHandler OnWaveCompleted;
+
+    public void spawnWaves()
     {
-        while (true)
+        StartCoroutine(spawnEnemies());
+    }
+    public IEnumerator spawnEnemies()
+    {
+        OnWaveStarted?.Invoke();
+        // Get current wave
+        if (currentWaveIndex >= waves.Count)
         {
-            // Get current wave
-            if (currentWaveIndex >= waves.Count)
+            // After predefined waves, reuse the last wave and increase difficulty
+            m_CurrentWave = GetScaledWave(waves[waves.Count - 1], waveRepeatCount + 1);
+            waveRepeatCount++;
+        }
+        else
+        {
+            m_CurrentWave = waves[currentWaveIndex];
+        }
+
+        // Instantiate every action in the current wave
+        foreach (WaveAction A in m_CurrentWave.actions)
+        {
+            if (A.delay > 0)
+                yield return new WaitForSeconds(A.delay);
+
+            if (A.prefab != null && A.spawnCount > 0)
             {
-                // After predefined waves, reuse the last wave and increase difficulty
-                m_CurrentWave = GetScaledWave(waves[waves.Count - 1], waveRepeatCount + 1);
-                waveRepeatCount++;
-                Debug.Log("Repeating last wave with increased difficulty: " + waveRepeatCount);
-            }
-            else
-            {
-                m_CurrentWave = waves[currentWaveIndex];
-                Debug.Log("Starting Wave: " + m_CurrentWave.name);
-            }
-
-            // Wait for the wave delay to stop
-            if (m_CurrentWave.delay > 0)
-            {
-                waveDelay = m_CurrentWave.delay;
-                yield return new WaitForSeconds(m_CurrentWave.delay);
-
-            }
-
-            // Instantiate every action in the current wave
-            foreach (WaveAction A in m_CurrentWave.actions)
-            {
-
-
-                if (A.delay > 0)
-                    yield return new WaitForSeconds(A.delay);
-
-                if (A.prefab != null && A.spawnCount > 0)
+                for (int i = 0; i < A.spawnCount; i++)
                 {
-                    for (int i = 0; i < A.spawnCount; i++)
+                    Vector3 spawnPosition = GetSpawnPositionEnemies();
+                    GameObject enemy = Instantiate(A.prefab, spawnPosition, Quaternion.identity).gameObject;
+                    if (currentWaveIndex >= waves.Count)
                     {
-                        Vector3 spawnPosition = GetSpawnPositionEnemies(); // Get a new spawn position
-                        GameObject enemy = Instantiate(A.prefab, spawnPosition, Quaternion.identity).gameObject;
-                        if (currentWaveIndex >= waves.Count)
-                        {
-                            ApplyDifficulty(enemy, waveRepeatCount); // Apply difficulty scaling
-                        }
-                        activeEnemies.Add(enemy); // Track spawned enemy
-                        enemyCount++;
+                        ApplyDifficulty(enemy, waveRepeatCount);
                     }
+                    activeEnemies.Add(enemy);
+                    enemyCount++;
                 }
             }
-
-            maxEnemyCount = enemyCount;
-
-            // Wait until all enemies are defeated
-            yield return new WaitUntil(() => activeEnemies.Count == 0);
-
-            // Move to the next wave
-            if (currentWaveIndex < waves.Count)
-            {
-                currentWaveIndex++;
-            }
-            Debug.Log("Wave completed! Moving to next wave.");
-            transform.position = GetNewSpawnPointPosition();
         }
-    }
 
-    void Start()
-    {
-        StartCoroutine(SpawnLoop());
+        maxEnemyCount = enemyCount;
+
+        // Wait until all enemies are defeated
+        yield return new WaitUntil(() => activeEnemies.Count == 0);
+
+        // Move to the next wave
+        if (currentWaveIndex < waves.Count)
+        {
+            currentWaveIndex++;
+            OnWaveCompleted?.Invoke(); // Notify the GameManager
+        }
+
+        transform.position = GetNewSpawnPointPosition();
+
     }
 
     void Update()
@@ -164,7 +153,6 @@ public class WaveSystemV2 : MonoBehaviour
     // Apply difficulty scaling to enemies
     void ApplyDifficulty(GameObject enemy, int repeatCount)
     {
-        // Example: Increase enemy health or speed
         EnemyBehaviour stats = enemy.GetComponent<EnemyBehaviour>();
         if (stats != null)
         {

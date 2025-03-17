@@ -13,13 +13,11 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] int skeletonSpawnChance;
     [SerializeField] int goblinSpawnChance;
     [SerializeField] int trollSpawnChance;
-    private List<GameObject> spawnEnemy;//list for spawning enemies
+    private List<GameObject> spawnEnemy; //list for spawning enemies
 
     private GameManager gameManager;
     private int waveNum = 1;
     private int enemiesCount=0;
-
-
     private int deadEnemies = 0;
 
 
