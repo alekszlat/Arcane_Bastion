@@ -88,9 +88,9 @@ public class WaveSystemV2 : MonoBehaviour
         if (currentWaveIndex < waves.Count)
         {
             currentWaveIndex++;
-            OnWaveCompleted?.Invoke(); // Notify the GameManager
         }
 
+        OnWaveCompleted?.Invoke(); // Notify the GameManager
         transform.position = GetNewSpawnPointPosition();
 
     }
