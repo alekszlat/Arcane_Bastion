@@ -155,14 +155,6 @@ MonoBehaviour:
       delay: 3
       prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
       spawnCount: 10
-    - name: Skeletons
-      delay: 3
-      prefab: {fileID: 4967630902765573891, guid: 55c08da177963794fa43550a8aa097fe, type: 3}
-      spawnCount: 5
-    - name: Trolls
-      delay: 1
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 3
   towerPos: {fileID: 102487675}
 --- !u!4 &36339853
 Transform:
@@ -1784,7 +1776,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1410230972}
   - component: {fileID: 1410230971}
-  - component: {fileID: 1410230970}
+  - component: {fileID: 1410230973}
   m_Layer: 0
   m_Name: Tower
   m_TagString: TowerBase
@@ -1792,18 +1784,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1410230970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1410230969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e06a77ac91b45b4dbecbe49423301fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &1410230971
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1843,6 +1823,18 @@ Transform:
   - {fileID: 102487675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1410230973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410230969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e06a77ac91b45b4dbecbe49423301fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1496285364
 GameObject:
   m_ObjectHideFlags: 0
@@ -2725,7 +2717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
-  preWaveTimer: 3
+  preWaveTimer: 4
 --- !u!4 &2024809008
 Transform:
   m_ObjectHideFlags: 0

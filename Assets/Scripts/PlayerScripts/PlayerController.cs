@@ -32,7 +32,9 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
-  
+    
+    private int countFireBall = 0;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -132,5 +134,15 @@ public class PlayerController : MonoBehaviour
     public Abilities getCristalAbility()
     {
         return crystalSkill;
+    }
+
+    public void setFireBallCount()
+    {
+        countFireBall++;
+    }
+
+    public int getFireBallCount()
+    {
+        return countFireBall;
     }
 }

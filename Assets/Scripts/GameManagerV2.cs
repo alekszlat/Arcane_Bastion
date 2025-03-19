@@ -41,14 +41,13 @@ public class GameManagerV2 : MonoBehaviour
 
     private void OnWaveStarted()
     {
-        Debug.Log("Wave started. Transitioning to Gameplay.");
+        //Debug.Log("Wave started. Transitioning to Gameplay.");
         setGameState(GameStateV2.Gameplay);
     }
 
     private void OnWaveCompleted()
     {
-        Debug.Log("Wave completed");
-        Debug.LogError("Wave complited");
+        //Debug.LogError("Wave complited");
         setGameState(GameStateV2.PreWave);
     }
     private void OnDestroy()
@@ -67,7 +66,7 @@ public class GameManagerV2 : MonoBehaviour
         if (gameState == GameStateV2.PreWave)
         {
             Timer -= Time.deltaTime;
-            Debug.Log("PreWave Timer: " + Timer); // Debug the timer value
+            //Debug.Log("PreWave Timer: " + Timer); // Debug the timer value
             if (Timer <= 0f)
             {
                 waveSystemV2.spawnWaves();
@@ -94,7 +93,6 @@ public class GameManagerV2 : MonoBehaviour
         else if (gameState == GameStateV2.PreWave)
         {
             Timer = preWaveTimer; // Reset the timer
-            Debug.Log("PreWave timer reset to: " + preWaveTimer);
         }
     }
 }

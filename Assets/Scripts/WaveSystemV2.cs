@@ -90,8 +90,8 @@ public class WaveSystemV2 : MonoBehaviour
             currentWaveIndex++;
         }
 
-        OnWaveCompleted?.Invoke(); // Notify the GameManager
         transform.position = GetNewSpawnPointPosition();
+        OnWaveCompleted?.Invoke(); // Notify the GameManager
 
     }
 

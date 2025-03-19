@@ -5,10 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public enum enemyStates
-{
-    normal,isShocked
-}
 public class EnemyBehaviour : MonoBehaviour,IDamageable
 {
    
@@ -25,14 +21,12 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     private float timer;
     private float health;
     protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
-    private WaveSystem waveSystem;
 
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
-        waveSystem = GameObject.FindGameObjectWithTag("WaveSystem")?.GetComponent<WaveSystem>();
     }
     public virtual void  Start()
     {
@@ -76,13 +70,15 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         
     }
 
-    private void updateHealthBar(float maxHealth, float currentHealth) { //updates healthbar
+    //updates healthbar
+    private void updateHealthBar(float maxHealth, float currentHealth) {
    
         float health = currentHealth / maxHealth;
      
         if (healthBar == null) { Debug.Log("healthBar is null"); }
 
-        healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);//"animation for health"
+        //"animation for health"
+        healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);
     
     }
     //Applying explosion on the enemy
@@ -94,33 +90,32 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             agent.enabled = false; // Disable pathfinding
         }
-
-        // Enable physics to apply force
-        rb.isKinematic = false;
-        rb.useGravity = true;
        
         health -= eDamage;
-      
-        rb.AddExplosionForce(eForce, ePosition.position, eRadius, eUpwardModifier, ForceMode.Impulse);
-    
+
+        if (rb != null)
+        {
+            rb.isKinematic = false; // Enable physics
+            rb.useGravity = true;
+            rb.AddExplosionForce(eForce, ePosition.position, eRadius, eUpwardModifier, ForceMode.Impulse);
+        }
+
         if (health <= 0)
         {
-            if (waveSystem != null)
-            {
-               waveSystem.enemyDeath();//if an enemy dies waveSystem v.1 gets this enemy's count
-            }
             Destroy(gameObject);
         }
 
-        Invoke(nameof(ResetAI), 3.2f);//3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
+        //3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
+        Invoke(nameof(ResetAI), 3.2f);
    
     }
 
     void ResetAI()
     {
-       // RaycastHit hitGround;//if needed
-
-        if (raycast(Vector3.down,3)|| raycast(Vector3.up,3)|| raycast(Vector3.back,3)|| raycast(Vector3.forward,3))//raycasts to check if enemy is on ground
+        // RaycastHit hitGround;
+        //raycasts to check if enemy is on ground
+        if (raycast(Vector3.down,3) || raycast(Vector3.up,3) 
+            || raycast(Vector3.back,3) || raycast(Vector3.forward,3))
         {
             if (agent != null)
             {
@@ -136,7 +131,8 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     }
 
-    public void attack(ref float towerHealth)//implemented by IDamagable
+    //implemented by IDamagable
+    public void attack(ref float towerHealth)
     {
         timer -= Time.deltaTime;
 
@@ -147,6 +143,8 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
      
         }
     }
+
+    // If enemy comes near the tower, stop the enemy
     private void OnTriggerEnter(Collider other)
     {
         if(!agent.enabled) return;
@@ -158,9 +156,11 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         if(!agent.enabled) return;
         agent.isStopped = false;
     }
-    public virtual IEnumerator isHit(float hitDuration)//if enemy is hit  isEnemyHit = true for duration for hitDurationhitDurationg
+
+    //if enemy is hit  isEnemyHit = true for duration for hitDurationhitDuration
+    public virtual IEnumerator isHit(float hitDuration)
     {
-        isEnemyHit = true;//bool
+        isEnemyHit = true;
 
         yield return new WaitForSeconds(hitDuration);
 
@@ -168,12 +168,13 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         canvas.SetActive(false);
     }
 
-    public bool raycast(Vector3 raycastWay,float raycastLenght)//raycast to check if enemy is on ground
+    //raycast to check if enemy is on ground
+    public bool raycast(Vector3 raycastWay,float raycastLenght)
     {
         return Physics.Raycast(transform.position, raycastWay, raycastLenght);
     }
 
- 
+    //GETTERS AND SETTERS
     public float GetMaxHealth()
     {
         return health;

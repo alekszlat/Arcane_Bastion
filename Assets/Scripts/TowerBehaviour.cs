@@ -37,7 +37,7 @@ public class TowerBehaviour : MonoBehaviour
     {  
         if (towerHealth <= 0)
         {
-            Debug.Log("Tower is destroyd!");
+            //Debug.Log("Tower is destroyd!");
         }
         else
         {
