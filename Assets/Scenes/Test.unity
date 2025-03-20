@@ -155,6 +155,30 @@ MonoBehaviour:
       delay: 3
       prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
       spawnCount: 10
+  - name: Wave 2
+    actions:
+    - name: Goblins
+      delay: 3
+      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
+      spawnCount: 15
+    - name: Trolls
+      delay: 3
+      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
+      spawnCount: 3
+  - name: Wave 2
+    actions:
+    - name: Goblins
+      delay: 3
+      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
+      spawnCount: 15
+    - name: Goblins
+      delay: 3
+      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
+      spawnCount: 3
+    - name: Skeletons
+      delay: 3
+      prefab: {fileID: 4967630902765573891, guid: 55c08da177963794fa43550a8aa097fe, type: 3}
+      spawnCount: 5
   towerPos: {fileID: 102487675}
 --- !u!4 &36339853
 Transform:
@@ -316,7 +340,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.47033334, y: 0.9545001, z: 0.426}
-  m_LocalScale: {x: 0.33333334, y: 0.37820703, z: 0.33333334}
+  m_LocalScale: {x: 0.33333334, y: 0.09, z: 0.33333334}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 317583192}
