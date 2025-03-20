@@ -1,28 +1,43 @@
+using UnityEditor.Playables;
 using UnityEngine;
 
-public enum GameState
+public enum GameState //used for diffrent game states
 {
     Paused,
     Gameplay,
-    SpawningWaves,
     PreWave,
     Death
 }
 public class GameManager : MonoBehaviour
 {
-    public static bool isPaused = false;
-    public static GameManager instance;
-    public GameState gameState;
+    [SerializeField] static bool isPaused = false;
+    [SerializeField] static GameManager instance;
+    [SerializeField] GameState gameState;
+    private WaveSystem waveSystem;
+
+    private float preWaveTimer = 10f;
     private void Awake()
     {
-        gameState = GameState.Gameplay;
-        if (instance == null)
-        {
-            instance = this;
+        gameState = GameState.PreWave;
+        waveSystem = GameObject.FindGameObjectWithTag("WaveSystem").GetComponent<WaveSystem>();
+    }
+    public void Update()
+    {
+        timerStates();
+    }
 
-            DontDestroyOnLoad(gameObject);
+    public void timerStates()//has to be in update because its a timer
+    {
+        if (gameState == GameState.PreWave)
+        {
+            preWaveTimer -= Time.deltaTime;
+            if (preWaveTimer <= 0f)
+            {
+                waveSystem.spawnWaves();//spawns waves from wave system when the cooldown ends
+                Debug.Log("PreWave timer ended. Calling spawnWaves().");
+                setGameState(GameState.Gameplay);
+            }
         }
-        else { Destroy(gameObject); }
 
     }
     public void setGameState(GameState gameState)
@@ -30,27 +45,21 @@ public class GameManager : MonoBehaviour
         if (this.gameState == gameState) return;
 
         this.gameState = gameState;
-      
+
         if (gameState == GameState.Paused)
         {
             isPaused = true;
-            Time.timeScale = 0f; // stops time,pauses game for time.deltaTime scripts
+            Time.timeScale = 0f; // stops time,pauses game for funcions using time.delta time and ones in fixedUpdate
         }
         else if (gameState == GameState.Gameplay)
         {
             isPaused = false;
-            Time.timeScale = 1f; // unpauses
+            Time.timeScale = 1f; //normal game speed
         }
-        if (gameState == GameState.SpawningWaves)//когато и
+        else if (gameState == GameState.PreWave)
         {
-         //  WaveSystem.instance.StartWaveSpawning();
+            preWaveTimer = 10f;//resets timer when we are in preWave
         }
-
     }
-   
-public GameState getGameState()
-    {
-        return gameState;
-    }
-
+  
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3720845640721402693}
   - component: {fileID: 3743290440917545436}
   - component: {fileID: 1531856405860554246}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 1728485437639925174}
   - component: {fileID: 6980975015037039790}
   - component: {fileID: 6609103964400241754}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Troll
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -146,7 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ff513c62e41cf409a014caaf511dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   layerGround:
     serializedVersion: 2
     m_Bits: 8
@@ -164,7 +163,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5925436254648143663}
   serializedVersion: 4
-  m_Mass: 1200
+  m_Mass: 35
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -217,7 +216,7 @@ GameObject:
   - component: {fileID: 5870704988378679136}
   - component: {fileID: 8050615135819848770}
   - component: {fileID: 8609342265895033189}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HealthBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +292,7 @@ GameObject:
   - component: {fileID: 2445884486286532483}
   - component: {fileID: 7912639181286407507}
   - component: {fileID: 4144005979396465807}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +379,7 @@ GameObject:
   - component: {fileID: 1685595429624182432}
   - component: {fileID: 2397872833581217496}
   - component: {fileID: 791091546407600664}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

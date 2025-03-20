@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2768776590030408809}
   - component: {fileID: 6456741953253992445}
   - component: {fileID: 2441647743841105086}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1603821831137476882}
   - component: {fileID: 8868592500949187971}
   - component: {fileID: 6181099425876511062}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 1261691640212773669}
   - component: {fileID: 5340377185294121829}
   - component: {fileID: 7701180881197811263}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 3150352867084604619}
   - component: {fileID: 3816748095148704416}
   - component: {fileID: 4703063368408496024}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HealthBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +352,7 @@ GameObject:
   - component: {fileID: 8747134721089106127}
   - component: {fileID: 1749566133489759472}
   - component: {fileID: 2309609943008147655}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Skeleton
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7055186992185571386}
   serializedVersion: 4
-  m_Mass: 100
+  m_Mass: 25
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -460,7 +460,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9438a3b12746e4a95e9713e3b74f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   layerGround:
     serializedVersion: 2
     m_Bits: 0
@@ -470,7 +469,5 @@ MonoBehaviour:
   attackDamage: 1.5
   attackInterval: 4
   isHitCooldown: 6
-  damage: 1.5
-  isSkeletonHitCooldown: 6
   arrowPrefab: {fileID: 1754460031920050054, guid: a3242dbffa422b948a8b2e6a43d54bb4, type: 3}
   shootingInterval: 3

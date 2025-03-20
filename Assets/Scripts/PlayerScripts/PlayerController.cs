@@ -9,7 +9,7 @@ using UnityEngine.UI;
     public float timer;
     public int manaCost;
     bool isUnlocked;
-     public Abilities(bool canUse,float cooldownTime,int manaCost,bool isUnlocked) {
+     public Abilities(bool canUse,float cooldownTime,int manaCost,bool isUnlocked) {//class for abilities that checks if an ability is usable,timer,manaCost, and if its unlocked
         this.isUnlocked = isUnlocked;
         this.canUse = canUse;
         this.cooldownTime = cooldownTime;
@@ -20,25 +20,21 @@ using UnityEngine.UI;
 }
 public class PlayerController : MonoBehaviour
 {
-
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpForce = 5f; // Force applied when jumping
     [SerializeField] float raycastDistance = 1.1f; // Distance to check for ground
     [SerializeField] LayerMask groundLayer; // Layer to identify ground objects
     [SerializeField] private GameObject ballPrefab;  // Assign your ball prefab in the inspector
     [SerializeField] private Transform spawnPoint;   // Where the ball spawns 
+    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 2, true);//object for fireball ability
+    [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 4, true);
+    [SerializeField] static Abilities crystalSkill = new Abilities(true, 15, 5, true);
     private float horizontalInput;
     private float verticalInput;
-    public static Abilities fireBallSkill = new Abilities(true, 2,2,true);
-    public static Abilities electricitySkill = new Abilities(true,6 ,4, true);
-    public static Abilities crystalSkill = new Abilities(true, 15 ,5, true);
-
-
     private Rigidbody rb;
-    // AbilityCooldown fireball=new AbilityCooldown { canUse = true, cooldownTime = 5f, timer = 5f };без конструктор?
+    
+    private int countFireBall = 0;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -48,43 +44,46 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        playerMovement();
+        playerAbilities();
+        abilityCooldownTimer(fireBallSkill);//ability cooldown is always in update because it activates only when,it's used
+        abilityCooldownTimer(electricitySkill);
+        abilityCooldownTimer(crystalSkill);
 
-
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-
-        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
-        transform.Translate(Vector3.right * speed * Time.deltaTime * horizontalInput);
-
-
-        // Check for jump input
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (Input.GetButtonDown("Jump") && IsGrounded())    // Check for jump input
         {
             Jump();
         }
 
+    }
+    public void playerAbilities() {
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.canUse)
         {
             ThrowFireBall();
-            fireBallSkill.canUse = false;
+            fireBallSkill.canUse = false;//if ability is used it cant be used again until cooldown is over
             fireBallSkill.timer = fireBallSkill.cooldownTime;
         }
-        if(Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.canUse)
+        if (Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.canUse)
         {
-            //missing mechanic
+            //TODO:missing eletricity skill
+
             electricitySkill.canUse = false;
             electricitySkill.timer = electricitySkill.cooldownTime;
         }
         if (Input.GetKeyDown(KeyCode.E) && crystalSkill.canUse)
         {
-            //missing mechanic
+            //TODO:missing cristal skill
             crystalSkill.canUse = false;
             crystalSkill.timer = crystalSkill.cooldownTime;
         }
-        abilityCooldownTimer(fireBallSkill);
-        abilityCooldownTimer(electricitySkill);
-        abilityCooldownTimer(crystalSkill);
+    }
+    public void playerMovement()
+    {
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
 
+        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
+        transform.Translate(Vector3.right * speed * Time.deltaTime * horizontalInput);
     }
 
     bool IsGrounded()
@@ -113,15 +112,14 @@ public class PlayerController : MonoBehaviour
             GameObject ball = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
         }
     }
-    public void abilityCooldownTimer(Abilities ability)
+    public void abilityCooldownTimer(Abilities ability) //cooldown for fireBall skill
     {
-        if (ability.canUse) return;
-        ability.timer -= Time.deltaTime;
+        if (ability.canUse) return; //timer starts when player CAN'T use an ability
+            ability.timer -= Time.deltaTime;
 
         if (ability.timer <= 0f)
         {
-            ability.canUse = true;
-           
+            ability.canUse = true; // true when player can use ability
         }
     }
 
@@ -136,5 +134,15 @@ public class PlayerController : MonoBehaviour
     public Abilities getCristalAbility()
     {
         return crystalSkill;
+    }
+
+    public void setFireBallCount()
+    {
+        countFireBall++;
+    }
+
+    public int getFireBallCount()
+    {
+        return countFireBall;
     }
 }

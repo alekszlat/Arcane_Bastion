@@ -5,10 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public enum enemyStates
-{
-    normal,isShocked
-}
 public class EnemyBehaviour : MonoBehaviour,IDamageable
 {
    
@@ -16,7 +12,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] GameObject canvas;
     [SerializeField] Image healthBar;
     [SerializeField] float maxHealth = 5;
-    [SerializeField] float attackDamage = 2f;
+    [SerializeField] float attackDamage = 2f;//enemy attack damage
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
     protected Transform target;
@@ -27,12 +23,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
 
 
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
     }
     public virtual void  Start()
@@ -56,7 +49,6 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         setEnemyDestination();
         isEnemyHealthBarVisable();
      
-      
     }
     public virtual void setEnemyDestination()
     {
@@ -68,24 +60,29 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     public void isEnemyHealthBarVisable()//if enemy is hit healthbar is visable
     {
         if (!isEnemyHit) return;
-  
-            canvas.SetActive(true);
-            updateHealthBar(maxHealth, health);
+        canvas.SetActive(true);
+        float enemyHeight = gameObject.transform.localScale.y+2.5f;
+        canvas.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y+enemyHeight, gameObject.transform.position.z);//making the ui stay above the enemy by getting the enemy height
+        Vector3 targetDirection = (target.position - gameObject.transform.position).normalized;
+        canvas.transform.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+       //look rotation accepts vector3
+        updateHealthBar(maxHealth, health);
         
     }
 
-    private void updateHealthBar(float maxHealth, float currentHealth) { //updates healthbar
+    //updates healthbar
+    private void updateHealthBar(float maxHealth, float currentHealth) {
    
         float health = currentHealth / maxHealth;
      
         if (healthBar == null) { Debug.Log("healthBar is null"); }
 
-        healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);//"animation for health"
+        //"animation for health"
+        healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);
     
-
     }
     //Applying explosion on the enemy
-    public void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
+    public virtual void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
     {
         StartCoroutine(isHit(isHitCooldown));//activates bool isHit=true for isHitCooldown(3) seconds
 
@@ -93,32 +90,32 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             agent.enabled = false; // Disable pathfinding
         }
-
-        // Enable physics to apply force
-        rb.isKinematic = false;
-        rb.useGravity = true;
        
         health -= eDamage;
-      
-        rb.AddExplosionForce(eForce, ePosition.position, eRadius, eUpwardModifier, ForceMode.Impulse);
-    
+
+        if (rb != null)
+        {
+            rb.isKinematic = false; // Enable physics
+            rb.useGravity = true;
+            rb.AddExplosionForce(eForce, ePosition.position, eRadius, eUpwardModifier, ForceMode.Impulse);
+        }
+
         if (health <= 0)
         {
             Destroy(gameObject);
         }
 
-        Invoke(nameof(ResetAI), 3.2f);//3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
+        //3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
+        Invoke(nameof(ResetAI), 3.2f);
    
     }
 
-  
-
     void ResetAI()
     {
-
-       // RaycastHit hitGround;//if needed
-
-        if (raycast(Vector3.down,3)|| raycast(Vector3.up,3)|| raycast(Vector3.back,3)|| raycast(Vector3.forward,3))//raycasts to check if enemy is on ground
+        // RaycastHit hitGround;
+        //raycasts to check if enemy is on ground
+        if (raycast(Vector3.down,3) || raycast(Vector3.up,3) 
+            || raycast(Vector3.back,3) || raycast(Vector3.forward,3))
         {
             if (agent != null)
             {
@@ -134,6 +131,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     }
 
+    //implemented by IDamagable
     public void attack(ref float towerHealth)
     {
         timer -= Time.deltaTime;
@@ -142,9 +140,11 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             timer = attackInterval;
             towerHealth -= attackDamage;
-            Debug.Log("enemy beh "+ towerHealth);
+     
         }
     }
+
+    // If enemy comes near the tower, stop the enemy
     private void OnTriggerEnter(Collider other)
     {
         if(!agent.enabled) return;
@@ -156,9 +156,11 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         if(!agent.enabled) return;
         agent.isStopped = false;
     }
-    public virtual IEnumerator isHit(float hitDuration)//enemy isHit for hitDuration
+
+    //if enemy is hit  isEnemyHit = true for duration for hitDurationhitDuration
+    public virtual IEnumerator isHit(float hitDuration)
     {
-        isEnemyHit = true;//bool
+        isEnemyHit = true;
 
         yield return new WaitForSeconds(hitDuration);
 
@@ -166,22 +168,21 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         canvas.SetActive(false);
     }
 
-    public bool raycast(Vector3 raycastWay,float raycastLenght)//raycast to check if enemy is on ground
+    //raycast to check if enemy is on ground
+    public bool raycast(Vector3 raycastWay,float raycastLenght)
     {
         return Physics.Raycast(transform.position, raycastWay, raycastLenght);
     }
-    public bool raycast(Vector3 raycastWay)//raycast to check if enemy is on ground
+
+    //GETTERS AND SETTERS
+    public float GetMaxHealth()
     {
-       return raycast(raycastWay, 1.1f);
-    }
-    public bool raycast(Vector3 raycastWay, RaycastHit hitGround)
-    {
-        return Physics.Raycast(transform.position, raycastWay, out hitGround, 1.5f, layerGround);//raycast ,just incase we ned to save the hitGround ray 
-    }
-    public Transform getTarget()
-    {
-        return target;
+        return health;
     }
 
-  
+    public void SetMaxHealth(float newMaxHealth)
+    {
+        health = newMaxHealth;
+    }
+
 }
