@@ -45,12 +45,10 @@ public class FireBallBehaviour : MonoBehaviour
     // Try adding  additional collisions components to the object
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy") || other.CompareTag("Ground"))
+        if(other.CompareTag("Enemy") || other.CompareTag("Ground") || other.CompareTag("TowerBase"))
         {
-            player.GetComponent<PlayerController>().setFireBallCount();
             ApplyExplosionPhysic();
             Destroy(gameObject);
-            Debug.Log("Fireball destroyed " + player.GetComponent<PlayerController>().getFireBallCount());
         }
     }
 }
