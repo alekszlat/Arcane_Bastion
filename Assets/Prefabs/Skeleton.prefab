@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: 8747134721089106127}
   - component: {fileID: 1749566133489759472}
   - component: {fileID: 2309609943008147655}
+  - component: {fileID: -5846807702481681261}
   m_Layer: 6
   m_Name: Skeleton
   m_TagString: Enemy
@@ -406,7 +407,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7055186992185571386}
   serializedVersion: 4
-  m_Mass: 25
+  m_Mass: 18
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -424,7 +425,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &1749566133489759472
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -465,9 +466,25 @@ MonoBehaviour:
     m_Bits: 0
   canvas: {fileID: 5258065656505585462}
   healthBar: {fileID: 6181099425876511062}
-  maxHealth: 5
+  maxHealth: 8
   attackDamage: 1.5
   attackInterval: 4
   isHitCooldown: 6
   arrowPrefab: {fileID: 1754460031920050054, guid: a3242dbffa422b948a8b2e6a43d54bb4, type: 3}
   shootingInterval: 3
+--- !u!208 &-5846807702481681261
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7055186992185571386}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
