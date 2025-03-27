@@ -15,6 +15,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] float attackDamage = 2f;//enemy attack damage
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
+
     protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;

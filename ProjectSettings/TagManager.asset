@@ -13,6 +13,7 @@ TagManager:
   - GameManager
   - WaveSystem
   - WaveSystemV2
+  - Camera
   layers:
   - Default
   - TransparentFX

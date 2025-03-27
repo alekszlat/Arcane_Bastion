@@ -40,17 +40,12 @@ public class FireBallBehaviour : MonoBehaviour
         Gizmos.DrawSphere(transform.position, explosionRadius); // Draw a solid sphere
     }
 
-    // The destroy doesn't quite destroy the object
-    // Try messing with the collision matrix to see if it's a collision issue
-    // Try adding  additional collisions components to the object
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy") || other.CompareTag("Ground"))
+        if(other.CompareTag("Enemy") || other.CompareTag("Ground") || other.CompareTag("TowerBase"))
         {
-            player.GetComponent<PlayerController>().setFireBallCount();
             ApplyExplosionPhysic();
             Destroy(gameObject);
-            Debug.Log("Fireball destroyed " + player.GetComponent<PlayerController>().getFireBallCount());
         }
     }
 }

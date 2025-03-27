@@ -133,10 +133,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4357dd85efb96464d9cdcaba30e17689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 90
+  speed: 60
   explosionRadius: 8
   explosionForce: 90
-  explosionUpwardModifier: 20
+  explosionUpwardModifier: 80
   fbDamage: 5
   enemyLayer:
     serializedVersion: 2
@@ -165,9 +165,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!135 &4608440448587803327
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -187,5 +187,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.3
+  m_Radius: 0.35
   m_Center: {x: 0, y: 0, z: 0}
