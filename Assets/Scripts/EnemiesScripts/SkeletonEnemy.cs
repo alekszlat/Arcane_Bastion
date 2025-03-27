@@ -8,7 +8,6 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] float shootingInterval = 2;//time before skeleton can shoot
     private bool canShootArrows=true;
-    private SkeletonArrowBehavior skeletonArrow;
     private LayerMask enemyLayer;
     private void Awake()
     {
@@ -35,10 +34,7 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
         }
     
     }
-    public override void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
-    {
-        base.ExplosionPhysic(eForce, ePosition, eRadius, eUpwardModifier, eDamage);
-    }
+  
 
     public void shootArrows() {
         Vector3 targetDirection = (target.position - transform.position).normalized;
@@ -47,7 +43,7 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
         {
             GameObject arrow = Instantiate(
                 arrowPrefab,transform.position+targetDirection*1.2f + Vector3.up * 1.8f,
-                Quaternion.LookRotation(targetDirection) * Quaternion.Euler(0, 90, 0) //used so the arrow faces the tower in the correct axis
+                Quaternion.LookRotation(targetDirection)
             );
 
             StartCoroutine(shootingCooldown());//after shoting arrow skeleton has to wait "shootingInterval" seconds

@@ -9,18 +9,25 @@ public class SkeletonArrowBehavior : MonoBehaviour, IDamageable//implements IDam
     private Transform towerPos;
     private Rigidbody rb;
     private Vector3 towerDir;
+    private GameObject arrowPrefab;
     
 
     private void Awake()
     {
         towerPos = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
+        arrowPrefab = GameObject.FindGameObjectWithTag("ArrowBody");
 
     }
     void Update()
     {
        ShootArrow();
+       addArrowGravity();
       
+    }
+    public void addArrowGravity() //rotates the arrow's z cordinate to make it look like gravity exists
+    {
+        transform.Rotate(0,0, 8 * Time.deltaTime);
     }
     public void ShootArrow()
     {

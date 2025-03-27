@@ -21,13 +21,15 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     private Rigidbody rb;
     private float timer;
     private float health;
+    private Vector3 targetDirection;
     protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
-
+    
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+        
     }
     public virtual void  Start()
     {
@@ -35,7 +37,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
 
-        if(rb != null)
+       
+
+        if (rb != null)
         {
             rb.isKinematic = true;
             rb.useGravity = false;
@@ -47,10 +51,13 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     // Update is called once per frame
    public virtual void Update()
     {
+
+       
         setEnemyDestination();
         isEnemyHealthBarVisable();
-     
+  
     }
+   
     public virtual void setEnemyDestination()
     {
         if (agent != null && agent.enabled == true)
@@ -58,13 +65,19 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
             agent.SetDestination(target.position);
         }
     }
+    
     public void isEnemyHealthBarVisable()//if enemy is hit healthbar is visable
     {
         if (!isEnemyHit) return;
+      
         canvas.SetActive(true);
+       
         float enemyHeight = gameObject.transform.localScale.y+2.5f;
+      
         canvas.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y+enemyHeight, gameObject.transform.position.z);//making the ui stay above the enemy by getting the enemy height
-        Vector3 targetDirection = (target.position - gameObject.transform.position).normalized;
+        
+        targetDirection = (target.position - gameObject.transform.position).normalized;
+
         canvas.transform.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
        //look rotation accepts vector3
         updateHealthBar(maxHealth, health);
