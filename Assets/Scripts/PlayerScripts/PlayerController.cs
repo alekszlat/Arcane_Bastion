@@ -1,4 +1,5 @@
 using NUnit.Framework.Constraints;
+using System.Collections;
 using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,24 +21,37 @@ using UnityEngine.UI;
 }
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player Movement")]
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpForce = 5f; // Force applied when jumping
     [SerializeField] float raycastDistance = 1.1f; // Distance to check for ground
-    [SerializeField] LayerMask groundLayer; // Layer to identify ground objects
-    [SerializeField] private GameObject ballPrefab;  // Assign your ball prefab in the inspector
-    [SerializeField] private Transform spawnPoint;   // Where the ball spawns 
+
+    [Header("Fireball Ability")]
+    [SerializeField] private GameObject fireballPrefab;  // Assign your ball prefab in the inspector
+    [SerializeField] private Transform castPoint;   // Where the ball spawns
+    [SerializeField] float maxCastDistance = 100f;
+    // Add a LineRenderer or UI reticle to show aim
+    [SerializeField] LineRenderer aimLine;
+    [SerializeField] float aimLineDuration = 0.1f;
+
+    [Header("Player Abilities")]
     [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 2, true);//object for fireball ability
     [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 4, true);
     [SerializeField] static Abilities crystalSkill = new Abilities(true, 15, 5, true);
+
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
-    
-    private int countFireBall = 0;
+    private Animator anim;
+    private Camera playerCamera;
+
+    private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
     }
 
@@ -50,19 +64,94 @@ public class PlayerController : MonoBehaviour
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(crystalSkill);
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())    // Check for jump input
+    }
+
+    // PLAYER MOVEMENT
+    public void playerMovement()
+    {
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+
+        // Forward and sideways movement with animation management
+        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
+        if(Input.GetKey(KeyCode.W))
         {
-            Jump();
+            anim.SetBool("isWalkingForward", true);
+        }
+        else
+        {
+            anim.SetBool("isWalkingForward", false);
         }
 
+        if (Input.GetKey(KeyCode.S))
+        {
+            anim.SetBool("isWalkingBack", true);
+        }
+        else
+        {
+            anim.SetBool("isWalkingBack", false);
+        }
+
+        transform.Translate(Vector3.right * speed * Time.deltaTime * horizontalInput);
+        if (Input.GetKey(KeyCode.A))
+        {
+            anim.SetBool("isWalkingLeft", true);
+        }
+        else
+        {
+            anim.SetBool("isWalkingLeft", false);
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            anim.SetBool("isWalkingRight", true);
+        }
+        else
+        {
+            anim.SetBool("isWalkingRight", false);
+        }
+
+        if (Input.GetButtonDown("Jump") && IsGrounded())    // Check for jump input
+        {
+            anim.SetBool("isJumping", true);
+            Jump();
+        }
+        else
+        {
+            anim.SetBool("isJumping", false);
+        }
     }
+
+    bool IsGrounded()
+    {
+        // Cast a ray downward to check for ground
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + raycastOffset, Vector3.down, out hit, raycastDistance))
+        {
+            return true; // Grounded
+        }
+        return false; // Not grounded
+    }
+
+    void Jump()
+    {
+        // Apply upward force to the Rigidbody
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+    }
+
+    // ABILITY MANAGEMENT
     public void playerAbilities() {
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.canUse)
         {
-            ThrowFireBall();
             fireBallSkill.canUse = false;//if ability is used it cant be used again until cooldown is over
+            anim.SetBool("isFireBallCasting", true);
             fireBallSkill.timer = fireBallSkill.cooldownTime;
         }
+        else
+        {
+            anim.SetBool("isFireBallCasting", false);
+        }
+
         if (Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.canUse)
         {
             //TODO:missing eletricity skill
@@ -77,45 +166,11 @@ public class PlayerController : MonoBehaviour
             crystalSkill.timer = crystalSkill.cooldownTime;
         }
     }
-    public void playerMovement()
-    {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
 
-        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
-        transform.Translate(Vector3.right * speed * Time.deltaTime * horizontalInput);
-    }
-
-    bool IsGrounded()
-    {
-        // Cast a ray downward to check for ground
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, raycastDistance))
-        {
-            return true; // Grounded
-        }
-        return false; // Not grounded
-    }
-
-    void Jump()
-    {
-        // Apply upward force to the Rigidbody
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-    }
-
-    void ThrowFireBall()
-    {
-
-        if (ballPrefab != null && spawnPoint != null)
-        {
-            // Instantiate the ball at the spawn point with player's rotation
-            GameObject ball = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
-        }
-    }
     public void abilityCooldownTimer(Abilities ability) //cooldown for fireBall skill
     {
         if (ability.canUse) return; //timer starts when player CAN'T use an ability
-            ability.timer -= Time.deltaTime;
+        ability.timer -= Time.deltaTime;
 
         if (ability.timer <= 0f)
         {
@@ -123,6 +178,51 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // ABILITY METHODS
+
+    // Called from Animation Event at the release point
+    public void ReleaseFireball()
+    {
+        // Calculate direction from camera center
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        Vector3 targetPoint;
+        if (Physics.Raycast(ray, out hit, maxCastDistance))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(maxCastDistance);
+        }
+
+        // Debugging with LineRenderer
+        if (aimLine != null)
+        {
+            aimLine.SetPosition(0, castPoint.position);
+            aimLine.SetPosition(1, targetPoint);
+            StartCoroutine(ClearAimLine());
+        }
+
+        // Calculate direction with slight upward arc
+        // Try without normalization to see the difference
+        Vector3 direction = (targetPoint - castPoint.position);
+        direction += Vector3.up * 0.1f; // Small upward angle
+
+        // Instantiate fireball
+        GameObject fireball = Instantiate(fireballPrefab, castPoint.position, Quaternion.LookRotation(direction));
+
+    }
+
+    IEnumerator ClearAimLine()
+    {
+        yield return new WaitForSeconds(aimLineDuration);
+        aimLine.SetPosition(0, Vector3.zero);
+        aimLine.SetPosition(1, Vector3.zero);
+    }
+
+    //GETTERS FOR ABILITIES (UI)
     public Abilities getFireBallAbility()
     {
         return fireBallSkill;
@@ -134,15 +234,5 @@ public class PlayerController : MonoBehaviour
     public Abilities getCristalAbility()
     {
         return crystalSkill;
-    }
-
-    public void setFireBallCount()
-    {
-        countFireBall++;
-    }
-
-    public int getFireBallCount()
-    {
-        return countFireBall;
     }
 }
