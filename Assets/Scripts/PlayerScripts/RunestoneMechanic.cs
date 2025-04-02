@@ -1,0 +1,62 @@
+using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+
+public class RunestoneMechanic : MonoBehaviour
+{
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    PlayerController playerController;
+    private List<NavMeshAgent> effectedAgentsList = new List<NavMeshAgent>();
+    private List<float> originalEnemySpeedList = new List<float>();
+    public LayerMask enemyLayer;
+    public int runestoneDuration;
+
+
+    void Start() //PS RUNESTONE works fine but fireball turns off enemy agent so sometimes enemies remain slowed
+    {
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        StartCoroutine(destroyObject());
+    }
+    
+     public IEnumerator destroyObject()//after duration resets runestone effect and destroys runestone
+      {
+         yield return new WaitForSeconds(runestoneDuration);
+         ressetRunestoneEffect();
+         Destroy(gameObject);
+      }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            NavMeshAgent agent = other.gameObject.GetComponent<NavMeshAgent>();
+            effectedAgentsList.Add(agent);//ads agents to list so we can reset them later
+            originalEnemySpeedList.Add(agent.speed);//ads agents speed to list
+
+            if (playerController.getRunestoneAbility().getIsUnlocked())//checks if ability is unlocked
+            {
+                agent.speed = 0;
+            }
+            else
+            {
+                agent.speed = agent.speed * 0.4f;
+            }
+        }
+    }
+    
+    public void ressetRunestoneEffect()//resets effects from runestone
+      {
+          for (int i = 0; i < effectedAgentsList.Count; i++)
+          {
+              if (effectedAgentsList[i] != null)
+              {
+                  effectedAgentsList[i].speed = originalEnemySpeedList[i];
+              }
+          }
+      }
+   
+   
+}

@@ -15,27 +15,33 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] float attackDamage = 2f;//enemy attack damage
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
-
     protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;
     private float timer;
     private float health;
+    private Vector3 targetDirection;
+    private float originalEnemySpeed;
     protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
-
+    
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        agent = GetComponent<NavMeshAgent>();
+      
+        rb = GetComponent<Rigidbody>();
+      
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+        
     }
     public virtual void  Start()
     {
+        originalEnemySpeed = agent.speed;
         health = maxHealth;
-        agent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
+      
 
-        if(rb != null)
+        if (rb != null)
         {
             rb.isKinematic = true;
             rb.useGravity = false;
@@ -47,10 +53,19 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     // Update is called once per frame
    public virtual void Update()
     {
+
         setEnemyDestination();
         isEnemyHealthBarVisable();
-     
+
     }
+
+    public void resetEffectedEnemyFromRunestone()
+    {
+        if (agent != null && agent.enabled == true) { 
+            agent.speed = originalEnemySpeed;
+    }
+    }
+   
     public virtual void setEnemyDestination()
     {
         if (agent != null && agent.enabled == true)
@@ -58,13 +73,19 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
             agent.SetDestination(target.position);
         }
     }
+    
     public void isEnemyHealthBarVisable()//if enemy is hit healthbar is visable
     {
         if (!isEnemyHit) return;
+      
         canvas.SetActive(true);
+       
         float enemyHeight = gameObject.transform.localScale.y+2.5f;
+      
         canvas.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y+enemyHeight, gameObject.transform.position.z);//making the ui stay above the enemy by getting the enemy height
-        Vector3 targetDirection = (target.position - gameObject.transform.position).normalized;
+        
+        targetDirection = (target.position - gameObject.transform.position).normalized;
+
         canvas.transform.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
        //look rotation accepts vector3
         updateHealthBar(maxHealth, health);
@@ -89,6 +110,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
         if (agent != null)
         {
+            Debug.Log("disabled");
             agent.enabled = false; // Disable pathfinding
         }
        
@@ -121,6 +143,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
             if (agent != null)
             {
                 agent.enabled = true; // Re-enable NavMeshAgent
+              
+                resetEffectedEnemyFromRunestone();//resets enemy speed to the original enemy speed
+                
             }
 
             if (rb != null)
@@ -144,18 +169,24 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
      
         }
     }
+   
 
     // If enemy comes near the tower, stop the enemy
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Target")) {
         if(!agent.enabled) return;
         agent.isStopped = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(!agent.enabled) return;
-        agent.isStopped = false;
+        if (other.gameObject.CompareTag("Target"))
+        {
+            if (!agent.enabled) return;
+            agent.isStopped = false;
+        }
     }
 
     //if enemy is hit  isEnemyHit = true for duration for hitDurationhitDuration
@@ -168,6 +199,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         isEnemyHit = false;
         canvas.SetActive(false);
     }
+    
 
     //raycast to check if enemy is on ground
     public bool raycast(Vector3 raycastWay,float raycastLenght)

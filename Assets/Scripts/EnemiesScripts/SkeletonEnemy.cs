@@ -8,24 +8,30 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] float shootingInterval = 2;//time before skeleton can shoot
     private bool canShootArrows=true;
-    private SkeletonArrowBehavior skeletonArrow;
     private LayerMask enemyLayer;
+    Vector3 targetDirection;
     private void Awake()
     {
        
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         enemyLayer = 1 << LayerMask.NameToLayer("Enemy");// turns layer into bit layer mask
+        targetDirection = (target.position - transform.position).normalized;
+     
     }
-
+ 
+    public void skeletonRotation()
+    {
+        Quaternion skeletonLookAtTower = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, skeletonLookAtTower, Time.deltaTime * 3);
+    }
+    
     public override void setEnemyDestination()
     {
+     
         float distance = Vector3.Distance(transform.position, target.position);
-        if (distance >= 30) { //if distance is >30 enemy moves to target 
-            agent.enabled = true; 
-        }
-        if (distance < 30 && raycast(Vector3.down,1.1f))//skeleton stops moving and starts shooting if distance<30
+       
+        if (distance < agent.stoppingDistance && raycast(Vector3.down,1.1f))//skeleton stops moving if is past the moving distance and starts shooting
         {
-            agent.enabled = false;   
             shootArrows();
         }
 
@@ -35,19 +41,15 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
         }
     
     }
-    public override void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
-    {
-        base.ExplosionPhysic(eForce, ePosition, eRadius, eUpwardModifier, eDamage);
-    }
+  
 
     public void shootArrows() {
-        Vector3 targetDirection = (target.position - transform.position).normalized;
 
         if (canShootArrows&&!isEnemyHit&&!isAlliedEnemyInFront())//can shoot enemy hasn't been hit soon,the shooting cooldown has reset, no enemies in front
         {
             GameObject arrow = Instantiate(
-                arrowPrefab,transform.position+targetDirection*1.2f + Vector3.up * 1.8f,
-                Quaternion.LookRotation(targetDirection) * Quaternion.Euler(0, 90, 0) //used so the arrow faces the tower in the correct axis
+                arrowPrefab,transform.position+targetDirection *1.2f + Vector3.up * 1.8f,
+                Quaternion.LookRotation(targetDirection)
             );
 
             StartCoroutine(shootingCooldown());//after shoting arrow skeleton has to wait "shootingInterval" seconds

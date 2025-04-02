@@ -1,24 +1,13 @@
+using JetBrains.Annotations;
 using NUnit.Framework.Constraints;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEditor.Playables;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
- public class Abilities
-{
-    public bool canUse;
-    public float cooldownTime;
-    public float timer;
-    public int manaCost;
-    bool isUnlocked;
-     public Abilities(bool canUse,float cooldownTime,int manaCost,bool isUnlocked) {//class for abilities that checks if an ability is usable,timer,manaCost, and if its unlocked
-        this.isUnlocked = isUnlocked;
-        this.canUse = canUse;
-        this.cooldownTime = cooldownTime;
-        timer = cooldownTime;
-        this.manaCost = manaCost;
 
-    }
-}
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Movement")]
@@ -29,29 +18,41 @@ public class PlayerController : MonoBehaviour
     [Header("Fireball Ability")]
     [SerializeField] private GameObject fireballPrefab;  // Assign your ball prefab in the inspector
     [SerializeField] private Transform castPoint;   // Where the ball spawns
-    [SerializeField] float maxCastDistance = 100f;
+    [SerializeField] float fireballMaxCastDistance = 100f;
     // Add a LineRenderer or UI reticle to show aim
     [SerializeField] LineRenderer aimLine;
     [SerializeField] float aimLineDuration = 0.1f;
 
+    [Header("Runestone Ability")]
+     private Transform TowerPos;
+    [SerializeField] private GameObject runestonePrefab;
+    [SerializeField] private GameObject runestoneIndicatorPrefab;
+    [SerializeField] float runestoneMaxCastDistance = 100f;
+    [SerializeField] LayerMask groundLayer;
+
     [Header("Player Abilities")]
-    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 2, true);//object for fireball ability
-    [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 4, true);
-    [SerializeField] static Abilities crystalSkill = new Abilities(true, 15, 5, true);
+    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 20, true);//object for fireball ability
+    [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 30, true);
+    [SerializeField] static Abilities runestoneSkill = new Abilities(true, 15, 40, false);
 
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
     private Animator anim;
     private Camera playerCamera;
+    private int playerMana=100;
+
+
 
     private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
     void Start()
     {
+        TowerPos = GameObject.FindGameObjectWithTag("Target").transform;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+      
 
     }
 
@@ -62,19 +63,20 @@ public class PlayerController : MonoBehaviour
         playerAbilities();
         abilityCooldownTimer(fireBallSkill);//ability cooldown is always in update because it activates only when,it's used
         abilityCooldownTimer(electricitySkill);
-        abilityCooldownTimer(crystalSkill);
+        abilityCooldownTimer(runestoneSkill);
+        Debug.Log(playerMana);
 
     }
 
     // PLAYER MOVEMENT
-    public void playerMovement()
+    public void playerMovement()//TRY  put animations in a difrent class (not MonoBehaviour)
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
         // Forward and sideways movement with animation management
         transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
-        if(Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
             anim.SetBool("isWalkingForward", true);
         }
@@ -135,66 +137,84 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
+       
         // Apply upward force to the Rigidbody
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
 
     // ABILITY MANAGEMENT
-    public void playerAbilities() {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.canUse)
+    IEnumerator ResetFireballAnimationAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // Време, което анимацията трябва да "завърти"
+        anim.SetBool("isFireBallCasting", false);
+    }
+    public void playerAbilities()
+    {
+        if (Abilities.usingAbility == true||isManaDepleted()==true) return; // Prevents casting any abilities if one is already in use
+
+        // Fireball ability
+        if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, fireBallSkill.getManaCost()))
         {
-            fireBallSkill.canUse = false;//if ability is used it cant be used again until cooldown is over
+            playerMana -= fireBallSkill.getManaCost();
+
+            fireBallSkill.setCanUseAbility(false);
             anim.SetBool("isFireBallCasting", true);
-            fireBallSkill.timer = fireBallSkill.cooldownTime;
+            fireBallSkill.setTimer(fireBallSkill.getCooldownTime());
+
+           //resets fireball Animation 
+            StartCoroutine(ResetFireballAnimationAfterDelay());//stops animation after cast
         }
-        else
+        else if (!Input.GetKeyDown(KeyCode.Mouse0)) //if mouse1 isnt pressed
         {
             anim.SetBool("isFireBallCasting", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.canUse)
+        
+        // Electricity ability (not implemented yet)
+        if (Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
         {
-            //TODO:missing eletricity skill
-
-            electricitySkill.canUse = false;
-            electricitySkill.timer = electricitySkill.cooldownTime;
+            if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
+            {
+                playerMana -= electricitySkill.getManaCost();
+            }
+            // TODO: Add electricity skill implementation here
+          
+            electricitySkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
+           // Start cooldown timer for electricity skill
+            electricitySkill.setTimer(electricitySkill.getCooldownTime());
         }
-        if (Input.GetKeyDown(KeyCode.E) && crystalSkill.canUse)
+
+        // Runestone ability
+        if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility()&& checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
-            //TODO:missing cristal skill
-            crystalSkill.canUse = false;
-            crystalSkill.timer = crystalSkill.cooldownTime;
+           
+          
+            StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
+            runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
+       
         }
     }
+   
 
-    public void abilityCooldownTimer(Abilities ability) //cooldown for fireBall skill
-    {
-        if (ability.canUse) return; //timer starts when player CAN'T use an ability
-        ability.timer -= Time.deltaTime;
-
-        if (ability.timer <= 0f)
-        {
-            ability.canUse = true; // true when player can use ability
-        }
-    }
 
     // ABILITY METHODS
 
     // Called from Animation Event at the release point
     public void ReleaseFireball()
     {
+     
         // Calculate direction from camera center
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         Vector3 targetPoint;
-        if (Physics.Raycast(ray, out hit, maxCastDistance))
+        if (Physics.Raycast(ray, out hit, fireballMaxCastDistance))
         {
             targetPoint = hit.point;
         }
         else
         {
-            targetPoint = ray.GetPoint(maxCastDistance);
+            targetPoint = ray.GetPoint(fireballMaxCastDistance);
         }
 
         // Debugging with LineRenderer
@@ -206,7 +226,6 @@ public class PlayerController : MonoBehaviour
         }
 
         // Calculate direction with slight upward arc
-        // Try without normalization to see the difference
         Vector3 direction = (targetPoint - castPoint.position);
         direction += Vector3.up * 0.1f; // Small upward angle
 
@@ -214,12 +233,115 @@ public class PlayerController : MonoBehaviour
         GameObject fireball = Instantiate(fireballPrefab, castPoint.position, Quaternion.LookRotation(direction));
 
     }
+    public IEnumerator runestoneAbilityMechanic()
+    {
+        Abilities.setAbilitiesCanclled(false);//ability canclled starts as false when entering the function
+       
+        yield return StartCoroutine(placeIndicator(runestonePrefab, runestoneIndicatorPrefab, runestoneMaxCastDistance,2));
+        
+        if (!Abilities.getAbilitiesCanclled())//if the ability isnt canclled then you use the ability
+        {
+            if (checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))//checks if you have enough mana
+            {
+                playerMana -= runestoneSkill.getManaCost(); //using ability costs mana
+            }
+            runestoneSkill.StartCooldown(); 
+        }
+        else
+        {
+            runestoneSkill.setCanUseAbility(true); 
+        }
+    }
+    public IEnumerator placeIndicator(GameObject abilityPrefab, GameObject abilityIndicatorPrefab, float maxCastDistance,int indicatorHeight)
+    {
+       
+        GameObject abilityIndicator = null;
+        Abilities.usingAbility = true; // Doesnt let you cast any abilities
+
+        while (true)  // Keep casting the ability
+        {
+            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // Ray from center of screen
+
+            RaycastHit hit;
+            int layerMask = ~LayerMask.GetMask("Default"); // Ignore default layer
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                Vector3 lookAtTower = TowerPos.position - hit.point; // Direction to tower
+                lookAtTower.y = 0; // Ignore height
+
+                // Create indicator if it doesn't exist
+                if (abilityIndicator == null)
+                {
+                    //abilityIndicator = Instantiate(abilityIndicatorPrefab, hit.point, Quaternion.LookRotation(lookAtTower)); //indicator can move y axix
+                    abilityIndicator = Instantiate(abilityIndicatorPrefab, new Vector3(hit.point.x, indicatorHeight, hit.point.y), Quaternion.LookRotation(lookAtTower));
+                    //indicator can't move y axix
+                    
+                }
+
+                abilityIndicator.transform.position = new Vector3(hit.point.x, 0, hit.point.z);//indicator goes to the viewport 
+
+                if (Input.GetKeyDown(KeyCode.Mouse1))//removes indicator when mouse pressed
+                {
+                    Destroy(abilityIndicator);
+                    Abilities.setAbilitiesCanclled(true);//the ability was canclled
+                    Abilities.usingAbility = false;//abilities can once again be used
+                    break;
+                }
+                // Check placement validity
+                if (hit.collider.gameObject.layer != 3 || lookAtTower.magnitude > maxCastDistance || lookAtTower.magnitude < 4)
+                    SetIndicatorColor(abilityIndicator, Color.red); // Invalid placement
+                else
+                {
+                    SetIndicatorColor(abilityIndicator, Color.blue); // Valid placement
+
+                    // Place ability on key press
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        Destroy(abilityIndicator);
+                        Instantiate(abilityPrefab, hit.point, Quaternion.LookRotation(lookAtTower));
+                        Abilities.usingAbility = false;//abilities can once again be used
+                      
+                        break;
+                    }
+                 
+                }
+            }
+
+            yield return null; // Wait for next frame
+        }
+    }
+
+    private void SetIndicatorColor(GameObject indicator, Color color) // Change indicator color
+    {
+        MeshRenderer renderer = indicator.GetComponent<MeshRenderer>();
+        if (renderer != null) renderer.material.color = color;
+
+        // Apply color  to child object
+        if (indicator.transform.childCount > 0)
+        {
+            Transform child = indicator.transform.GetChild(0);
+            MeshRenderer childRenderer = child.GetComponent<MeshRenderer>();
+            if (childRenderer != null) childRenderer.material.color = color;
+        }
+    }
 
     IEnumerator ClearAimLine()
     {
         yield return new WaitForSeconds(aimLineDuration);
         aimLine.SetPosition(0, Vector3.zero);
         aimLine.SetPosition(1, Vector3.zero);
+    }
+
+    public void abilityCooldownTimer(Abilities ability) //Cooldown For Abilities
+    {
+        if (ability.getCanUseAbility()) return; //timer starts when player CAN'T use an ability
+        float abilityTimer = ability.getTimer();
+       
+        ability.setTimer(abilityTimer - Time.deltaTime);// Decrease the timer each frame
+        if (abilityTimer <= 0f)
+        {
+            ability.setCanUseAbility(true); // true when player can use ability
+        }
     }
 
     //GETTERS FOR ABILITIES (UI)
@@ -231,8 +353,124 @@ public class PlayerController : MonoBehaviour
     {
         return electricitySkill;
     }
-    public Abilities getCristalAbility()
+    public Abilities getRunestoneAbility()
     {
-        return crystalSkill;
+        return runestoneSkill;
+    }
+    //Mana
+    public void setPlayerMana(int mana)
+    {
+        if (mana > 100) { mana = 100; }
+        if (mana < 0) { mana = 0; }
+
+        playerMana = mana;
+    }
+    public int getPlayerMana()
+    {
+       return playerMana; 
+    }
+    public bool isManaDepleted()
+    {
+        if (getPlayerMana() <= 0) { return true; } 
+        else
+        {
+            return false;
+        }
+
+    }
+    public bool checkIfManaIsEnough(int myMana, int manaCost)
+    {
+        if (myMana >= manaCost) { return true; }
+        else { return false; }
+    }
+}
+
+public class Abilities
+{
+    public static bool usingAbility;//checks if player is using an ability with an indicator
+    private static bool abilityCancelled = false;//checks if ability is canclled
+    // Private fields
+    private bool canUse;
+    private float cooldownTime;
+    private float timer;
+    private int manaCost;
+    private bool isUnlocked;
+
+
+    // Constructor to initialize the ability
+    public Abilities(bool abilityCooldownPassed, float cooldownTime, int manaCost, bool isUnlocked)
+    {
+        canUse = abilityCooldownPassed;
+        this.cooldownTime = cooldownTime;
+        timer = 0f;
+        this.manaCost = manaCost;
+        this.isUnlocked = isUnlocked;
+    
+    }
+    public void StartCooldown()
+    {
+        canUse = false;
+        timer = cooldownTime;
+    }
+    public static void setAbilitiesCanclled(bool areAbilitiesCancled) {
+        abilityCancelled = areAbilitiesCancled;
+    }
+    public static bool getAbilitiesCanclled()
+    {
+        return abilityCancelled;
+    }
+    // Setter and Getter for canUse
+    public void setCanUseAbility(bool canUse)
+    {
+        this.canUse = canUse;
+    }
+
+    public bool getCanUseAbility()
+    {
+        return canUse;
+    }
+
+    // Setter and Getter for cooldownTime
+    public void setCooldownTime(float cooldownTime)
+    {
+        this.cooldownTime = cooldownTime;
+    }
+
+    public float getCooldownTime()
+    {
+        return cooldownTime;
+    }
+
+    // Setter and Getter for timer
+    public void setTimer(float timer)
+    {
+        this.timer = timer;
+    }
+
+    public float getTimer()
+    {
+        return timer;
+    }
+
+    // Setter and Getter for manaCost
+    public void setManaCost(int manaCost)
+    {
+        this.manaCost = manaCost;
+    }
+
+    public int getManaCost()
+    {
+        return manaCost;
+    }
+
+    // Setter and Getter for isUnlocked
+    public void setIsUnlocked(bool isUnlocked)
+    {
+        this.isUnlocked = isUnlocked;
+    }
+
+    public bool getIsUnlocked()
+    {
+        return isUnlocked;
     }
 }
