@@ -18,12 +18,14 @@ public class GameManagerV2 : MonoBehaviour
     [SerializeField] static GameManager instance;
     [SerializeField] GameStateV2 gameState;
     private WaveSystemV2 waveSystemV2;
+    private PlayerController playerController;
     private float Timer;
 
     public float preWaveTimer = 10f;
 
     private void Awake()
     {
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         Timer = preWaveTimer;
         gameState = GameStateV2.PreWave;
         GameObject waveSystemV2Object = GameObject.FindGameObjectWithTag("WaveSystemV2");
@@ -93,6 +95,7 @@ public class GameManagerV2 : MonoBehaviour
         else if (gameState == GameStateV2.PreWave)
         {
             Timer = preWaveTimer; // Reset the timer
+            playerController.setPlayerMana(100);
         }
     }
 }

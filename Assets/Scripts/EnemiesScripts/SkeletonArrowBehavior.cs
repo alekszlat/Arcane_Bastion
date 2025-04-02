@@ -9,16 +9,13 @@ public class SkeletonArrowBehavior : MonoBehaviour, IDamageable//implements IDam
     private Transform towerPos;
     private Rigidbody rb;
     private Vector3 towerDir;
-    private GameObject arrowPrefab;
     
-
     private void Awake()
     {
         towerPos = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
-        arrowPrefab = GameObject.FindGameObjectWithTag("ArrowBody");
-
     }
+
     void Update()
     {
        ShootArrow();
