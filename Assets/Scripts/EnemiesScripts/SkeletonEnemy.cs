@@ -7,7 +7,7 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
 {
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] float shootingInterval = 2;//time before skeleton can shoot
-    private bool canShootArrows=true;
+    private bool canShootArrows = true;
     private LayerMask enemyLayer;
     Vector3 targetDirection;
     private void Awake()
@@ -18,7 +18,7 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
         targetDirection = (target.position - transform.position).normalized;
      
     }
- 
+
     public void skeletonRotation()
     {
         Quaternion skeletonLookAtTower = Quaternion.LookRotation(targetDirection);

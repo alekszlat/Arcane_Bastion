@@ -15,28 +15,30 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] float attackDamage = 2f;//enemy attack damage
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
+    [SerializeField] GameObject ligthningAura;
+    private GameObject ligthningAuraInstance;
     protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;
     private float timer;
     private float health;
+    private float vunrabilityPercentage = 1f; //percentage of health that is vunrable to explosion
     private Vector3 targetDirection;
     private float originalEnemySpeed;
-    protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
+    protected bool isEnemyHit = false; //while true health bar is visable,and the skeleton can't shoot arrows
     
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        agent = GetComponent<NavMeshAgent>();
-      
-        rb = GetComponent<Rigidbody>();
       
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         
     }
     public virtual void  Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
         originalEnemySpeed = agent.speed;
         health = maxHealth;
       
@@ -63,7 +65,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     {
         if (agent != null && agent.enabled == true) { 
             agent.speed = originalEnemySpeed;
-    }
+        }
     }
    
     public virtual void setEnemyDestination()
@@ -114,7 +116,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
             agent.enabled = false; // Disable pathfinding
         }
        
-        health -= eDamage;
+        health -= eDamage * vunrabilityPercentage;
 
         if (rb != null)
         {
@@ -125,6 +127,10 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
         if (health <= 0)
         {
+            if(ligthningAuraInstance != null)
+            {
+                ligthningAuraInstance.GetComponent<LigthningAuraControl>().EnemyDeath();
+            }
             Destroy(gameObject);
         }
 
@@ -199,7 +205,15 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         isEnemyHit = false;
         canvas.SetActive(false);
     }
-    
+
+    //Resets the enemy vunrability percentage to 1f after ligthingEffect duration
+    public IEnumerator resetVunrabilityPercentage(float ligthingEffect)
+    {
+        yield return new WaitForSeconds(ligthingEffect);
+        Debug.Log("destroyed");
+        Destroy(ligthningAuraInstance);
+        vunrabilityPercentage = 1f;
+    }
 
     //raycast to check if enemy is on ground
     public bool raycast(Vector3 raycastWay,float raycastLenght)
@@ -216,6 +230,14 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     public void SetMaxHealth(float newMaxHealth)
     {
         health = newMaxHealth;
+    }
+
+    public void setVunrabilityPercentage(float newVunrabilityPercentage)
+    {
+        vunrabilityPercentage = newVunrabilityPercentage;
+        ligthningAuraInstance = Instantiate(ligthningAura, transform.position, Quaternion.identity, transform);
+        ligthningAuraInstance.GetComponent<LigthningAuraControl>().setEnemy(gameObject);
+        StartCoroutine(resetVunrabilityPercentage(5f));
     }
 
 }

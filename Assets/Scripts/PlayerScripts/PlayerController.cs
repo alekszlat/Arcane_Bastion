@@ -19,19 +19,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject fireballPrefab;  // Assign your ball prefab in the inspector
     [SerializeField] private Transform castPoint;   // Where the ball spawns
     [SerializeField] float fireballMaxCastDistance = 100f;
-    // Add a LineRenderer or UI reticle to show aim
     [SerializeField] LineRenderer aimLine;
     [SerializeField] float aimLineDuration = 0.1f;
 
+    [Header("Lightning Ability")]
+    [SerializeField] private GameObject lightningPrefab; // Assign your ball prefab in the inspector
+    [SerializeField] private GameObject lightningIndicatorPrefab; // Assign your ball prefab in the inspector
+    [SerializeField] float lightningMaxCastDistance = 100f;
+
     [Header("Runestone Ability")]
-     private Transform TowerPos;
     [SerializeField] private GameObject runestonePrefab;
     [SerializeField] private GameObject runestoneIndicatorPrefab;
     [SerializeField] float runestoneMaxCastDistance = 100f;
-    [SerializeField] LayerMask groundLayer;
+    private Transform TowerPos;
 
-    [Header("Player Abilities")]
-    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 20, true);//object for fireball ability
+    // Spell objects
+    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 0, true);
     [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 30, true);
     [SerializeField] static Abilities runestoneSkill = new Abilities(true, 15, 40, false);
 
@@ -42,8 +45,6 @@ public class PlayerController : MonoBehaviour
     private Camera playerCamera;
     private int playerMana=100;
 
-
-
     private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
     void Start()
@@ -52,8 +53,6 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-      
-
     }
 
     // Update is called once per frame
@@ -61,10 +60,12 @@ public class PlayerController : MonoBehaviour
     {
         playerMovement();
         playerAbilities();
-        abilityCooldownTimer(fireBallSkill);//ability cooldown is always in update because it activates only when,it's used
+
+        //ability cooldown is always in update because it activates only when,it's used
+        abilityCooldownTimer(fireBallSkill);
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(runestoneSkill);
-        Debug.Log(playerMana);
+        //Debug.Log(playerMana);
 
     }
 
@@ -170,33 +171,21 @@ public class PlayerController : MonoBehaviour
         }
 
         
-        // Electricity ability (not implemented yet)
-        if (Input.GetKeyDown(KeyCode.Mouse1) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
+        // Lightning ability (In progress)
+        if (Input.GetKeyDown(KeyCode.Q) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
         {
-            if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
-            {
-                playerMana -= electricitySkill.getManaCost();
-            }
-            // TODO: Add electricity skill implementation here
-          
+            StartCoroutine(lightningAbilityMechanic()); // Start the lightning ability process
             electricitySkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
-           // Start cooldown timer for electricity skill
-            electricitySkill.setTimer(electricitySkill.getCooldownTime());
         }
 
         // Runestone ability
-        if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility()&& checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
+        if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
-           
-          
             StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
             runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
-       
         }
     }
    
-
-
     // ABILITY METHODS
 
     // Called from Animation Event at the release point
@@ -235,7 +224,7 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator runestoneAbilityMechanic()
     {
-        Abilities.setAbilitiesCanclled(false);//ability canclled starts as false when entering the function
+        Abilities.setAbilityCancelled(false);//ability canclled starts as false when entering the function
        
         yield return StartCoroutine(placeIndicator(runestonePrefab, runestoneIndicatorPrefab, runestoneMaxCastDistance,2));
         
@@ -250,6 +239,26 @@ public class PlayerController : MonoBehaviour
         else
         {
             runestoneSkill.setCanUseAbility(true); 
+        }
+    }
+
+    public IEnumerator lightningAbilityMechanic()
+    {
+        Abilities.setAbilityCancelled(false);//ability canclled starts as false when entering the function
+
+        yield return StartCoroutine(placeIndicator(lightningPrefab, lightningIndicatorPrefab, lightningMaxCastDistance, 2));
+
+        if (!Abilities.getAbilitiesCanclled())//if the ability isnt canclled then you use the ability
+        {
+            if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))//checks if you have enough mana
+            {
+                playerMana -= electricitySkill.getManaCost(); //using ability costs mana
+            }
+            electricitySkill.StartCooldown();
+        }
+        else
+        {
+            electricitySkill.setCanUseAbility(true);
         }
     }
     public IEnumerator placeIndicator(GameObject abilityPrefab, GameObject abilityIndicatorPrefab, float maxCastDistance,int indicatorHeight)
@@ -283,7 +292,7 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Mouse1))//removes indicator when mouse pressed
                 {
                     Destroy(abilityIndicator);
-                    Abilities.setAbilitiesCanclled(true);//the ability was canclled
+                    Abilities.setAbilityCancelled(true);//the ability was canclled
                     Abilities.usingAbility = false;//abilities can once again be used
                     break;
                 }
@@ -412,7 +421,7 @@ public class Abilities
         canUse = false;
         timer = cooldownTime;
     }
-    public static void setAbilitiesCanclled(bool areAbilitiesCancled) {
+    public static void setAbilityCancelled(bool areAbilitiesCancled) {
         abilityCancelled = areAbilitiesCancled;
     }
     public static bool getAbilitiesCanclled()

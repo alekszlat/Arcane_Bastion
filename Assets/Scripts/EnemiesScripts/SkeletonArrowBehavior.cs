@@ -28,7 +28,7 @@ public class SkeletonArrowBehavior : MonoBehaviour, IDamageable//implements IDam
     }
     public void ShootArrow()
     {
-        towerDir = (towerPos.position-transform.position).normalized;// the direction from arrow to the tower
+        towerDir = (towerPos.position-transform.position).normalized; // the direction from arrow to the tower
         rb.linearVelocity = (towerDir + Vector3.up * 0.2f) * speed;
     }
     public void attack(ref float towerHealth)//implemented by IDamagable

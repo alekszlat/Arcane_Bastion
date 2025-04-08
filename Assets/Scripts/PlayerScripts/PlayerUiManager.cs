@@ -14,7 +14,6 @@ public class PlayerUiManager : MonoBehaviour
     private void Awake()
     {
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-       
     }
 
     // Update is called once per frame

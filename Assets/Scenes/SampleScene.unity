@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.3499822, g: 0.50807804, b: 0.5471698, a: 0.6313726}
   m_FogMode: 2
   m_FogDensity: 0.009
@@ -395,7 +395,6 @@ GameObject:
   - component: {fileID: 102487677}
   - component: {fileID: 102487676}
   - component: {fileID: 102487678}
-  - component: {fileID: 102487679}
   m_Layer: 0
   m_Name: TargetCylinder
   m_TagString: Target
@@ -499,29 +498,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &102487679
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102487674}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &147344145
 GameObject:
   m_ObjectHideFlags: 0
@@ -1997,7 +1973,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1000.12
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -7331,7 +7307,7 @@ GameObject:
   - component: {fileID: 1410230973}
   m_Layer: 0
   m_Name: Tower
-  m_TagString: TowerBase
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7368,7 +7344,7 @@ Transform:
   m_GameObject: {fileID: 1410230969}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.16, z: 0}
+  m_LocalPosition: {x: 0, y: 2.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7757,35 +7733,19 @@ MonoBehaviour:
   waves:
   - name: Wave 1
     actions:
-    - name: Goblins
-      delay: 3
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 10
-  - name: Wave 2
-    actions:
-    - name: Goblins
-      delay: 3
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 15
-    - name: Trolls
-      delay: 3
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 3
-  - name: Wave 2
-    actions:
-    - name: Goblins
-      delay: 3
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 15
-    - name: Goblins
-      delay: 3
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 3
     - name: Skeletons
-      delay: 3
+      delay: 0
       prefab: {fileID: 4967630902765573891, guid: 55c08da177963794fa43550a8aa097fe, type: 3}
       spawnCount: 5
-  towerPos: {fileID: 0}
+    - name: Goblins
+      delay: 1
+      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
+      spawnCount: 10
+    - name: Trolls
+      delay: 2
+      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
+      spawnCount: 5
+  towerPos: {fileID: 102487675}
 --- !u!4 &1634424475
 Transform:
   m_ObjectHideFlags: 0
@@ -9742,6 +9702,34 @@ PrefabInstance:
       propertyPath: aimLine
       value: 
       objectReference: {fileID: 631105616}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: lightningPrefab
+      value: 
+      objectReference: {fileID: 8740616746320483972, guid: 2ec234ef78c860c47b7358a78ff1d349, type: 3}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: runestonePrefab
+      value: 
+      objectReference: {fileID: 8740616746320483972, guid: e780a4232db674142901e6b8f8a141ca, type: 3}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: groundLayerL.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: groundLayerR.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: lightningIndicatorPrefab
+      value: 
+      objectReference: {fileID: 1862363449044018019, guid: 22d22ae77cc82ce43ba2ca4b60809e26, type: 3}
+    - target: {fileID: 7514913250739118257, guid: 3b17d0630e19b13439fa4f591906fc40, type: 3}
+      propertyPath: runestoneIndicatorPrefab
+      value: 
+      objectReference: {fileID: 1862363449044018019, guid: 850252aa8c936274cba010d361ed765e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
