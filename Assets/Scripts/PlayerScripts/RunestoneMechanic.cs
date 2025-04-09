@@ -21,12 +21,12 @@ public class RunestoneMechanic : MonoBehaviour
         StartCoroutine(destroyObject());
     }
     
-     public IEnumerator destroyObject()//after duration resets runestone effect and destroys runestone
-      {
-         yield return new WaitForSeconds(runestoneDuration);
-         ressetRunestoneEffect();
-         Destroy(gameObject);
-      }
+    public IEnumerator destroyObject()//after duration resets runestone effect and destroys runestone
+    {
+        yield return new WaitForSeconds(runestoneDuration);
+        ressetRunestoneEffect();
+        Destroy(gameObject);
+    }
     
     private void OnTriggerEnter(Collider other)
     {
@@ -48,15 +48,13 @@ public class RunestoneMechanic : MonoBehaviour
     }
     
     public void ressetRunestoneEffect()//resets effects from runestone
-      {
-          for (int i = 0; i < effectedAgentsList.Count; i++)
-          {
-              if (effectedAgentsList[i] != null)
-              {
-                  effectedAgentsList[i].speed = originalEnemySpeedList[i];
-              }
-          }
-      }
-   
-   
+    {
+         for (int i = 0; i < effectedAgentsList.Count; i++)
+         {
+             if (effectedAgentsList[i] != null)
+             {
+                effectedAgentsList[i].speed = originalEnemySpeedList[i];
+             }
+         }
+    }
 }

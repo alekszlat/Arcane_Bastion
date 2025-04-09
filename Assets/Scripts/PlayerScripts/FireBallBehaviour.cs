@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FireBallBehaviour : MonoBehaviour
@@ -10,7 +9,9 @@ public class FireBallBehaviour : MonoBehaviour
     [SerializeField] float explosionUpwardModifier = 1f;
     [SerializeField] float fbDamage = 2f;
     public LayerMask enemyLayer;
+    public LayerMask groundLayer;
     private Rigidbody rb;
+    private bool hasHitGround;
 
     private GameObject player;
 
@@ -20,6 +21,12 @@ public class FireBallBehaviour : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.linearVelocity = transform.forward * speed;
         player = GameObject.FindGameObjectWithTag("Player");
+        hasHitGround = false;
+    }
+
+    void Update()
+    {
+        checkGroundCollsion();
     }
 
     void ApplyExplosionPhysic()
@@ -42,10 +49,24 @@ public class FireBallBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy") || other.CompareTag("Ground") || other.CompareTag("TowerBase"))
+        if(other.CompareTag("Enemy") || other.CompareTag("TowerBase") || !hasHitGround)
         {
             ApplyExplosionPhysic();
             Destroy(gameObject);
+        }
+    }
+
+    void checkGroundCollsion()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1f, groundLayer))
+        {
+            if (hit.collider.CompareTag("Ground"))
+            {
+                hasHitGround = true;
+                ApplyExplosionPhysic();
+                Destroy(gameObject);
+            }
         }
     }
 }

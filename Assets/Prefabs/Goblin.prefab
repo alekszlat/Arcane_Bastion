@@ -258,6 +258,7 @@ MonoBehaviour:
   attackDamage: 2
   attackInterval: 4
   isHitCooldown: 3
+  ligthningAura: {fileID: 1936488993998635378, guid: 88b14fae91f3b5345abdc3e7a5f29793, type: 3}
 --- !u!54 &5830252229167919086
 Rigidbody:
   m_ObjectHideFlags: 0

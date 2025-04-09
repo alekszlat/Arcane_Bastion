@@ -20,6 +20,7 @@ public class PlayerUiManager : MonoBehaviour
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         waveSystemController = GameObject.FindGameObjectWithTag("WaveSystemV2").GetComponent<WaveSystemV2>();
         towerController= GameObject.FindGameObjectWithTag("TowerBase").GetComponent<TowerBehaviour>();
+
     }
 
     // Update is called once per frame
