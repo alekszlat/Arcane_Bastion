@@ -23,6 +23,7 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
     {
         Quaternion skeletonLookAtTower = Quaternion.LookRotation(targetDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, skeletonLookAtTower, Time.deltaTime * 3);
+       
     }
     
     public override void setEnemyDestination()

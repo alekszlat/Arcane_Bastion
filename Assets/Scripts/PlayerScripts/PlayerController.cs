@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float runestoneMaxCastDistance = 100f;
     private Transform TowerPos;
 
-    // Spell objects
-    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 0, true);
+    [Header("Player Abilities")]
+    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 0, true);//object for fireball ability
     [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 30, true);
     [SerializeField] static Abilities runestoneSkill = new Abilities(true, 15, 40, false);
 
@@ -146,7 +146,7 @@ public class PlayerController : MonoBehaviour
     // ABILITY MANAGEMENT
     IEnumerator ResetFireballAnimationAfterDelay()
     {
-        yield return new WaitForSeconds(0.1f); // Време, което анимацията трябва да "завърти"
+        yield return new WaitForSeconds(0.1f); // Г‚Г°ГҐГ¬ГҐ, ГЄГ®ГҐГІГ® Г Г­ГЁГ¬Г Г¶ГЁГїГІГ  ГІГ°ГїГЎГўГ  Г¤Г  "Г§Г ГўГєГ°ГІГЁ"
         anim.SetBool("isFireBallCasting", false);
     }
     public void playerAbilities()
@@ -181,6 +181,7 @@ public class PlayerController : MonoBehaviour
         // Runestone ability
         if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
+
             StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
             runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
