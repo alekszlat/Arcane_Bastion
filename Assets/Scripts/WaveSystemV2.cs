@@ -159,4 +159,15 @@ public class WaveSystemV2 : MonoBehaviour
             stats.SetMaxHealth(stats.GetMaxHealth() + repeatCount * 10); // Increase health
         }
     }
+    int getCurrentWaveIndex()
+    {
+        return currentWaveIndex;
+    }
+    int getEnemyCount() {
+        return enemyCount;
+    }
+    int getMaxEnemyCount()
+    {
+        return maxEnemyCount;
+    }
 }

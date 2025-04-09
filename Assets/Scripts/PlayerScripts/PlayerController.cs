@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
 
     [Header("Player Abilities")]
-    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 20, true);//object for fireball ability
+    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 0, true);//object for fireball ability
     [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 30, true);
     [SerializeField] static Abilities runestoneSkill = new Abilities(true, 15, 40, false);
 
@@ -187,8 +187,7 @@ public class PlayerController : MonoBehaviour
         // Runestone ability
         if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility()&& checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
-           
-          
+
             StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
             runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
        

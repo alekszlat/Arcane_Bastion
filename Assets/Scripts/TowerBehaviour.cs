@@ -43,7 +43,9 @@ public class TowerBehaviour : MonoBehaviour
         {
             damageable.attack(ref towerHealth); //attacks while tower has health
         }
-
-
+    }
+    float getTowerHealth()
+    {
+        return towerHealth;
     }
 }

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class PlayerUiManager : MonoBehaviour
@@ -7,21 +8,27 @@ public class PlayerUiManager : MonoBehaviour
     [SerializeField] Image runestoneSkillBackground;
     [SerializeField] Image electricitySkillBackground;
     [SerializeField] Image manaBackground;
+    [SerializeField] TextMeshProUGUI notEnoughManaText;
     private PlayerController playerController;
+    private WaveSystemV2 waveSystemController;
+    private TowerBehaviour towerController;
     private float mana;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-       
+        waveSystemController = GameObject.FindGameObjectWithTag("WaveSystemV2").GetComponent<WaveSystemV2>();
+        towerController= GameObject.FindGameObjectWithTag("TowerBase").GetComponent<TowerBehaviour>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        int maxMana = 100;
+        int currentMana = playerController.getPlayerMana();
         areAbilitiesOnCooldownUi();
-        updateManaBar();
+        updateManaBar(maxMana,currentMana);
     }
     public void areAbilitiesOnCooldownUi()//couldown for enemy ui  abilities
     {
@@ -30,11 +37,9 @@ public class PlayerUiManager : MonoBehaviour
         abilitiesAnimation(playerController.getRunestoneAbility(), runestoneSkillBackground);
     }
     
-    private void updateManaBar()
+    private void updateManaBar(int maxBarCapacity,int currentBarCapacity)
     {
-        int maxMana = 100;
-        float currentMana = playerController.getPlayerMana();
-        mana = currentMana / maxMana;
+        mana = currentBarCapacity / maxBarCapacity;
         manaBackground.fillAmount = Mathf.MoveTowards(manaBackground.fillAmount, mana, 2 * Time.deltaTime);
     }
     private void abilityUiCooldown(float curentCooldownTimer, float maxCooldown, Image abilityImage,float animationSpeed)//the logic for the ui animation
