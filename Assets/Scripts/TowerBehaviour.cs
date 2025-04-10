@@ -7,11 +7,13 @@ public interface IDamageable //an interface used for enemies to deal damage to t
 public class TowerBehaviour : MonoBehaviour
 {
     private static float towerHealth;
+    private float maxTowerHealth;
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        towerHealth = 10f; //start tower health
+        maxTowerHealth = 10f; //start tower health
+        towerHealth = maxTowerHealth;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -44,8 +46,12 @@ public class TowerBehaviour : MonoBehaviour
             damageable.attack(ref towerHealth); //attacks while tower has health
         }
     }
-    float getTowerHealth()
+    public float getTowerHealth()
     {
         return towerHealth;
+    }
+    public float getMaxTowerHealth()
+    {
+        return maxTowerHealth;
     }
 }

@@ -146,7 +146,7 @@ public class PlayerController : MonoBehaviour
     // ABILITY MANAGEMENT
     IEnumerator ResetFireballAnimationAfterDelay()
     {
-        yield return new WaitForSeconds(0.1f); // Âðåìå, êîåòî àíèìàöèÿòà òðÿáâà äà "çàâúðòè"
+        yield return new WaitForSeconds(0.1f);
         anim.SetBool("isFireBallCasting", false);
     }
     public void playerAbilities()
@@ -391,7 +391,7 @@ public class PlayerController : MonoBehaviour
     public bool checkIfManaIsEnough(int myMana, int manaCost)
     {
         if (myMana >= manaCost) { return true; }
-        else { return false; }
+        else { Debug.Log("NO MANA"); return false; }
     }
 }
 

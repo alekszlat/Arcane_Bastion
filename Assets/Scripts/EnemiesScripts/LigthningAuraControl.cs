@@ -26,7 +26,7 @@ public class LigthningAuraControl : MonoBehaviour
 
     public void EnemyDeath()
     {
-        DestroyImmediate(gameObject);
+        Destroy(gameObject);
     }
 
     public void setEnemy(GameObject enemy)
