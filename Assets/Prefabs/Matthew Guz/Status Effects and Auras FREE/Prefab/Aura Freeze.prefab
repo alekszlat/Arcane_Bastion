@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4850777541897618062}
   - component: {fileID: 6572040225179551714}
   m_Layer: 0
-  m_Name: 'Aura '
+  m_Name: Aura Freeze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
