@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
     }
     public void playerAbilities()
     {
-        if (Abilities.usingAbility == true||isManaDepleted()==true) return; // Prevents casting any abilities if one is already in use
+        if (Abilities.usingAbility == true) return; // Prevents casting any abilities if one is already in use
 
         // Fireball ability
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, fireBallSkill.getManaCost()))
@@ -174,6 +174,7 @@ public class PlayerController : MonoBehaviour
         // Lightning ability (In progress)
         if (Input.GetKeyDown(KeyCode.Q) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
         {
+            if (isManaDepleted() == true) return;
             StartCoroutine(lightningAbilityMechanic()); // Start the lightning ability process
             electricitySkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
@@ -181,7 +182,7 @@ public class PlayerController : MonoBehaviour
         // Runestone ability
         if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
-
+            if (isManaDepleted() == true) return;
             StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
             runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
@@ -223,6 +224,7 @@ public class PlayerController : MonoBehaviour
         GameObject fireball = Instantiate(fireballPrefab, castPoint.position, Quaternion.LookRotation(direction));
 
     }
+    
     public IEnumerator runestoneAbilityMechanic()
     {
         Abilities.setAbilityCancelled(false);//ability canclled starts as false when entering the function
@@ -390,9 +392,15 @@ public class PlayerController : MonoBehaviour
     }
     public bool checkIfManaIsEnough(int myMana, int manaCost)
     {
-        if (myMana >= manaCost) { return true; }
-        else { Debug.Log("NO MANA"); return false; }
+        if (myMana >= manaCost)  return true;
+        return false;
     }
+    public bool checkIfManaIsNotEnoughAfterPressingAnAbility(int myMana, int manaCost)
+    {
+        if (myMana < manaCost && (Input.GetKeyDown(KeyCode.E)|| Input.GetKeyDown(KeyCode.Q))) { return true; }
+        else {  return false; }
+    }
+
 }
 
 public class Abilities

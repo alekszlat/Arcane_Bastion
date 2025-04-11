@@ -29,6 +29,7 @@ public class WaveSystemV2 : MonoBehaviour
     private int waveRepeatCount = 0; // Track how many times the last wave has been repeated
     private int enemyCount = 0; // Track enemy count 
     private int maxEnemyCount = 0; // Get the max count of enemies
+    private int globalWaveIndex = 0;
 
     public Transform towerPos; //Save tower position 
 
@@ -45,6 +46,8 @@ public class WaveSystemV2 : MonoBehaviour
     public IEnumerator spawnEnemies()
     {
         OnWaveStarted?.Invoke();
+        globalWaveIndex++;
+        Debug.Log(globalWaveIndex);
         // Get current wave
         if (currentWaveIndex >= waves.Count)
         {
@@ -159,9 +162,9 @@ public class WaveSystemV2 : MonoBehaviour
             stats.SetMaxHealth(stats.GetMaxHealth() + repeatCount * 10); // Increase health
         }
     }
-    public int getCurrentWaveIndex()
+    public int getGlobalWaveIndex()
     {
-        return currentWaveIndex;
+        return globalWaveIndex;
     }
    public int getEnemyCount() {
         return enemyCount;
