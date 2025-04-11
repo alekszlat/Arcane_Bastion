@@ -91,8 +91,8 @@ public class PlayerUiManager : MonoBehaviour
     }
     public void waveNumberUi()
     {
-        int currentWaveNumber=waveSystemController.getCurrentWaveIndex();
-        waveNumText.text = (currentWaveNumber+1).ToString(); //sets the curent wave idex 
+        int currentWaveNumber=waveSystemController.getGlobalWaveIndex();
+        waveNumText.text = (currentWaveNumber).ToString(); //sets the curent wave idex 
     }
    
     IEnumerator showNoManaText()
@@ -105,7 +105,8 @@ public class PlayerUiManager : MonoBehaviour
         int playerMana = playerController.getPlayerMana();
         int electricityAbilityManaCost= playerController.getElectricityAbility().getManaCost();
         int runestoneAbilityManaCost = playerController.getRunestoneAbility().getManaCost();
-        if(!playerController.checkIfManaIsEnough(playerMana,electricityAbilityManaCost)||!playerController.checkIfManaIsEnough(playerMana, runestoneAbilityManaCost))
+        if(playerController.checkIfManaIsNotEnoughAfterPressingAnAbility(playerMana,electricityAbilityManaCost)||
+           playerController.checkIfManaIsNotEnoughAfterPressingAnAbility(playerMana,runestoneAbilityManaCost))
         {
             StartCoroutine(showNoManaText());
         }
