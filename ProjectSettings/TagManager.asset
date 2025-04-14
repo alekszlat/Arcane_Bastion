@@ -16,6 +16,7 @@ TagManager:
   - Camera
   - ArrowBody
   - Runestone
+  - InvisibleWall
   layers:
   - Default
   - TransparentFX
@@ -26,8 +27,8 @@ TagManager:
   - enemyLayer
   - Environment
   - Runestone
-  - 
-  - 
+  - InvisibleWall
+  - Spell
   - 
   - 
   - 
