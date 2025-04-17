@@ -1,32 +1,57 @@
 using System;
 using UnityEngine;
-
+public interface IDamageable //an interface used for enemies to deal damage to tower
+{
+    void attack(ref float towerHealth);
+}
 public class TowerBehaviour : MonoBehaviour
 {
-    private float health;
-
-
+    private static float towerHealth;
+    private float maxTowerHealth;
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        health = 10f;
-        Debug.Log(health);
+        maxTowerHealth = 10f; //start tower health
+        towerHealth = maxTowerHealth;
     }
+    private void OnTriggerEnter(Collider other)
+    {
+       if(other.CompareTag("Arrow"))
+        {
+            IDamageable damageable = other.GetComponentInParent<IDamageable>(); 
 
+            checkIfTowerIsAttacked(damageable);
+            Destroy(other.gameObject);
+        }
+
+    }
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))//if enemy colides with tower 
         {
-            EnemyBehaviour enemyBehaviour = other.GetComponent<EnemyBehaviour>();
-            if (health <= 0)
-            {
-                Debug.Log("Tower is destroyd!");
-            }
-            else
-            {
-                enemyBehaviour.attack(ref health);
-            }
-
+            IDamageable damageable = other.GetComponentInParent<IDamageable>(); // Find the IDamageable component in the enemy
+            checkIfTowerIsAttacked(damageable);
+ 
         }
+    }
+    public void checkIfTowerIsAttacked(IDamageable damageable)// Method to check if the tower is attacked and process the attack
+    {  
+        if (towerHealth <= 0)
+        {
+            //Debug.Log("Tower is destroyd!");
+        }
+        else
+        {
+            damageable.attack(ref towerHealth); //attacks while tower has health
+        }
+    }
+    public float getTowerHealth()
+    {
+        return towerHealth;
+    }
+    public float getMaxTowerHealth()
+    {
+        return maxTowerHealth;
     }
 }

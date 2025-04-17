@@ -8,13 +8,15 @@ TagManager:
   - FireBall
   - TowerBase
   - Enemy
-<<<<<<< Updated upstream
-=======
   - Arrow
   - Target
   - GameManager
   - WaveSystem
->>>>>>> Stashed changes
+  - WaveSystemV2
+  - Camera
+  - ArrowBody
+  - Runestone
+  - InvisibleWall
   layers:
   - Default
   - TransparentFX
@@ -22,11 +24,11 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - enemyLayer
+  - Environment
+  - Runestone
+  - InvisibleWall
+  - Spell
   - 
   - 
   - 

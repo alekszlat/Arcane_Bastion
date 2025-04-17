@@ -5,10 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public enum enemyStates
-{
-    normal,isShocked
-}
 public class EnemyBehaviour : MonoBehaviour,IDamageable
 {
    
@@ -16,30 +12,40 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] GameObject canvas;
     [SerializeField] Image healthBar;
     [SerializeField] float maxHealth = 5;
-    [SerializeField] float attackDamage = 2f;
+    [SerializeField] float attackDamage = 2f;//enemy attack damage
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
+    [SerializeField] GameObject ligthningAura;
+    [SerializeField] GameObject freezeAura;
+    private GameObject ligthningAuraInstance;
+    private GameObject freezeAuraInstance;
     protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;
     private float timer;
     private float health;
-    protected bool isEnemyHit = false;//while true health bar is visable,and the skeleton can't shoot arrows
+    private float vunrabilityPercentage = 1f; //percentage of health that is vunrable to explosion
+    private Vector3 targetDirection;
+    private float originalEnemySpeed;
+    protected bool isEnemyHit = false; //while true health bar is visable,and the skeleton can't shoot arrows
+    
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
+      
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
+        
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void  Start()
     {
-        health = maxHealth;
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        originalEnemySpeed = agent.speed;
+        health = maxHealth;
+      
 
-        if(rb != null)
+        if (rb != null)
         {
             rb.isKinematic = true;
             rb.useGravity = false;
@@ -51,11 +57,19 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     // Update is called once per frame
    public virtual void Update()
     {
+
         setEnemyDestination();
         isEnemyHealthBarVisable();
-     
-      
+
     }
+
+    public void resetEffectedEnemyFromRunestone()
+    {
+        if (agent != null && agent.enabled == true) { 
+            agent.speed = originalEnemySpeed;
+        }
+    }
+   
     public virtual void setEnemyDestination()
     {
         if (agent != null && agent.enabled == true)
@@ -63,62 +77,84 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
             agent.SetDestination(target.position);
         }
     }
+    
     public void isEnemyHealthBarVisable()//if enemy is hit healthbar is visable
     {
         if (!isEnemyHit) return;
-  
-            canvas.SetActive(true);
-            updateHealthBar(maxHealth, health);
+      
+        canvas.SetActive(true);
+       
+        float enemyHeight = gameObject.transform.localScale.y+2.5f;
+      
+        canvas.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y+enemyHeight, gameObject.transform.position.z);//making the ui stay above the enemy by getting the enemy height
+        
+        targetDirection = (target.position - gameObject.transform.position).normalized;
+
+        canvas.transform.rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+       //look rotation accepts vector3
+        updateHealthBar(maxHealth, health);
         
     }
 
-    private void updateHealthBar(float maxHealth, float currentHealth) { //updates healthbar
+    //updates healthbar
+    private void updateHealthBar(float maxHealth, float currentHealth) {
    
         float health = currentHealth / maxHealth;
      
         if (healthBar == null) { Debug.Log("healthBar is null"); }
 
-        healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);//"animation for health"
+        //"animation for health"
+        healthBar.fillAmount = Mathf.MoveTowards(healthBar.fillAmount, health, 1.5f * Time.deltaTime);
     
-
     }
     //Applying explosion on the enemy
-    public void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
+    public virtual void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
     {
         StartCoroutine(isHit(isHitCooldown));//activates bool isHit=true for isHitCooldown(3) seconds
 
         if (agent != null)
         {
+            Debug.Log("disabled");
             agent.enabled = false; // Disable pathfinding
         }
+       
+        health -= eDamage * vunrabilityPercentage;
 
-        // Enable physics to apply force
-        rb.isKinematic = false;
-        rb.useGravity = true;
-
-        health -= eDamage;
-
-        rb.AddExplosionForce(eForce, ePosition.position, eRadius, eUpwardModifier, ForceMode.Impulse);
+        if (rb != null)
+        {
+            rb.isKinematic = false; // Enable physics
+            rb.useGravity = true;
+            rb.AddExplosionForce(eForce, ePosition.position, eRadius, eUpwardModifier, ForceMode.Impulse);
+        }
 
         if (health <= 0)
         {
+            if(ligthningAuraInstance != null)
+            {
+                ligthningAuraInstance.GetComponent<LigthningAuraControl>().EnemyDeath();
+            }
+            destroyFreezeAura();  
             Destroy(gameObject);
         }
 
-        Invoke(nameof(ResetAI), 3.2f);//3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
-
+        //3,2 so the enemy can have time to lecaribrate,lower than 2 breaks it
+        Invoke(nameof(ResetAI), 3.2f);
+   
     }
 
     void ResetAI()
     {
-
-       // RaycastHit hitGround;//if needed
-
-        if (raycast(Vector3.down,3)|| raycast(Vector3.up,3)|| raycast(Vector3.back,3)|| raycast(Vector3.forward,3))//raycasts to check if enemy is on ground
+        // RaycastHit hitGround;
+        //raycasts to check if enemy is on ground
+        if (raycast(Vector3.down,3) || raycast(Vector3.up,3) 
+            || raycast(Vector3.back,3) || raycast(Vector3.forward,3))
         {
             if (agent != null)
             {
                 agent.enabled = true; // Re-enable NavMeshAgent
+              
+                resetEffectedEnemyFromRunestone();//resets enemy speed to the original enemy speed
+                
             }
 
             if (rb != null)
@@ -130,6 +166,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     }
 
+    //implemented by IDamagable
     public void attack(ref float towerHealth)
     {
         timer -= Time.deltaTime;
@@ -138,23 +175,33 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             timer = attackInterval;
             towerHealth -= attackDamage;
-            Debug.Log("enemy beh "+ towerHealth);
+     
         }
     }
+   
+
+    // If enemy comes near the tower, stop the enemy
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Target")) {
         if(!agent.enabled) return;
         agent.isStopped = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(!agent.enabled) return;
-        agent.isStopped = false;
+        if (other.gameObject.CompareTag("Target"))
+        {
+            if (!agent.enabled) return;
+            agent.isStopped = false;
+        }
     }
-    public virtual IEnumerator isHit(float hitDuration)//enemy isHit for hitDuration
+
+    //if enemy is hit  isEnemyHit = true for duration for hitDurationhitDuration
+    public virtual IEnumerator isHit(float hitDuration)
     {
-        isEnemyHit = true;//bool
+        isEnemyHit = true;
 
         yield return new WaitForSeconds(hitDuration);
 
@@ -162,11 +209,22 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         canvas.SetActive(false);
     }
 
-    public bool raycast(Vector3 raycastWay,float raycastLenght)//raycast to check if enemy is on ground
+    //Resets the enemy vunrability percentage to 1f after ligthingEffect duration
+    public IEnumerator resetVunrabilityPercentage(float ligthingEffect)
+    {
+        yield return new WaitForSeconds(ligthingEffect);
+        Debug.Log("destroyed");
+        Destroy(ligthningAuraInstance);
+        vunrabilityPercentage = 1f;
+    }
+
+    //raycast to check if enemy is on ground
+    public bool raycast(Vector3 raycastWay,float raycastLenght)
     {
         return Physics.Raycast(transform.position, raycastWay, raycastLenght);
     }
 
+    //GETTERS AND SETTERS
     public float GetMaxHealth()
     {
         return health;
@@ -175,5 +233,27 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     public void SetMaxHealth(float newMaxHealth)
     {
         health = newMaxHealth;
+    }
+
+    public void setVunrabilityPercentage(float newVunrabilityPercentage)
+    {
+        vunrabilityPercentage = newVunrabilityPercentage;
+        ligthningAuraInstance = Instantiate(ligthningAura, transform.position, Quaternion.identity, transform);
+        ligthningAuraInstance.GetComponent<LigthningAuraControl>().setEnemy(gameObject);
+        StartCoroutine(resetVunrabilityPercentage(5f));
+    }
+
+    public void instantiateFreezeAura()
+    {
+        freezeAuraInstance = Instantiate(freezeAura, transform.position, Quaternion.identity, transform);
+        freezeAuraInstance.GetComponent<FreezeAuraControl>().setEnemy(gameObject);
+    }
+
+    public void destroyFreezeAura()
+    {
+        if (freezeAuraInstance != null)
+        {
+            freezeAuraInstance.GetComponent<FreezeAuraControl>().EnemyDeath();
+        }
     }
 }
