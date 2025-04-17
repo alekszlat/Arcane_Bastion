@@ -47,7 +47,7 @@ public class WaveSystemV2 : MonoBehaviour
     {
         OnWaveStarted?.Invoke();
         globalWaveIndex++;
-        Debug.Log(globalWaveIndex);
+   
         // Get current wave
         if (currentWaveIndex >= waves.Count)
         {
@@ -86,6 +86,8 @@ public class WaveSystemV2 : MonoBehaviour
 
         // Wait until all enemies are defeated
         yield return new WaitUntil(() => activeEnemies.Count == 0);
+
+        
 
         // Move to the next wave
         if (currentWaveIndex < waves.Count)

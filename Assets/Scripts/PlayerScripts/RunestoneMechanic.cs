@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static Abilities;
 
 public class RunestoneMechanic : MonoBehaviour
 {
@@ -11,7 +12,6 @@ public class RunestoneMechanic : MonoBehaviour
     PlayerController playerController;
     private List<NavMeshAgent> effectedAgentsList = new List<NavMeshAgent>();
     private List<float> originalEnemySpeedList = new List<float>();
-    public LayerMask enemyLayer;
     public int runestoneDuration;
 
 
@@ -36,11 +36,11 @@ public class RunestoneMechanic : MonoBehaviour
             effectedAgentsList.Add(agent);//ads agents to list so we can reset them later
             originalEnemySpeedList.Add(agent.speed);//ads agents speed to list
 
-            if (playerController.getRunestoneAbility().getIsUnlocked())//checks if ability is unlocked
+            if (playerController.getRunestoneAbility().getAbilityStatus() == AbilityStatus.isUpgraded)//checks if ability is unlocked
             {
                 agent.speed = 0;
             }
-            else
+            else if (playerController.getRunestoneAbility().getAbilityStatus() == AbilityStatus.isUnlocked)
             {
                 agent.speed = agent.speed * 0.4f;
             }

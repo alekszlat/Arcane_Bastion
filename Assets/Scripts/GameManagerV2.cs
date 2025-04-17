@@ -15,8 +15,8 @@ public class GameManagerV2 : MonoBehaviour
 {
 
     [SerializeField] static bool isPaused = false;
-    [SerializeField] static GameManager instance;
-    [SerializeField] GameStateV2 gameState;
+   
+    private GameStateV2 gameState;
     private WaveSystemV2 waveSystemV2;
     private PlayerController playerController;
     private float Timer;
@@ -98,4 +98,12 @@ public class GameManagerV2 : MonoBehaviour
             playerController.setPlayerMana(100);
         }
     }
+    public GameStateV2 getGameState() {
+        return gameState;
+    }
+    public float getGameManagerTimeUntilPrewaveEnds()
+    {
+        return Timer;
+    }
+
 }

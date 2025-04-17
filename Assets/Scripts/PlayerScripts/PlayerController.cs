@@ -6,6 +6,7 @@ using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static Abilities;
 
 
 public class PlayerController : MonoBehaviour
@@ -34,10 +35,10 @@ public class PlayerController : MonoBehaviour
     private Transform TowerPos;
 
     [Header("Player Abilities")]
-    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 0, true);//object for fireball ability
-    [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 30, true);
-    [SerializeField] static Abilities runestoneSkill = new Abilities(true, 15, 40, false);
-
+    static Abilities fireBallSkill = new Abilities(true, 2, 0, Abilities.AbilityStatus.isUnlocked,0,50);//object for fireball ability
+    static Abilities electricitySkill = new Abilities(true, 6, 25, Abilities.AbilityStatus.isLocked,40,70);//cooldown check,timer,mana cost,ability status,unlock cost,upgrade cost
+    static Abilities runestoneSkill = new Abilities(true, 15, 35, Abilities.AbilityStatus.isLocked,50,100);
+    private int playerMoney=999;
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
@@ -49,6 +50,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+       
+
         TowerPos = GameObject.FindGameObjectWithTag("Target").transform;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
@@ -58,13 +61,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerMovement();
-        playerAbilities();
+    
 
         //ability cooldown is always in update because it activates only when,it's used
         abilityCooldownTimer(fireBallSkill);
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(runestoneSkill);
+
+        if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
+        playerMovement();
+        playerAbilities();
+
+       
         //Debug.Log(playerMana);
 
     }
@@ -72,6 +80,7 @@ public class PlayerController : MonoBehaviour
     // PLAYER MOVEMENT
     public void playerMovement()//TRY  put animations in a difrent class (not MonoBehaviour)
     {
+      
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
@@ -149,6 +158,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         anim.SetBool("isFireBallCasting", false);
     }
+    
     public void playerAbilities()
     {
         if (Abilities.usingAbility == true) return; // Prevents casting any abilities if one is already in use
@@ -174,7 +184,7 @@ public class PlayerController : MonoBehaviour
         // Lightning ability (In progress)
         if (Input.GetKeyDown(KeyCode.Q) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
         {
-            if (isManaDepleted() == true) return;
+            if (isManaDepleted() == true || electricitySkill.getAbilityStatus() == AbilityStatus.isLocked) return;//check if you have enough mana or have unlocked the ability
             StartCoroutine(lightningAbilityMechanic()); // Start the lightning ability process
             electricitySkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
@@ -182,7 +192,7 @@ public class PlayerController : MonoBehaviour
         // Runestone ability
         if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
-            if (isManaDepleted() == true) return;
+            if (isManaDepleted() == true|| runestoneSkill.getAbilityStatus() == AbilityStatus.isLocked) return;
             StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
             runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
@@ -264,6 +274,8 @@ public class PlayerController : MonoBehaviour
             electricitySkill.setCanUseAbility(true);
         }
     }
+  
+
     public IEnumerator placeIndicator(GameObject abilityPrefab, GameObject abilityIndicatorPrefab, float maxCastDistance,int indicatorHeight)
     {
        
@@ -355,8 +367,39 @@ public class PlayerController : MonoBehaviour
             ability.setCanUseAbility(true); // true when player can use ability
         }
     }
+    //PLAYER MONEY GETER-SETER
+   public int getPlayerMoney()
+    {
+        return playerMoney;
+    }
+    public void setPlayerMoney(int playerMoney)
+    {
+        this.playerMoney = playerMoney;
+    }
+
+    //UNLOCK/UPGRADE ABILITIES(FUNC)
+    //if player has enough money he can upgrade or purchase an ability
+    public void upgradeAbility(Abilities ability) 
+    {
+        if (ability.getAbilityUpgradeCost() > playerMoney) return;
+        playerMoney -= ability.getAbilityUpgradeCost();
+        ability.setAbilityStatus(AbilityStatus.isUpgraded);
+        if (ability.getManaCost() > 0)
+        {
+            ability.setManaCost(ability.getManaCost() + 15);
+        }
+
+    }
+    public void unlockAbility(Abilities ability)
+    {
+        if (ability.getAbilityUnlockCost() > playerMoney) return;
+        playerMoney -= ability.getAbilityUnlockCost();
+        ability.setAbilityStatus(AbilityStatus.isUnlocked);
+
+    }
 
     //GETTERS FOR ABILITIES (UI)
+
     public Abilities getFireBallAbility()
     {
         return fireBallSkill;
@@ -383,28 +426,28 @@ public class PlayerController : MonoBehaviour
     }
     public bool isManaDepleted()
     {
-        if (getPlayerMana() <= 0) { return true; } 
-        else
-        {
-            return false;
-        }
-
+        return getPlayerMana() <= 0;
+        
     }
     public bool checkIfManaIsEnough(int myMana, int manaCost)
     {
-        if (myMana >= manaCost)  return true;
-        return false;
+        return myMana >= manaCost;
+        
     }
     public bool checkIfManaIsNotEnoughAfterPressingAnAbility(int myMana, int manaCost)
     {
-        if (myMana < manaCost && (Input.GetKeyDown(KeyCode.E)|| Input.GetKeyDown(KeyCode.Q))) { return true; }
-        else {  return false; }
+        return myMana < manaCost && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Q));
+    
     }
-
+    
 }
 
-public class Abilities
-{
+public class Abilities{  
+    public enum AbilityStatus
+    {
+        isLocked, isUnlocked, isUpgraded
+
+    }
     public static bool usingAbility;//checks if player is using an ability with an indicator
     private static bool abilityCancelled = false;//checks if ability is canclled
     // Private fields
@@ -412,17 +455,23 @@ public class Abilities
     private float cooldownTime;
     private float timer;
     private int manaCost;
-    private bool isUnlocked;
+    private int abilityUnlockCost;
+    private int abilityUpgradeCost;
 
+
+    private AbilityStatus abilityStatus;
+  
 
     // Constructor to initialize the ability
-    public Abilities(bool abilityCooldownPassed, float cooldownTime, int manaCost, bool isUnlocked)
+    public Abilities(bool abilityCooldownPassed, float cooldownTime, int manaCost,AbilityStatus abilityStatus,int abilityUnlockCost,int abilityUpgradeCost)
     {
         canUse = abilityCooldownPassed;
         this.cooldownTime = cooldownTime;
         timer = 0f;
         this.manaCost = manaCost;
-        this.isUnlocked = isUnlocked;
+        this.abilityStatus = abilityStatus;
+        this.abilityUnlockCost = abilityUnlockCost;
+        this.abilityUpgradeCost = abilityUpgradeCost;
     
     }
     public void StartCooldown()
@@ -436,6 +485,15 @@ public class Abilities
     public static bool getAbilitiesCanclled()
     {
         return abilityCancelled;
+    }
+    //Getter for abilityCost
+    public int getAbilityUpgradeCost()
+    {
+        return abilityUpgradeCost;
+    } 
+    public int getAbilityUnlockCost()
+    {
+        return abilityUnlockCost;
     }
     // Setter and Getter for canUse
     public void setCanUseAbility(bool canUse)
@@ -482,13 +540,12 @@ public class Abilities
     }
 
     // Setter and Getter for isUnlocked
-    public void setIsUnlocked(bool isUnlocked)
+   public AbilityStatus getAbilityStatus()
     {
-        this.isUnlocked = isUnlocked;
+        return abilityStatus;
     }
-
-    public bool getIsUnlocked()
+    public void setAbilityStatus(AbilityStatus abilityStatus)
     {
-        return isUnlocked;
+        this.abilityStatus = abilityStatus;
     }
 }
