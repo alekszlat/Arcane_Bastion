@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using NUnit.Framework.Constraints;
 using System.Collections;
 using Unity.VisualScripting;
-using UnityEditor.Playables;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -45,12 +45,12 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private Camera playerCamera;
     private int playerMana=100;
+   
 
     private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
     void Start()
     {
-       
 
         TowerPos = GameObject.FindGameObjectWithTag("Target").transform;
         rb = GetComponent<Rigidbody>();
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(runestoneSkill);
 
-        if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
+        if (ShopUiManager.shopIsOpen); //if the shop is open player can't move
         playerMovement();
         playerAbilities();
 

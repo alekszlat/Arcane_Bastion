@@ -39,12 +39,14 @@ public class WaveSystemV2 : MonoBehaviour
     public delegate void WaveCompletedHandler();
     public static event WaveCompletedHandler OnWaveCompleted;
 
+    
     public void spawnWaves()
     {
         StartCoroutine(spawnEnemies());
     }
     public IEnumerator spawnEnemies()
     {
+        
         OnWaveStarted?.Invoke();
         globalWaveIndex++;
    
@@ -100,6 +102,7 @@ public class WaveSystemV2 : MonoBehaviour
 
     }
 
+
     void Update()
     {
         // Remove destroyed enemies from the activeEnemies list
@@ -143,7 +146,7 @@ public class WaveSystemV2 : MonoBehaviour
         foreach (WaveAction action in originalWave.actions)
         {
             WaveAction scaledAction = new WaveAction
-            {
+            {                                                
                 name = action.name,
                 delay = action.delay,
                 prefab = action.prefab,
@@ -155,6 +158,7 @@ public class WaveSystemV2 : MonoBehaviour
         return scaledWave;
     }
 
+    
     // Apply difficulty scaling to enemies
     void ApplyDifficulty(GameObject enemy, int repeatCount)
     {
@@ -164,6 +168,9 @@ public class WaveSystemV2 : MonoBehaviour
             stats.SetMaxHealth(stats.GetMaxHealth() + repeatCount * 10); // Increase health
         }
     }
+
+   
+  
     public int getGlobalWaveIndex()
     {
         return globalWaveIndex;
