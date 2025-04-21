@@ -17,6 +17,7 @@ TagManager:
   - ArrowBody
   - Runestone
   - MenuManager
+  - InvisibleWall
   layers:
   - Default
   - TransparentFX
@@ -27,8 +28,8 @@ TagManager:
   - enemyLayer
   - Environment
   - Runestone
-  - 
-  - 
+  - InvisibleWall
+  - Spell
   - 
   - 
   - 

@@ -39,13 +39,15 @@ public class PlayerController : MonoBehaviour
     static Abilities electricitySkill = new Abilities(true, 6, 25, Abilities.AbilityStatus.isLocked,40,70);//cooldown check,timer,mana cost,ability status,unlock cost,upgrade cost
     static Abilities runestoneSkill = new Abilities(true, 15, 35, Abilities.AbilityStatus.isLocked,50,100);
     private int playerMoney=999;
+
+    [SerializeField] LayerMask aimLayerMask;
+
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
     private Animator anim;
     private Camera playerCamera;
-    private int playerMana=100;
-   
+    private int playerMana = 100;
 
     private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
@@ -56,6 +58,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        aimLayerMask = ~(1 << LayerMask.NameToLayer("InvisibleWall"));
     }
 
     // Update is called once per frame
@@ -209,7 +212,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
 
         Vector3 targetPoint;
-        if (Physics.Raycast(ray, out hit, fireballMaxCastDistance))
+        if (Physics.Raycast(ray, out hit, fireballMaxCastDistance, aimLayerMask))
         {
             targetPoint = hit.point;
         }
@@ -287,7 +290,7 @@ public class PlayerController : MonoBehaviour
             Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // Ray from center of screen
 
             RaycastHit hit;
-            int layerMask = ~LayerMask.GetMask("Default"); // Ignore default layer
+            int layerMask = ~(LayerMask.GetMask("Default") | LayerMask.GetMask("InvisibleWall")); // Ignore default layer
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
             {
                 Vector3 lookAtTower = TowerPos.position - hit.point; // Direction to tower
