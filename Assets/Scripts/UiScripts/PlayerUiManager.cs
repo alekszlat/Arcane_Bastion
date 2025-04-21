@@ -76,7 +76,7 @@ public class PlayerUiManager : MonoBehaviour
 
         areAbilitiesOnCooldownUi();
 
-        updateBar(maxTowerHealth, towerHealth, towerBar, 0.80f);
+        updateBar(maxTowerHealth, towerHealth, towerBar, 4f);
         updateBar(maxMana,currentMana,manaBar,0.80f);
         updateBar(maxEnemyCount,currentEnemyCount, waveBar, 0.30f);
 

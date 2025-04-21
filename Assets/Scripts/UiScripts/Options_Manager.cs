@@ -34,11 +34,7 @@ public class Options_Manager : MonoBehaviour
             return;
         }
     }
-    private void OnEnable()
-    {
-        loadPreferences();
-        Debug.Log("loadedPrefrence");
-    }
+   
     private void Start()
     { // resulutuonsArr[0] = Screen.resolutions[0];//both are arrays
         showQualityStart();
