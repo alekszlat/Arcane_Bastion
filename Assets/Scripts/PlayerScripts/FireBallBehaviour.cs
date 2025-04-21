@@ -19,9 +19,10 @@ public class FireBallBehaviour : MonoBehaviour
     void Start()
     {
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        // Make fireball ignore collisions with invisible walls
+        Physics.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("InvisibleWall"), true);
         rb = GetComponent<Rigidbody>();
         rb.linearVelocity = transform.forward * speed;
-        player = GameObject.FindGameObjectWithTag("Player");
         hasHitGround = false;
     }
 
@@ -64,9 +65,10 @@ public class FireBallBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy") || other.CompareTag("TowerBase") || !hasHitGround)
+        if(other.CompareTag("Enemy") || other.CompareTag("Target") || !hasHitGround)
         {
             ApplyExplosionPhysic();
+            Debug.Log("Hit enemy or tower");
             Destroy(gameObject);
         }
     }
@@ -80,6 +82,7 @@ public class FireBallBehaviour : MonoBehaviour
             {
                 hasHitGround = true;
                 ApplyExplosionPhysic();
+                Debug.Log("Ground hit");
                 Destroy(gameObject);
             }
         }
