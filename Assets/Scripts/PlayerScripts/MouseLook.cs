@@ -6,7 +6,7 @@ public class MouseLook : MonoBehaviour
     [SerializeField] float mouseSen;
     [SerializeField] Transform player;
     [SerializeField] Transform cameraPos;
-    [SerializeField] Transform staffAim;
+ 
 
     private Vector2 rotation;
 
@@ -31,7 +31,7 @@ public class MouseLook : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(-rotation.y, rotation.x, 0);
         player.transform.rotation = Quaternion.Euler(0, rotation.x, 0);
-        staffAim.transform.rotation = Quaternion.Euler(-rotation.y, rotation.x, 0);
+  
     }
 
     private void LateUpdate()
