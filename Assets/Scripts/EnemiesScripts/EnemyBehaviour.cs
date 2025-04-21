@@ -16,7 +16,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] float attackInterval = 4f;
     [SerializeField] protected int isHitCooldown = 3;
     [SerializeField] GameObject ligthningAura;
+    [SerializeField] GameObject freezeAura;
     private GameObject ligthningAuraInstance;
+    private GameObject freezeAuraInstance;
     protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;
@@ -135,6 +137,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
             {
                 ligthningAuraInstance.GetComponent<LigthningAuraControl>().EnemyDeath();
             }
+            destroyFreezeAura();  
             Destroy(gameObject);
         }
 
@@ -244,4 +247,17 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         StartCoroutine(resetVunrabilityPercentage(5f));
     }
 
+    public void instantiateFreezeAura()
+    {
+        freezeAuraInstance = Instantiate(freezeAura, transform.position, Quaternion.identity, transform);
+        freezeAuraInstance.GetComponent<FreezeAuraControl>().setEnemy(gameObject);
+    }
+
+    public void destroyFreezeAura()
+    {
+        if (freezeAuraInstance != null)
+        {
+            freezeAuraInstance.GetComponent<FreezeAuraControl>().EnemyDeath();
+        }
+    }
 }

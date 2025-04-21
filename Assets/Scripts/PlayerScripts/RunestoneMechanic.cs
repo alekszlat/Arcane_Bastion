@@ -28,13 +28,18 @@ public class RunestoneMechanic : MonoBehaviour
         Destroy(gameObject);
     }
     
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
+            EnemyBehaviour enemyBehaviour = other.gameObject.GetComponent<EnemyBehaviour>();
+            if (enemyBehaviour != null)
+            {
+                enemyBehaviour.instantiateFreezeAura(); // sets enemy to 50% vunrable
+            }
             NavMeshAgent agent = other.gameObject.GetComponent<NavMeshAgent>();
-            effectedAgentsList.Add(agent);//ads agents to list so we can reset them later
-            originalEnemySpeedList.Add(agent.speed);//ads agents speed to list
+            effectedAgentsList.Add(agent); // adds agents to list so we can reset them later
+            originalEnemySpeedList.Add(agent.speed); // adds agents speed to list
 
             if (playerController.getRunestoneAbility().getAbilityStatus() == AbilityStatus.isUpgraded)//checks if ability is unlocked
             {
@@ -54,7 +59,8 @@ public class RunestoneMechanic : MonoBehaviour
              if (effectedAgentsList[i] != null)
              {
                 effectedAgentsList[i].speed = originalEnemySpeedList[i];
-             }
+                effectedAgentsList[i].GetComponent<EnemyBehaviour>().destroyFreezeAura(); // resets enemy to 100% vunrable
+            }
          }
     }
 }
