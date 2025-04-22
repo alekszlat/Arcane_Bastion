@@ -9416,7 +9416,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1548081901}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: goBackToMainMenu
+        m_MethodName: goToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

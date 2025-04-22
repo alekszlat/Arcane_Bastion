@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(runestoneSkill);
 
-        if (ShopUiManager.shopIsOpen); //if the shop is open player can't move
+       // if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
         playerMovement();
         playerAbilities();
 
