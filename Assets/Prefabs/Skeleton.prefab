@@ -469,6 +469,7 @@ MonoBehaviour:
   attackDamage: 1.5
   attackInterval: 4
   isHitCooldown: 6
-  ligthningAura: {fileID: 1936488993998635378, guid: 88b14fae91f3b5345abdc3e7a5f29793, type: 3}
+  ligthningAura: {fileID: 1936488993998635378, guid: 74da14343daa0c34cb791b3dc087d738, type: 3}
+  freezeAura: {fileID: 3081362037621676516, guid: c8b72d3baf6ab294cac58b252976ef0d, type: 3}
   arrowPrefab: {fileID: 1754460031920050054, guid: a3242dbffa422b948a8b2e6a43d54bb4, type: 3}
   shootingInterval: 3
