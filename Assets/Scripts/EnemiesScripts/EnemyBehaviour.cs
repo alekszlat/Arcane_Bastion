@@ -32,7 +32,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+       
       
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         
@@ -72,9 +72,13 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
    
     public virtual void setEnemyDestination()
     {
-        if (agent != null && agent.enabled == true)
+        if (agent != null && agent.enabled == true && target != null && target.gameObject != null)
         {
-            agent.SetDestination(target.position);
+           
+            if (target != null && target.gameObject != null)
+            {
+                agent.SetDestination(target.position);
+            }
         }
     }
     
