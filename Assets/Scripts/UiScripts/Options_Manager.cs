@@ -25,7 +25,7 @@ public class Options_Manager : MonoBehaviour
 
         if (instance == null)
         {
-
+          
             instance = this;
            
         }
