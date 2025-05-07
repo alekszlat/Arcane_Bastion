@@ -47,7 +47,7 @@ public class PlayerUiManager : MonoBehaviour
 
         if (towerController == null)
         {
-            towerController = GameObject.FindGameObjectWithTag("TowerBase")?.GetComponent<TowerBehaviour>();
+            towerController = GameObject.FindGameObjectWithTag("Target")?.GetComponent<TowerBehaviour>();
         }
         if (gameManagerV2 == null)
         {

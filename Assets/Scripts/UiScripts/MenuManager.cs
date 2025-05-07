@@ -34,10 +34,7 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
       
     }
-    public void goBackToMainMenu()
-    {
-        SceneManager.LoadScene(0);//string is also placable here 
-    }
+   
     public void showDeathScreen()
     {
         gameManagerV2.setGameState(GameStateV2.Death);

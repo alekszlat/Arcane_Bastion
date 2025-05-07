@@ -25,8 +25,9 @@ public class Options_Manager : MonoBehaviour
 
         if (instance == null)
         {
+          
             instance = this;
-            DontDestroyOnLoad(gameObject);
+           
         }
         else
         {
@@ -34,23 +35,39 @@ public class Options_Manager : MonoBehaviour
             return;
         }
     }
-   
+
+    private void Update()
+    {
+        Debug.Log("fullscreen: "+ getFullScreen());
+    }
     private void Start()
     { // resulutuonsArr[0] = Screen.resolutions[0];//both are arrays
+     
+        resArr = Screen.resolutions;
         showQualityStart();
         checkIfFullScreen();
         resDropdown.ClearOptions(); //clears options before adding resolutions
         addResolutions();           // adds resolution to the dropdown witch accepts an array list
         loadPreferences();          //loads player settings
         Debug.Log("loadedPrefrence");
-
+        Screen.fullScreen = true;
 
     }
+ 
+    private void OnEnable()
+    {
+        resArr = Screen.resolutions;
+        showQualityStart();
+        checkIfFullScreen();
+        resDropdown.ClearOptions(); //clears options before adding resolutions
+        addResolutions();           // adds resolution to the dropdown witch accepts an array list
+        loadPreferences();
 
+    }
     //SETTINGS MENU
     public void addResolutions()//ads resolutions
     {
-        resArr = Screen.resolutions;
+      
       
         System.Array.Reverse(resArr); // reverse the array so we get res from top to bottom
       
@@ -78,7 +95,7 @@ public class Options_Manager : MonoBehaviour
         // automaticly pics if we dont have a prefrence
         if (!PlayerPrefs.HasKey("resolutionIndex") && currentResolutionIndex != -1)//if player hasn't selected a res and we have found a perfect resolution
         {
-            setCurrentRes(currentResolutionIndex);//ñëàãà ðåçîëþöèÿòà 
+            setCurrentRes(currentResolutionIndex);
         }
 
             PlayerPrefs.Save();//save prefrence after every change
@@ -87,9 +104,10 @@ public class Options_Manager : MonoBehaviour
 
     private void setCurrentRes(int index)
     {
+     
         Resolution selected = resArr[index];//we take the selected res from the array and add it
         resDropdown.value = index;
-        Screen.SetResolution(selected.width, selected.height, getFullScreen());//ñìåíÿìå ðåçîëþöèÿòà
+        Screen.SetResolution(selected.width, selected.height, getFullScreen());
         resDropdown.RefreshShownValue();
         PlayerPrefs.SetInt("resolutionIndex", index);
    
@@ -136,8 +154,8 @@ public class Options_Manager : MonoBehaviour
         if (PlayerPrefs.HasKey("fullScreen"))
         {
             Screen.fullScreen = PlayerPrefs.GetInt("fullScreen", 1) == 1;//accepts only bool 
-
-        }
+            
+        } 
 
         if (PlayerPrefs.HasKey("resolutionIndex"))
         {
@@ -174,7 +192,7 @@ public class Options_Manager : MonoBehaviour
         }
         else
         {
-            PlayerPrefs.SetInt("fullScreen", 0);//0 minimised
+            PlayerPrefs.SetInt("fullScreen", 0);//0 minimized
             toggleÒext.text = "FullScreen Off";
 
         }
@@ -185,21 +203,27 @@ public class Options_Manager : MonoBehaviour
     }
     public void checkIfFullScreen()//changes text on the ui text for full screen
     {
+        bool isFullScreen = PlayerPrefs.GetInt("fullScreen", 1) == 1;
+
+        fullScreenToggle.isOn = isFullScreen;
         fullScreenToggle.isOn = Screen.fullScreen;
-        if (fullScreenToggle.isOn)
-        {
+        if (isFullScreen) { 
             toggleÒext.text = "FullScreen On";
         }
         else
         {
             toggleÒext.text = "FullScreen Off";
         }
+
     }
 
     public bool getFullScreen()
     {
-        return Screen.fullScreen;
-   
+        if (!PlayerPrefs.HasKey("fullScreen"))
+        {
+            return true; 
+        }
+        return PlayerPrefs.GetInt("fullScreen") == 1;
     }
 
     //MAIN MENY

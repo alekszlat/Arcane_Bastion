@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     }
     public void Update()
     {
+        Debug.Log("current gamestate: "+gameState);
         timerStates();
     }
 

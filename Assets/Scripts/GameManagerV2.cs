@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 
 public enum GameStateV2 //used for diffrent game states
 {
@@ -24,9 +25,14 @@ public class GameManagerV2 : MonoBehaviour
 
     public float preWaveTimer = 10f;
 
-  
-    private void Awake()
+    private void Start()
     {
+       if(Time.timeScale == 0)//if for some reason TimeScale is 0 return time to normal
+        {
+            Time.timeScale = 1;
+        }
+    }
+    private void Awake() { 
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         Timer = preWaveTimer;
         gameState = GameStateV2.PreWave;
