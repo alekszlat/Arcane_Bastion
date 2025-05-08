@@ -39,15 +39,17 @@ public class WaveSystemV2 : MonoBehaviour
     public delegate void WaveCompletedHandler();
     public static event WaveCompletedHandler OnWaveCompleted;
 
+    
     public void spawnWaves()
     {
         StartCoroutine(spawnEnemies());
     }
     public IEnumerator spawnEnemies()
     {
+        
         OnWaveStarted?.Invoke();
         globalWaveIndex++;
-        Debug.Log(globalWaveIndex);
+   
         // Get current wave
         if (currentWaveIndex >= waves.Count)
         {
@@ -87,6 +89,8 @@ public class WaveSystemV2 : MonoBehaviour
         // Wait until all enemies are defeated
         yield return new WaitUntil(() => activeEnemies.Count == 0);
 
+        
+
         // Move to the next wave
         if (currentWaveIndex < waves.Count)
         {
@@ -97,6 +101,7 @@ public class WaveSystemV2 : MonoBehaviour
         OnWaveCompleted?.Invoke(); // Notify the GameManager
 
     }
+
 
     void Update()
     {
@@ -141,7 +146,7 @@ public class WaveSystemV2 : MonoBehaviour
         foreach (WaveAction action in originalWave.actions)
         {
             WaveAction scaledAction = new WaveAction
-            {
+            {                                                
                 name = action.name,
                 delay = action.delay,
                 prefab = action.prefab,
@@ -153,6 +158,7 @@ public class WaveSystemV2 : MonoBehaviour
         return scaledWave;
     }
 
+    
     // Apply difficulty scaling to enemies
     void ApplyDifficulty(GameObject enemy, int repeatCount)
     {
@@ -162,6 +168,9 @@ public class WaveSystemV2 : MonoBehaviour
             stats.SetMaxHealth(stats.GetMaxHealth() + repeatCount * 10); // Increase health
         }
     }
+
+   
+  
     public int getGlobalWaveIndex()
     {
         return globalWaveIndex;

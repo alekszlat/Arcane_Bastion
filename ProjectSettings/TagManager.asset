@@ -16,6 +16,7 @@ TagManager:
   - Camera
   - ArrowBody
   - Runestone
+  - MenuManager
   - InvisibleWall
   layers:
   - Default
