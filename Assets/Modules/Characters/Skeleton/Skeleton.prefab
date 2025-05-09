@@ -513,6 +513,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8994184473166562490}
+  - {fileID: 5032718979830295076}
   m_Father: {fileID: 3468014582482331929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &823408263656069900
@@ -1535,7 +1536,6 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5032718979830295076}
   - {fileID: 5950652007798179008}
   m_Father: {fileID: 8321173257430735076}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
@@ -1563,15 +1563,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3430438203358074643}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.48454258, y: 0.30598766, z: -0.4849086, w: 0.6606464}
+  m_LocalPosition: {x: -0.021736287, y: 0.11041168, z: -0.045460027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4363012054557745767}
   - {fileID: 6381572729315344125}
   - {fileID: 5302743080612868517}
-  m_Father: {fileID: 6025305756929578639}
+  m_Father: {fileID: 4405051308868712271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3790155440062408764
 GameObject:
@@ -2299,9 +2299,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8321173257430735076}
   - component: {fileID: 3745102732851882419}
-  - component: {fileID: -6951403434291614418}
-  - component: {fileID: -545847102861596469}
-  - component: {fileID: 4634658855650829414}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -2355,74 +2352,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-6951403434291614418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5710821909791059796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c9438a3b12746e4a95e9713e3b74f7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerGround:
-    serializedVersion: 2
-    m_Bits: 8
-  canvas: {fileID: 0}
-  healthBar: {fileID: 0}
-  maxHealth: 5
-  attackDamage: 2
-  attackInterval: 4
-  isHitCooldown: 3
-  arrowPrefab: {fileID: 1754460031920050054, guid: a3242dbffa422b948a8b2e6a43d54bb4, type: 3}
-  shootingInterval: 3
---- !u!195 &-545847102861596469
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5710821909791059796}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 2
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: -1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!136 &4634658855650829414
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5710821909791059796}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 4.29
-  m_Height: 20.7
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
 --- !u!1 &6197032385546528532
 GameObject:
   m_ObjectHideFlags: 0
@@ -2868,9 +2797,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8129253269199600257}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: -0.50000006, y: 0.49999994, z: 0.49999994, w: 0.5000002}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 99.999954, y: 99.999985, z: 99.99998}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8321173257430735076}

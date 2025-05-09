@@ -17,6 +17,7 @@ TagManager:
   - ArrowBody
   - Runestone
   - InvisibleWall
+  - Skeleton
   layers:
   - Default
   - TransparentFX

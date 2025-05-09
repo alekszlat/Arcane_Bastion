@@ -19,6 +19,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     [SerializeField] GameObject freezeAura;
     private GameObject ligthningAuraInstance;
     private GameObject freezeAuraInstance;
+    protected bool isHitChecker = false; //if enemy is hit by explosion, this is true for 3 seconds
     protected Transform target;
     protected NavMeshAgent agent;
     private Rigidbody rb;
@@ -28,19 +29,11 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     private Vector3 targetDirection;
     private float originalEnemySpeed;
     protected bool isEnemyHit = false; //while true health bar is visable,and the skeleton can't shoot arrows
-    
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-      
-        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
-        
-    }
     public virtual void  Start()
     {
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         originalEnemySpeed = agent.speed;
         health = maxHealth;
       
@@ -110,6 +103,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     //Applying explosion on the enemy
     public virtual void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
     {
+        isHitChecker = true; //enemy is hit by explosion
         StartCoroutine(isHit(isHitCooldown));//activates bool isHit=true for isHitCooldown(3) seconds
 
         if (agent != null)
@@ -151,6 +145,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             if (agent != null)
             {
+                isHitChecker = false;
                 agent.enabled = true; // Re-enable NavMeshAgent
               
                 resetEffectedEnemyFromRunestone();//resets enemy speed to the original enemy speed

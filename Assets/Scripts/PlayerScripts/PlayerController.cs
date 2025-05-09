@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
     public void playerMovement()//TRY  put animations in a different class (not MonoBehaviour)
     {
         // Create a 2D vector with movement directions.
-        moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         // Use the vector instead of separate GetKey to get the movement direction to reduce calls for better performance.
         bool isWalkingForward = moveDirection.y > 0;
