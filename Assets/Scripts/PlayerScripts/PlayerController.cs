@@ -35,13 +35,15 @@ public class PlayerController : MonoBehaviour
     private Transform TowerPos;
 
     [Header("Player Abilities")]
-    static Abilities fireBallSkill = new Abilities(true, 2, 0, Abilities.AbilityStatus.isUnlocked,0,50);//object for fireball ability
-    static Abilities electricitySkill = new Abilities(true, 6, 25, Abilities.AbilityStatus.isLocked,40,70);//cooldown check,timer,mana cost,ability status,unlock cost,upgrade cost
-    static Abilities runestoneSkill = new Abilities(true, 15, 35, Abilities.AbilityStatus.isLocked,50,100);
-    private int playerMoney=999;
+    Abilities fireBallSkill = new Abilities(true, 2, 0, Abilities.AbilityStatus.isUnlocked, 0, 50);//object for fireball ability
+    Abilities electricitySkill = new Abilities(true, 6, 25, Abilities.AbilityStatus.isLocked, 40, 70);//cooldown check,timer,mana cost,ability status,unlock cost,upgrade cost
+    Abilities runestoneSkill = new Abilities(true, 15, 35, Abilities.AbilityStatus.isLocked, 50, 100);
+    private int playerMoney = 50;
 
     [SerializeField] LayerMask aimLayerMask;
-    
+    private GameManagerV2 gameManager;
+
+    public static bool usingIndicator;
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
@@ -53,37 +55,43 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        
+        fireBallSkill.setAbilityStatus(AbilityStatus.isUnlocked);
+        electricitySkill.setAbilityStatus(AbilityStatus.isLocked);
+        runestoneSkill.setAbilityStatus(AbilityStatus.isLocked);
 
         TowerPos = GameObject.FindGameObjectWithTag("Target").transform;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerV2>();
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         aimLayerMask = ~(1 << LayerMask.NameToLayer("InvisibleWall"));
+        usingIndicator = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-    
+
 
         //ability cooldown is always in update because it activates only when,it's used
         abilityCooldownTimer(fireBallSkill);
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(runestoneSkill);
 
-       // if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
+        // if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
         playerMovement();
         playerAbilities();
 
-       
-        //Debug.Log(playerMana);
+
+        Debug.Log("using indicator: " + usingIndicator);
 
     }
 
     // PLAYER MOVEMENT
     public void playerMovement()//TRY  put animations in a difrent class (not MonoBehaviour)
     {
-      
+
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
@@ -150,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-       
+
         // Apply upward force to the Rigidbody
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
@@ -161,10 +169,10 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         anim.SetBool("isFireBallCasting", false);
     }
-    
+
     public void playerAbilities()
     {
-        if (Abilities.usingAbility == true) return; // Prevents casting any abilities if one is already in use
+        if (Abilities.usingAbility == true || ShopUiManager.shopIsOpen) return; // Prevents casting any abilities if one is already in use
 
         // Fireball ability
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, fireBallSkill.getManaCost()))
@@ -284,15 +292,20 @@ public class PlayerController : MonoBehaviour
        
         GameObject abilityIndicator = null;
         Abilities.usingAbility = true; // Doesnt let you cast any abilities
-
+       
+       
         while (true)  // Keep casting the ability
         {
+            
+           
             Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // Ray from center of screen
-
+          
             RaycastHit hit;
             int layerMask = ~(LayerMask.GetMask("Default") | LayerMask.GetMask("InvisibleWall")); // Ignore default layer
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
             {
+                usingIndicator = true;
+
                 Vector3 lookAtTower = TowerPos.position - hit.point; // Direction to tower
                 lookAtTower.y = 0; // Ignore height
 
@@ -304,10 +317,10 @@ public class PlayerController : MonoBehaviour
                     //indicator can't move y axix
                     
                 }
-
+              
                 abilityIndicator.transform.position = new Vector3(hit.point.x, 0, hit.point.z);//indicator goes to the viewport 
 
-                if (Input.GetKeyDown(KeyCode.Mouse1))//removes indicator when mouse pressed
+                if (Input.GetKeyDown(KeyCode.Mouse1)&& gameManager.getGameState() != GameStateV2.Paused)//removes indicator when mouse pressed if game is not paused
                 {
                     Destroy(abilityIndicator);
                     Abilities.setAbilityCancelled(true);//the ability was canclled
@@ -322,7 +335,7 @@ public class PlayerController : MonoBehaviour
                     SetIndicatorColor(abilityIndicator, Color.blue); // Valid placement
 
                     // Place ability on key press
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    if (Input.GetKeyDown(KeyCode.Mouse0)&& gameManager.getGameState() != GameStateV2.Paused)
                     {
                         Destroy(abilityIndicator);
                         Instantiate(abilityPrefab, hit.point, Quaternion.LookRotation(lookAtTower));
@@ -333,9 +346,11 @@ public class PlayerController : MonoBehaviour
                  
                 }
             }
+           
 
             yield return null; // Wait for next frame
         }
+        usingIndicator = false;
     }
 
     private void SetIndicatorColor(GameObject indicator, Color color) // Change indicator color
@@ -384,7 +399,7 @@ public class PlayerController : MonoBehaviour
     //if player has enough money he can upgrade or purchase an ability
     public void upgradeAbility(Abilities ability) 
     {
-        if (ability.getAbilityUpgradeCost() > playerMoney) return;
+        if (notEnoughMoneyToUpgradeAnAbility(ability)) return;
         playerMoney -= ability.getAbilityUpgradeCost();
         ability.setAbilityStatus(AbilityStatus.isUpgraded);
         if (ability.getManaCost() > 0)
@@ -393,9 +408,17 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    public bool notEnoughMoneyToUpgradeAnAbility(Abilities ability)
+    {
+        return ability.getAbilityUpgradeCost() > playerMoney;
+    }
+    public bool notEnoughMoneyToUnlockAnAbility(Abilities ability)
+    {
+        return ability.getAbilityUnlockCost() > playerMoney;
+    }
     public void unlockAbility(Abilities ability)
     {
-        if (ability.getAbilityUnlockCost() > playerMoney) return;
+        if (notEnoughMoneyToUnlockAnAbility(ability)) return;
         playerMoney -= ability.getAbilityUnlockCost();
         ability.setAbilityStatus(AbilityStatus.isUnlocked);
 

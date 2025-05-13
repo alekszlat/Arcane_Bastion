@@ -18,6 +18,7 @@ TagManager:
   - Runestone
   - MenuManager
   - InvisibleWall
+  - Shop
   layers:
   - Default
   - TransparentFX
