@@ -386,9 +386,9 @@ public class PlayerController : MonoBehaviour
         }
     }
     //PLAYER MONEY GETER-SETER
-   public int getPlayerMoney()
+    public int getPlayerMoney()
     {
-        return playerMoney;
+         return playerMoney;
     }
     public void setPlayerMoney(int playerMoney)
     {

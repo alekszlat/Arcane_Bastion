@@ -10807,6 +10807,7 @@ GameObject:
   - component: {fileID: 1407742098}
   - component: {fileID: 1407742097}
   - component: {fileID: 1407742096}
+  - component: {fileID: 1407742099}
   m_Layer: 5
   m_Name: PauseScreen
   m_TagString: Untagged
@@ -10873,6 +10874,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1407742099
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407742095}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1434981995
 GameObject:
   m_ObjectHideFlags: 0
@@ -11632,8 +11645,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccfb7604a7191f84281cbc44d7927d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathScreen: {fileID: 2079149275}
-  pauseScreen: {fileID: 1407742095}
+  deathScreenGroup: {fileID: 2079149279}
+  pauseScreenGroup: {fileID: 1407742099}
 --- !u!4 &1548081902
 Transform:
   m_ObjectHideFlags: 0
@@ -12126,20 +12139,18 @@ MonoBehaviour:
     - name: Goblins
       delay: 2
       prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 5
+      spawnCount: 10
   - name: Wave 2
     actions:
     - name: Goblins
       delay: 2
       prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
       spawnCount: 10
-  - name: Wave 3
-    actions:
-    - name: Goblins
+    - name: Trolls
       delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 20
-  - name: Wave 4
+      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
+      spawnCount: 3
+  - name: Wave 2
     actions:
     - name: Goblins
       delay: 2
@@ -12148,62 +12159,13 @@ MonoBehaviour:
     - name: Trolls
       delay: 2
       prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 4
-  - name: Wave 5
-    actions:
-    - name: Goblins
-      delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 15
-    - name: Trolls
-      delay: 2
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 4
-  - name: Wave 6
-    actions:
-    - name: Goblins
-      delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 15
-    - name: Trolls
-      delay: 2
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 6
-  - name: Wave 7
-    actions:
-    - name: Goblins
-      delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 20
-    - name: Trolls
-      delay: 2
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 6
-  - name: Wave 8
-    actions:
-    - name: Goblins
-      delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 15
-    - name: Trolls
-      delay: 2
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 8
-  - name: Wave 9
-    actions:
-    - name: Goblins
-      delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
-      spawnCount: 15
-    - name: Trolls
-      delay: 2
-      prefab: {fileID: 969845000709944892, guid: d25d1590e4df32d4d80e7b8d0768e1c9, type: 3}
-      spawnCount: 5
+      spawnCount: 3
     - name: Skeletons
       delay: 2
       prefab: {fileID: 4967630902765573891, guid: 55c08da177963794fa43550a8aa097fe, type: 3}
-      spawnCount: 5
+      spawnCount: 4
   towerPos: {fileID: 1798436463}
+  playerController: {fileID: 1789980303}
 --- !u!4 &1634424475
 Transform:
   m_ObjectHideFlags: 0
@@ -15186,6 +15148,7 @@ GameObject:
   - component: {fileID: 2079149276}
   - component: {fileID: 2079149278}
   - component: {fileID: 2079149277}
+  - component: {fileID: 2079149279}
   m_Layer: 5
   m_Name: Death Screen
   m_TagString: Untagged
@@ -15252,6 +15215,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079149275}
   m_CullTransparentMesh: 1
+--- !u!225 &2079149279
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079149275}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &2079192006
 PrefabInstance:
   m_ObjectHideFlags: 0

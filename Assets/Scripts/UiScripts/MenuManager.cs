@@ -4,8 +4,6 @@ using DG.Tweening;
 public class MenuManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [SerializeField] GameObject deathScreen;
-    [SerializeField] GameObject pauseScreen;
     [SerializeField] CanvasGroup deathScreenGroup;
     [SerializeField] CanvasGroup pauseScreenGroup;
 
@@ -66,8 +64,8 @@ public class MenuManager : MonoBehaviour
             }); 
             
           
-     }else if(Input.GetKeyDown(KeyCode.Escape) && gameManagerV2.getGameState() == GameStateV2.Paused)
-        {
+        }
+        else if(Input.GetKeyDown(KeyCode.Escape) && gameManagerV2.getGameState() == GameStateV2.Paused){
             unpauseGame();
         }
 }
