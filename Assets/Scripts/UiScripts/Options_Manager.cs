@@ -20,22 +20,7 @@ public class Options_Manager : MonoBehaviour
     [SerializeField] private Slider volumeSlider;
 
 
-    private void Awake()
-    {
-
-        if (instance == null)
-        {
-          
-            instance = this;
-           
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
-
+  
     private void Update()
     {
         Debug.Log("fullscreen: "+ getFullScreen());
