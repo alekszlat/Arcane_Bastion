@@ -4,6 +4,7 @@ using System.Collections;
 using Unity.VisualScripting;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Abilities;
@@ -92,49 +93,27 @@ public class PlayerController : MonoBehaviour
     public void playerMovement()//TRY  put animations in a difrent class (not MonoBehaviour)
     {
 
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        // Create a 2D vector with movement directions.
+        Vector2 moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        // Forward and sideways movement with animation management
-        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
-        if (Input.GetKey(KeyCode.W))
-        {
-            anim.SetBool("isWalkingForward", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingForward", false);
-        }
+        // Use the vector instead of separate GetKey to get the movement direction to reduce calls for better performance.
+        bool isWalkingForward = moveDirection.y > 0;
+        bool isWalkingBackward = moveDirection.y < 0;
+        bool isWalkingRight = moveDirection.x > 0;
+        bool isWalkingLeft = moveDirection.x < 0;
 
-        if (Input.GetKey(KeyCode.S))
-        {
-            anim.SetBool("isWalkingBack", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingBack", false);
-        }
+        transform.Translate(Vector3.forward * speed * Time.deltaTime * moveDirection.y);
 
-        transform.Translate(Vector3.right * speed * Time.deltaTime * horizontalInput);
-        if (Input.GetKey(KeyCode.A))
-        {
-            anim.SetBool("isWalkingLeft", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingLeft", false);
-        }
+        anim.SetBool("isWalkingForward", isWalkingForward);
+        anim.SetBool("isWalkingBack", isWalkingBackward);
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            anim.SetBool("isWalkingRight", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingRight", false);
-        }
+        transform.Translate(Vector3.right * speed * Time.deltaTime * moveDirection.x);
+        anim.SetBool("isWalkingRight", isWalkingRight);
+        anim.SetBool("isWalkingLeft", isWalkingLeft);
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())    // Check for jump input
+        // Check for jump input
+        // Hristo: A trigger could be used instead of a bool.
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             anim.SetBool("isJumping", true);
             Jump();
