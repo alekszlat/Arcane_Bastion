@@ -125,6 +125,7 @@ public class GameManagerV2 : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;    //unlocks cursor
             Cursor.visible = true;                     //cursor is visable
+
             Time.timeScale = 0f;
         }
     }

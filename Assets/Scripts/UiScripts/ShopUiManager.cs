@@ -32,7 +32,7 @@ public class ShopUiManager : MonoBehaviour
     private bool canOpenShop = true;//checks if shop can be opened
     private bool canCloseShop = false;//checks if shop can be closed
  
-    public static bool shopIsOpen = false;
+    public static bool shopIsOpen = false;//checks if shop is opened
     private GameManagerV2 gameManagerV2;
     private PlayerController playerController;
     private Abilities fireBallSkill;
@@ -136,10 +136,12 @@ public class ShopUiManager : MonoBehaviour
             shop.gameObject.transform.position = shopStartPos;//resets shop to starting position
             shop.gameObject.SetActive(false);          //hides shop
 
-            Cursor.lockState = CursorLockMode.Locked;    //locks cursor
-            Cursor.visible = false;                      //makes cursor invisable
+           
             shopAnimation = ShopAnimation.AnimationCompeled; //makes sure animation happends once
         }));
+            //are outside so it defenetly happends
+            Cursor.lockState = CursorLockMode.Locked;    //locks cursor
+            Cursor.visible = false;                      //makes cursor invisable
             shopIsOpen = false;                        //indicates shop is closed
         }
     }
