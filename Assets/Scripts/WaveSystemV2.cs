@@ -30,6 +30,8 @@ public class WaveSystemV2 : MonoBehaviour
     private int enemyCount = 0; // Track enemy count 
     private int maxEnemyCount = 0; // Get the max count of enemies
     private int globalWaveIndex = 0;
+    private double percentageReward = 0.5f; // Delay between enemy spawns (in seconds) 
+    private int rewardAmount = 20; // Amount of reward given to the player
 
     public Transform towerPos; //Save tower position 
 
@@ -39,7 +41,8 @@ public class WaveSystemV2 : MonoBehaviour
     public delegate void WaveCompletedHandler();
     public static event WaveCompletedHandler OnWaveCompleted;
 
-    
+    [SerializeField] PlayerController playerController; // Reference to the PlayerController script
+
     public void spawnWaves()
     {
         StartCoroutine(spawnEnemies());
@@ -89,7 +92,7 @@ public class WaveSystemV2 : MonoBehaviour
         // Wait until all enemies are defeated
         yield return new WaitUntil(() => activeEnemies.Count == 0);
 
-        
+        giveReward(); // Give reward to the player
 
         // Move to the next wave
         if (currentWaveIndex < waves.Count)
@@ -169,13 +172,18 @@ public class WaveSystemV2 : MonoBehaviour
         }
     }
 
-   
-  
+    public void giveReward() {
+        int playerMoney = playerController.getPlayerMoney();
+        int playerReward = (int)System.Math.Ceiling(rewardAmount*percentageReward);
+        playerController.setPlayerMoney(playerMoney + playerReward + rewardAmount);
+        percentageReward += 0.05f; // Increase reward percentage
+    }
+    
     public int getGlobalWaveIndex()
     {
         return globalWaveIndex;
     }
-   public int getEnemyCount() {
+    public int getEnemyCount() {
         return enemyCount;
     }
     public int getMaxEnemyCount()

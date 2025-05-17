@@ -28,6 +28,8 @@ public class PlayerUiManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeUntilNextWaveText;
     [SerializeField] Image lockerRunestoneAbilityImage;
     [SerializeField] Image lockerElectrityAbilityImage;
+    [SerializeField] GameObject indicatorInstructions;
+
 
 
 
@@ -85,13 +87,24 @@ public class PlayerUiManager : MonoBehaviour
         displayMessageIfManaIsNotEnough();
         isAbilityLocked(electricitySkill, electricityManaCostText,lockerElectrityAbilityImage);
         isAbilityLocked(runestoneSkill, runestoneManaCostText, lockerRunestoneAbilityImage);
-
+        showIndicatorInstrucions();
         timeUntilNextWaveUi();
 
     }
     
    
    //UI Func
+    public void showIndicatorInstrucions()
+    {
+        if (PlayerController.usingIndicator)
+        {
+            indicatorInstructions.SetActive(true);
+        }
+        else
+        {
+            indicatorInstructions.SetActive(false);
+        }
+    }
     public void isAbilityLocked(Abilities ability, TextMeshProUGUI abilityManaCost,Image lockerimage)//if ability is not locked mana is visable and the locker Icon dissaperars
     {
         if (ability.getAbilityStatus() != AbilityStatus.isLocked) {
@@ -165,7 +178,7 @@ public class PlayerUiManager : MonoBehaviour
     {
         if (gameManagerV2.getGameState() == GameStateV2.PreWave) {
             timeUntilNextWaveText.gameObject.SetActive(true);
-            timeUntilNextWaveText.text = " Wave incoming in " + ((int)gameManagerV2.getGameManagerTimeUntilPrewaveEnds()).ToString()+ " seconds";
+            timeUntilNextWaveText.text = " Wave incoming in " + ((int)gameManagerV2.getTimerUntilPrewaveEnds()).ToString()+ " seconds";
         }
         else
         {
