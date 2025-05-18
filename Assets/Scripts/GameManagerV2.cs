@@ -15,19 +15,20 @@ public enum GameStateV2 //used for diffrent game states
 public class GameManagerV2 : MonoBehaviour
 {
 
-    public static bool isPaused = false;
+   
    
     private GameStateV2 gameState;
     private WaveSystemV2 waveSystemV2;
     private PlayerController playerController;
     private float Timer;
-  
+    private bool isTimerPaused = false;//if true timer continiues,if false timer resets 
 
     public float preWaveTimer = 10f;
 
     private void Start()
     {
-       if(Time.timeScale == 0)//if for some reason TimeScale is 0 return time to normal
+      
+        if (Time.timeScale == 0)//if for some reason TimeScale is 0 return time to normal
         {
             Time.timeScale = 1;
         }
@@ -75,6 +76,7 @@ public class GameManagerV2 : MonoBehaviour
 
     public void timerStates()
     {
+       
         if (gameState == GameStateV2.PreWave)
         {
             Timer -= Time.deltaTime;
@@ -96,37 +98,55 @@ public class GameManagerV2 : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;    //unlocks cursor
             Cursor.visible = true;                     //cursor is visable
-            isPaused = true;
+        
             Time.timeScale = 0f;
         }
         else if (gameState == GameStateV2.Gameplay)
         {
             Cursor.lockState = CursorLockMode.Locked;    //locks cursor
             Cursor.visible = false;                     //cursor is invsible
-            isPaused = false;
+           
             Time.timeScale = 1f;
         }
         else if (gameState == GameStateV2.PreWave)
         {
             Cursor.lockState = CursorLockMode.Locked;    //locks cursor
             Cursor.visible = false;                     //cursor is invsible
-            Timer = preWaveTimer; // Reset the timer
+            if (!isTimerPaused)//if timer isnt paused the game resets( After Waves), else if its paused timer continiues
+            {
+                Timer = preWaveTimer; // Reset the timer 
+            }
+            isTimerPaused = false;
             playerController.setPlayerMana(100);
             Time.timeScale = 1f;
-        }else if(gameState == GameStateV2.Death)
+       
+        }
+        else if(gameState == GameStateV2.Death)
         {
             Cursor.lockState = CursorLockMode.None;    //unlocks cursor
             Cursor.visible = true;                     //cursor is visable
-            isPaused = true;
+
             Time.timeScale = 0f;
         }
     }
     public GameStateV2 getGameState() {
         return gameState;
     }
-    public float getGameManagerTimeUntilPrewaveEnds()
+    public float getTimerUntilPrewaveEnds()
     {
         return Timer;
     }
 
+    public void setTimerUntilPrewaveEnds(float Timer)
+    {
+        this.Timer = Timer;
+    }
+    public void setIsTimerPaused(bool isTimerPaused)
+    {
+        this.isTimerPaused = isTimerPaused;
+    }
+    public bool getIsTimerPaused()
+    {
+        return isTimerPaused;
+    }
 }
