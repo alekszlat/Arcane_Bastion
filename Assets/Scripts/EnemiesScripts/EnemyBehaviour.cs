@@ -28,14 +28,13 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     private Vector3 targetDirection;
     private float originalEnemySpeed;
     protected bool isEnemyHit = false; //while true health bar is visable,and the skeleton can't shoot arrows
-    
+    protected bool isHitAnimation = false;
+    protected bool isAttackAnimation = false;
 
-    private void Awake()
+
+    protected virtual void Awake()
     {
-       
-      
-        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
-        
+        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();   
     }
     public virtual void  Start()
     {
@@ -56,12 +55,12 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     // Update is called once per frame
    public virtual void Update()
-    {
+   {
 
         setEnemyDestination();
         isEnemyHealthBarVisable();
 
-    }
+   }
 
     public void resetEffectedEnemyFromRunestone()
     {
@@ -114,6 +113,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     //Applying explosion on the enemy
     public virtual void ExplosionPhysic(float eForce, Transform ePosition, float eRadius, float eUpwardModifier, float eDamage)
     {
+        isHitAnimation = true;
         StartCoroutine(isHit(isHitCooldown));//activates bool isHit=true for isHitCooldown(3) seconds
 
         if (agent != null)
@@ -153,6 +153,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         if (raycast(Vector3.down,3) || raycast(Vector3.up,3) 
             || raycast(Vector3.back,3) || raycast(Vector3.forward,3))
         {
+            isHitAnimation = false;
             if (agent != null)
             {
                 agent.enabled = true; // Re-enable NavMeshAgent
@@ -173,6 +174,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
     //implemented by IDamagable
     public void attack(ref float towerHealth)
     {
+        isAttackAnimation = true;
         timer -= Time.deltaTime;
 
         if (timer <= 0f)
