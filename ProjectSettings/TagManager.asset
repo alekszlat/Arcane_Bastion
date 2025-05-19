@@ -19,6 +19,7 @@ TagManager:
   - MenuManager
   - InvisibleWall
   - Shop
+  - AudioManager
   layers:
   - Default
   - TransparentFX

@@ -126,7 +126,8 @@ public class Options_Manager : MonoBehaviour
         {
             float volume = PlayerPrefs.GetFloat("volume");
             volumeSlider.value = volume;//sets slider ui to voliume
-            volumeMixer.SetFloat("volume", volume);
+            float dB = volume <= 0.0001f ? -80f : Mathf.Log10(volume) * 20;
+            volumeMixer.SetFloat("volume", dB);
         }
         else
         {
@@ -151,7 +152,8 @@ public class Options_Manager : MonoBehaviour
   
     public void setVolume(float volume)
     {
-        volumeMixer.SetFloat("volume", volume);
+        float dB = volume <= 0.0001f ? -80f : Mathf.Log10(volume) * 20;
+        volumeMixer.SetFloat("volume", dB);
         PlayerPrefs.SetFloat("volume", volume);
         PlayerPrefs.Save();
     }

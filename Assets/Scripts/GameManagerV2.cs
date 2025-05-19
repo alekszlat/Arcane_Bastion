@@ -69,8 +69,24 @@ public class GameManagerV2 : MonoBehaviour
 
     public void Update()
     {
-      
-        timerStates();
+     
+        Debug.Log("Is shop open: " + ShopUiManager.shopIsOpen);
+
+        if (gameState == GameStateV2.PreWave)
+        {
+            if (ShopUiManager.shopIsOpen)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+
+    timerStates();
     
     }
 
@@ -108,10 +124,10 @@ public class GameManagerV2 : MonoBehaviour
            
             Time.timeScale = 1f;
         }
+
         else if (gameState == GameStateV2.PreWave)
-        {
-            Cursor.lockState = CursorLockMode.Locked;    //locks cursor
-            Cursor.visible = false;                     //cursor is invsible
+        {     
+         
             if (!isTimerPaused)//if timer isnt paused the game resets( After Waves), else if its paused timer continiues
             {
                 Timer = preWaveTimer; // Reset the timer 

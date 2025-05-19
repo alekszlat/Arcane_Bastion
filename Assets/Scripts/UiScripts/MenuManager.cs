@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+
 public class MenuManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] CanvasGroup deathScreenGroup;
     [SerializeField] CanvasGroup pauseScreenGroup;
-
+    private AudioManager audioManager;
+   
     private GameManagerV2 gameManagerV2;
     private GameStateV2 temp;
     private float tempTime;
@@ -15,15 +17,14 @@ public class MenuManager : MonoBehaviour
 
     private void OnValidate()
     {
+        if (audioManager == null)
+        {
+            audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
+        }
         if (gameManagerV2 == null)
         {
             gameManagerV2 = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerV2>();
         }
-    }
-    void Start()
-    {
-        
-       
     }
 
     // Update is called once per frame
@@ -42,6 +43,7 @@ public class MenuManager : MonoBehaviour
     public void showDeathScreen()
     {
         gameManagerV2.setGameState(GameStateV2.Death);
+        audioManager.playSoundEfects(audioManager.getDeathSound());
         deathScreenGroup.gameObject.SetActive(true);
         deathScreenGroup.DOFade(1,2);
     }
@@ -50,6 +52,7 @@ public class MenuManager : MonoBehaviour
       
         if (Input.GetKeyDown(KeyCode.Escape) && gameManagerV2.getGameState() != GameStateV2.Paused) {
             if (!canPause) return;
+           
             canPause = false;
             canUnpause = false;
             pauseScreenGroup.alpha = 0f; // pausescreen is visable
@@ -59,6 +62,7 @@ public class MenuManager : MonoBehaviour
 
             pauseScreenGroup.DOFade(1, 0.5f).OnComplete(() =>//after fading game pauses
             {
+                audioManager.pauseAllSounds();//pauses all sounds and sfx
                 gameManagerV2.setGameState(GameStateV2.Paused);
                 canUnpause = true;
             }); 
@@ -71,12 +75,14 @@ public class MenuManager : MonoBehaviour
 }
     public void unpauseGame()//there are 2 ways to acces upause game by pressing a button or  espace
     {
-        if (!canUnpause) return;
+        if (!canUnpause) return;//
+      
         canPause = false;
         canUnpause = false;
         pauseScreenGroup.DOFade(0, 1f).OnComplete(() =>
         {
-          pauseScreenGroup.gameObject.SetActive(false);
+            audioManager.unpauseAllSounds();//pauses all sounds and sfx
+            pauseScreenGroup.gameObject.SetActive(false);
           canPause = true;
 
         });

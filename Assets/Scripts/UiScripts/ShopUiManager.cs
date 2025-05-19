@@ -59,6 +59,7 @@ public class ShopUiManager : MonoBehaviour
         shopStartPos = shop.gameObject.transform.position;
 
     }
+ 
     void Update()
     {
         fireBallSkill = playerController.getFireBallAbility();

@@ -51,16 +51,16 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private Camera playerCamera;
     private int playerMana = 100;
+    private AudioManager audioManager;
 
     private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
     void Start()
-    {
-        
+    {   
         fireBallSkill.setAbilityStatus(AbilityStatus.isUnlocked);
         electricitySkill.setAbilityStatus(AbilityStatus.isLocked);
         runestoneSkill.setAbilityStatus(AbilityStatus.isLocked);
-
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         TowerPos = GameObject.FindGameObjectWithTag("Target").transform;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
@@ -73,8 +73,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         //ability cooldown is always in update because it activates only when,it's used
         abilityCooldownTimer(fireBallSkill);
         abilityCooldownTimer(electricitySkill);
@@ -83,9 +81,7 @@ public class PlayerController : MonoBehaviour
         // if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
         playerMovement();
         playerAbilities();
-
-
-        Debug.Log("using indicator: " + usingIndicator);
+    
 
     }
 
@@ -157,7 +153,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, fireBallSkill.getManaCost()))
         {
             playerMana -= fireBallSkill.getManaCost();
-
+            audioManager.playSoundEfects(audioManager.getFireballSfx());
             fireBallSkill.setCanUseAbility(false);
             anim.SetBool("isFireBallCasting", true);
             fireBallSkill.setTimer(fireBallSkill.getCooldownTime());
@@ -171,7 +167,7 @@ public class PlayerController : MonoBehaviour
         }
 
         
-        // Lightning ability (In progress)
+       
         if (Input.GetKeyDown(KeyCode.Q) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
         {
             if (isManaDepleted() == true || electricitySkill.getAbilityStatus() == AbilityStatus.isLocked) return;//check if you have enough mana or have unlocked the ability
@@ -236,6 +232,7 @@ public class PlayerController : MonoBehaviour
             if (checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))//checks if you have enough mana
             {
                 playerMana -= runestoneSkill.getManaCost(); //using ability costs mana
+                audioManager.playSoundEfects(audioManager.getRunestoneSfx());//Play sound efect if ability is casted
             }
             runestoneSkill.StartCooldown(); 
         }
@@ -256,6 +253,7 @@ public class PlayerController : MonoBehaviour
             if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))//checks if you have enough mana
             {
                 playerMana -= electricitySkill.getManaCost(); //using ability costs mana
+                audioManager.playSoundEfects(audioManager.getElectricitySfx());//Play sound efect if ability is casted
             }
             electricitySkill.StartCooldown();
         }
