@@ -67,7 +67,7 @@ public class GameManagerV2 : MonoBehaviour
     public void Update()
     {
      
-        Debug.Log("Is shop open: " + ShopUiManager.shopIsOpen);
+      //  Debug.Log("Is shop open: " + ShopUiManager.shopIsOpen);
 
         if (gameState == GameStateV2.PreWave)
         {

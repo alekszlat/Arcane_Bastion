@@ -115,7 +115,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
         if (agent != null)
         {
-            Debug.Log("disabled");
+           // Debug.Log("disabled");
             agent.enabled = false; // Disable pathfinding
         }
        
