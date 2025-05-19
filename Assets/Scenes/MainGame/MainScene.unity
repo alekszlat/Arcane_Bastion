@@ -12820,13 +12820,13 @@ MonoBehaviour:
     actions:
     - name: Goblins
       delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
+      prefab: {fileID: 5724291769866341122, guid: 6cb6ea53ce5846a47a9dca7d62b709fe, type: 3}
       spawnCount: 10
   - name: Wave 2
     actions:
     - name: Goblins
       delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
+      prefab: {fileID: 5724291769866341122, guid: 6cb6ea53ce5846a47a9dca7d62b709fe, type: 3}
       spawnCount: 10
     - name: Trolls
       delay: 2
@@ -12836,7 +12836,7 @@ MonoBehaviour:
     actions:
     - name: Goblins
       delay: 2
-      prefab: {fileID: 5724291769866341122, guid: 54862d915207de640ba5931f9a8bf096, type: 3}
+      prefab: {fileID: 5724291769866341122, guid: 6cb6ea53ce5846a47a9dca7d62b709fe, type: 3}
       spawnCount: 10
     - name: Trolls
       delay: 2

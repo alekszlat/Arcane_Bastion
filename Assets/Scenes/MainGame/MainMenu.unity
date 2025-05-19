@@ -2461,7 +2461,7 @@ MonoBehaviour:
   resDropdown: {fileID: 1091895965}
   qualityDropdown: {fileID: 1637981293}
   fullScreenToggle: {fileID: 1382548784}
-  "toggle\u0422ext": {fileID: 1974290950}
+  "toggle\xD2ext": {fileID: 1974290950}
   sfxSlider: {fileID: 1352727813}
   musicSlider: {fileID: 1426980663}
 --- !u!4 &756903250
