@@ -34,7 +34,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     protected virtual void Awake()
     {
-        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();   
+        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();    
     }
     public virtual void  Start()
     {
@@ -118,7 +118,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
         if (agent != null)
         {
-            Debug.Log("disabled");
+           // Debug.Log("disabled");
             agent.enabled = false; // Disable pathfinding
         }
        
@@ -261,5 +261,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             freezeAuraInstance.GetComponent<FreezeAuraControl>().EnemyDeath();
         }
+    }
+    public Vector3 getTargetDirection()
+    {
+        return targetDirection;
     }
 }

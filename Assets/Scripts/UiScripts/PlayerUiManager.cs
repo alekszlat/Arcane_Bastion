@@ -26,6 +26,8 @@ public class PlayerUiManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI runestoneManaCostText;
     [SerializeField] TextMeshProUGUI electricityManaCostText;
     [SerializeField] TextMeshProUGUI timeUntilNextWaveText;
+    [SerializeField] GameObject runestoneAbilityStats;
+    [SerializeField] GameObject electricityAbilityStats;
     [SerializeField] Image lockerRunestoneAbilityImage;
     [SerializeField] Image lockerElectrityAbilityImage;
     [SerializeField] GameObject indicatorInstructions;
@@ -85,8 +87,8 @@ public class PlayerUiManager : MonoBehaviour
         waveNumberUi();
         howMuchManaDoesAbilityCost();
         displayMessageIfManaIsNotEnough();
-        isAbilityLocked(electricitySkill, electricityManaCostText,lockerElectrityAbilityImage);
-        isAbilityLocked(runestoneSkill, runestoneManaCostText, lockerRunestoneAbilityImage);
+        isAbilityLocked(electricitySkill, electricityAbilityStats, lockerElectrityAbilityImage);
+        isAbilityLocked(runestoneSkill, runestoneAbilityStats, lockerRunestoneAbilityImage);
         showIndicatorInstrucions();
         timeUntilNextWaveUi();
 
@@ -105,10 +107,10 @@ public class PlayerUiManager : MonoBehaviour
             indicatorInstructions.SetActive(false);
         }
     }
-    public void isAbilityLocked(Abilities ability, TextMeshProUGUI abilityManaCost,Image lockerimage)//if ability is not locked mana is visable and the locker Icon dissaperars
+    public void isAbilityLocked(Abilities ability, GameObject abilityStats,Image lockerimage)//if ability is not locked mana is visable and the locker Icon dissaperars
     {
         if (ability.getAbilityStatus() != AbilityStatus.isLocked) {
-            abilityManaCost.gameObject.SetActive(true);
+            abilityStats.gameObject.SetActive(true);
             lockerimage.gameObject.SetActive(false);
         }
     }
