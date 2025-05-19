@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
             if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))//checks if you have enough mana
             {
                 playerMana -= electricitySkill.getManaCost(); //using ability costs mana
-                audioManager.playSoundEfects(audioManager.getRunestoneSfx());//Play sound efect if ability is casted
+                audioManager.playSoundEfects(audioManager.getElectricitySfx());//Play sound efect if ability is casted
             }
             electricitySkill.StartCooldown();
         }
