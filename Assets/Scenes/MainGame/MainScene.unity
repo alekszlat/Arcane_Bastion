@@ -3431,7 +3431,7 @@ AudioSource:
   m_GameObject: {fileID: 413804151}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 81d5604943e679d4e9905853e5cb06bd, type: 2}
+  OutputAudioMixerGroup: {fileID: 6121261782913881274, guid: 81d5604943e679d4e9905853e5cb06bd, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -11908,10 +11908,10 @@ RectTransform:
   - {fileID: 989205355}
   m_Father: {fileID: 544263139}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 667, y: 81.688}
-  m_SizeDelta: {x: 300.6251, y: 300.6249}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 67, y: 81.688}
+  m_SizeDelta: {x: 300.62512, y: 300.6249}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1503341955
 GameObject:
@@ -12195,7 +12195,7 @@ AudioSource:
   m_GameObject: {fileID: 1545534647}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 81d5604943e679d4e9905853e5cb06bd, type: 2}
+  OutputAudioMixerGroup: {fileID: -5034095556315534589, guid: 81d5604943e679d4e9905853e5cb06bd, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -14741,6 +14741,7 @@ MonoBehaviour:
   sfxSorce: {fileID: 1545534648}
   backgroundMusic: {fileID: 8300000, guid: b2db184ef5ce0c2449a7e7e3f0cbb32d, type: 3}
   mainMenuMusic: {fileID: 8300000, guid: 88be14253c9b2cf43ad9c8a815343e6d, type: 3}
+  deathSound: {fileID: 8300000, guid: 8a12a0221ce5a9b47b28d1cba4381ecb, type: 3}
   fireballSfx: {fileID: 8300000, guid: 8ad5aebc83e64df499478c13566b2ae4, type: 3}
   runestoneSfx: {fileID: 8300000, guid: 95bfec7ea924d3342878c8117c089127, type: 3}
   electricitySfx: {fileID: 8300000, guid: 7a12e5118bcaf5a4ca87437e04d3ff2b, type: 3}

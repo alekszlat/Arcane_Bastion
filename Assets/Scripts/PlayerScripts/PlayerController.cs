@@ -133,7 +133,6 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-
         // Apply upward force to the Rigidbody
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
@@ -153,7 +152,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, fireBallSkill.getManaCost()))
         {
             playerMana -= fireBallSkill.getManaCost();
-            audioManager.playSoundEfects(audioManager.getFireballSfx());
             fireBallSkill.setCanUseAbility(false);
             anim.SetBool("isFireBallCasting", true);
             fireBallSkill.setTimer(fireBallSkill.getCooldownTime());
@@ -253,7 +251,7 @@ public class PlayerController : MonoBehaviour
             if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))//checks if you have enough mana
             {
                 playerMana -= electricitySkill.getManaCost(); //using ability costs mana
-                audioManager.playSoundEfects(audioManager.getElectricitySfx());//Play sound efect if ability is casted
+                audioManager.playSoundEfects(audioManager.getRunestoneSfx());//Play sound efect if ability is casted
             }
             electricitySkill.StartCooldown();
         }

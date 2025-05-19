@@ -32,10 +32,7 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
 
     private void Awake()
     {
-       
-      
-        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
-        
+        target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();    
     }
     public virtual void  Start()
     {
@@ -259,5 +256,9 @@ public class EnemyBehaviour : MonoBehaviour,IDamageable
         {
             freezeAuraInstance.GetComponent<FreezeAuraControl>().EnemyDeath();
         }
+    }
+    public Vector3 getTargetDirection()
+    {
+        return targetDirection;
     }
 }

@@ -14,9 +14,6 @@ public enum GameStateV2 //used for diffrent game states
 
 public class GameManagerV2 : MonoBehaviour
 {
-
-   
-   
     private GameStateV2 gameState;
     private WaveSystemV2 waveSystemV2;
     private PlayerController playerController;

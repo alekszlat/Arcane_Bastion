@@ -14,10 +14,12 @@ public class FireBallBehaviour : MonoBehaviour
     private bool hasHitGround;
     private PlayerController playerController;
     private GameObject player;
+    private AudioManager audioManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         // Make fireball ignore collisions with invisible walls
         Physics.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("InvisibleWall"), true);
@@ -67,8 +69,9 @@ public class FireBallBehaviour : MonoBehaviour
     {
         if(other.CompareTag("Enemy") || other.CompareTag("Target") || !hasHitGround)
         {
+            audioManager.playSoundEfects(audioManager.getFireballSfx());
             ApplyExplosionPhysic();
-            Debug.Log("Hit enemy or tower");
+           // Debug.Log("Hit enemy or tower");
             Destroy(gameObject);
         }
     }
@@ -80,9 +83,10 @@ public class FireBallBehaviour : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground"))
             {
+                audioManager.playSoundEfects(audioManager.getFireballSfx());
                 hasHitGround = true;
                 ApplyExplosionPhysic();
-                Debug.Log("Ground hit");
+                //Debug.Log("Ground hit");
                 Destroy(gameObject);
             }
         }

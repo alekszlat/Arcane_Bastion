@@ -44,6 +44,7 @@ public class MenuManager : MonoBehaviour
     {
         gameManagerV2.setGameState(GameStateV2.Death);
         audioManager.playSoundEfects(audioManager.getDeathSound());
+        audioManager.pauseMusic();
         deathScreenGroup.gameObject.SetActive(true);
         deathScreenGroup.DOFade(1,2);
     }
