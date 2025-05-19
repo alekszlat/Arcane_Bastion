@@ -9,19 +9,16 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
     [SerializeField] float shootingInterval = 2;//time before skeleton can shoot
     private bool canShootArrows = true;
     private LayerMask enemyLayer;
-    Vector3 targetDirection;
+ 
     private void Awake()
-    {
-       
+    {   
         target = GameObject.FindGameObjectWithTag("Target").GetComponent<Transform>();
         enemyLayer = 1 << LayerMask.NameToLayer("Enemy");// turns layer into bit layer mask
-        targetDirection = (target.position - transform.position).normalized;
-     
     }
 
     public void skeletonRotation()
     {
-        Quaternion skeletonLookAtTower = Quaternion.LookRotation(targetDirection);
+        Quaternion skeletonLookAtTower = Quaternion.LookRotation(getTargetDirection());
         transform.rotation = Quaternion.Slerp(transform.rotation, skeletonLookAtTower, Time.deltaTime * 3);
        
     }
@@ -49,8 +46,8 @@ public class SkeletonEnemy : EnemyBehaviour//extends basic enemy behavior
         if (canShootArrows&&!isEnemyHit&&!isAlliedEnemyInFront())//can shoot enemy hasn't been hit soon,the shooting cooldown has reset, no enemies in front
         {
             GameObject arrow = Instantiate(
-                arrowPrefab,transform.position+targetDirection *1.2f + Vector3.up * 1.8f,
-                Quaternion.LookRotation(targetDirection)
+                arrowPrefab,transform.position+getTargetDirection() *1.2f + Vector3.up * 1.8f,
+                Quaternion.LookRotation(getTargetDirection())
             );
 
             StartCoroutine(shootingCooldown());//after shoting arrow skeleton has to wait "shootingInterval" seconds

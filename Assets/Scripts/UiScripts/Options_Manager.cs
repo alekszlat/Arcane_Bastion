@@ -17,10 +17,11 @@ public class Options_Manager : MonoBehaviour
     // [SerializeField] private
     [SerializeField] private Toggle fullScreenToggle; 
     [SerializeField] private TMP_Text toggle“ext;    
-    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider musicSlider;
 
 
-  
+
     private void Update()
     {
         Debug.Log("fullscreen: "+ getFullScreen());
@@ -122,19 +123,8 @@ public class Options_Manager : MonoBehaviour
             QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("quality"));
         }
 
-        if (PlayerPrefs.HasKey("volume"))
-        {
-            float volume = PlayerPrefs.GetFloat("volume");
-            volumeSlider.value = volume;//sets slider ui to voliume
-            volumeMixer.SetFloat("volume", volume);
-        }
-        else
-        {
-            volumeSlider.value = 1f;
-            volumeMixer.SetFloat("volume", 1f);
-
-        }
-
+        loadVolumePref("sfxVolume",sfxSlider);
+        loadVolumePref("musicVolume",musicSlider);
 
         if (PlayerPrefs.HasKey("fullScreen"))
         {
@@ -149,10 +139,36 @@ public class Options_Manager : MonoBehaviour
      
     }
   
-    public void setVolume(float volume)
+    public void loadVolumePref(string volName,Slider volSlider)
     {
-        volumeMixer.SetFloat("volume", volume);
-        PlayerPrefs.SetFloat("volume", volume);
+        if (PlayerPrefs.HasKey(volName))
+        {
+            float volume = PlayerPrefs.GetFloat(volName);
+            volSlider.value = volume;//sets slider ui to voliume
+            float dB = volume <= 0.0001f ? -80f : Mathf.Log10(volume) * 20;
+            volumeMixer.SetFloat(volName, dB);
+        }
+        else
+        {
+            volSlider.value = 1f;
+            float dB = Mathf.Log10(1f) * 20;
+            volumeMixer.SetFloat(volName, dB);
+        }
+
+    }
+    public void setSfxVolume(float volume)
+    {
+        setVolume("sfxVolume",volume);
+    }
+    public void setMusicVolume(float volume)
+    {
+        setVolume("musicVolume", volume);
+    }
+    public void setVolume(string volName,float volume)
+    {
+        float dB = volume <= 0.0001f ? -80f : Mathf.Log10(volume) * 20;
+        volumeMixer.SetFloat(volName, dB);
+        PlayerPrefs.SetFloat(volName, volume);//the player pref has the same name as the vol mixer param for now
         PlayerPrefs.Save();
     }
     public void showQualityStart() {//shows quality button ui
