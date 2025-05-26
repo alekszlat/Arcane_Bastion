@@ -2,10 +2,12 @@ using JetBrains.Annotations;
 using NUnit.Framework.Constraints;
 using System.Collections;
 using Unity.VisualScripting;
-using UnityEditor.Playables;
+
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static Abilities;
 
 
 public class PlayerController : MonoBehaviour
@@ -34,90 +36,80 @@ public class PlayerController : MonoBehaviour
     private Transform TowerPos;
 
     [Header("Player Abilities")]
-    [SerializeField] static Abilities fireBallSkill = new Abilities(true, 2, 0, true);//object for fireball ability
-    [SerializeField] static Abilities electricitySkill = new Abilities(true, 6, 30, true);
-    [SerializeField] static Abilities runestoneSkill = new Abilities(true, 15, 40, false);
+    Abilities fireBallSkill = new Abilities(true, 2, 0, Abilities.AbilityStatus.isUnlocked, 0, 50);//object for fireball ability
+    Abilities electricitySkill = new Abilities(true, 6, 25, Abilities.AbilityStatus.isLocked, 40, 70);//cooldown check,timer,mana cost,ability status,unlock cost,upgrade cost
+    Abilities runestoneSkill = new Abilities(true, 15, 35, Abilities.AbilityStatus.isLocked, 50, 100);
+    private int playerMoney = 50;
 
     [SerializeField] LayerMask aimLayerMask;
+    private GameManagerV2 gameManager;
 
+    public static bool usingIndicator;
     private float horizontalInput;
     private float verticalInput;
     private Rigidbody rb;
     private Animator anim;
     private Camera playerCamera;
     private int playerMana = 100;
+    private AudioManager audioManager;
 
     private Vector3 raycastOffset = new Vector3(0, 1.1f, 0); // Offset for the raycast origin
 
     void Start()
-    {
+    {   
+        fireBallSkill.setAbilityStatus(AbilityStatus.isUnlocked);
+        electricitySkill.setAbilityStatus(AbilityStatus.isLocked);
+        runestoneSkill.setAbilityStatus(AbilityStatus.isLocked);
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
         TowerPos = GameObject.FindGameObjectWithTag("Target").transform;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerV2>();
         playerCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         aimLayerMask = ~(1 << LayerMask.NameToLayer("InvisibleWall"));
+        usingIndicator = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerMovement();
-        playerAbilities();
-
         //ability cooldown is always in update because it activates only when,it's used
         abilityCooldownTimer(fireBallSkill);
         abilityCooldownTimer(electricitySkill);
         abilityCooldownTimer(runestoneSkill);
-        //Debug.Log(playerMana);
+
+        // if (ShopUiManager.shopIsOpen) return; //if the shop is open player can't move
+        playerMovement();
+        playerAbilities();
+    
 
     }
 
     // PLAYER MOVEMENT
     public void playerMovement()//TRY  put animations in a difrent class (not MonoBehaviour)
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
 
-        // Forward and sideways movement with animation management
-        transform.Translate(Vector3.forward * speed * Time.deltaTime * verticalInput);
-        if (Input.GetKey(KeyCode.W))
-        {
-            anim.SetBool("isWalkingForward", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingForward", false);
-        }
+        // Create a 2D vector with movement directions.
+        Vector2 moveDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        if (Input.GetKey(KeyCode.S))
-        {
-            anim.SetBool("isWalkingBack", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingBack", false);
-        }
+        // Use the vector instead of separate GetKey to get the movement direction to reduce calls for better performance.
+        bool isWalkingForward = moveDirection.y > 0;
+        bool isWalkingBackward = moveDirection.y < 0;
+        bool isWalkingRight = moveDirection.x > 0;
+        bool isWalkingLeft = moveDirection.x < 0;
 
-        transform.Translate(Vector3.right * speed * Time.deltaTime * horizontalInput);
-        if (Input.GetKey(KeyCode.A))
-        {
-            anim.SetBool("isWalkingLeft", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingLeft", false);
-        }
+        transform.Translate(Vector3.forward * speed * Time.deltaTime * moveDirection.y);
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            anim.SetBool("isWalkingRight", true);
-        }
-        else
-        {
-            anim.SetBool("isWalkingRight", false);
-        }
+        anim.SetBool("isWalkingForward", isWalkingForward);
+        anim.SetBool("isWalkingBack", isWalkingBackward);
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())    // Check for jump input
+        transform.Translate(Vector3.right * speed * Time.deltaTime * moveDirection.x);
+        anim.SetBool("isWalkingRight", isWalkingRight);
+        anim.SetBool("isWalkingLeft", isWalkingLeft);
+
+        // Check for jump input
+        // Hristo: A trigger could be used instead of a bool.
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             anim.SetBool("isJumping", true);
             Jump();
@@ -141,7 +133,6 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-       
         // Apply upward force to the Rigidbody
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
@@ -152,15 +143,15 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         anim.SetBool("isFireBallCasting", false);
     }
+
     public void playerAbilities()
     {
-        if (Abilities.usingAbility == true) return; // Prevents casting any abilities if one is already in use
+        if (Abilities.usingAbility == true || ShopUiManager.shopIsOpen) return; // Prevents casting any abilities if one is already in use
 
         // Fireball ability
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireBallSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, fireBallSkill.getManaCost()))
         {
             playerMana -= fireBallSkill.getManaCost();
-
             fireBallSkill.setCanUseAbility(false);
             anim.SetBool("isFireBallCasting", true);
             fireBallSkill.setTimer(fireBallSkill.getCooldownTime());
@@ -174,10 +165,10 @@ public class PlayerController : MonoBehaviour
         }
 
         
-        // Lightning ability (In progress)
+       
         if (Input.GetKeyDown(KeyCode.Q) && electricitySkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))
         {
-            if (isManaDepleted() == true) return;
+            if (isManaDepleted() == true || electricitySkill.getAbilityStatus() == AbilityStatus.isLocked) return;//check if you have enough mana or have unlocked the ability
             StartCoroutine(lightningAbilityMechanic()); // Start the lightning ability process
             electricitySkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
@@ -185,7 +176,7 @@ public class PlayerController : MonoBehaviour
         // Runestone ability
         if (Input.GetKeyDown(KeyCode.E) && runestoneSkill.getCanUseAbility() && checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))
         {
-            if (isManaDepleted() == true) return;
+            if (isManaDepleted() == true|| runestoneSkill.getAbilityStatus() == AbilityStatus.isLocked) return;
             StartCoroutine(runestoneAbilityMechanic()); // Start the runestone ability process
             runestoneSkill.setCanUseAbility(false); // Prevents reusing ability until cooldown
         }
@@ -239,6 +230,7 @@ public class PlayerController : MonoBehaviour
             if (checkIfManaIsEnough(playerMana, runestoneSkill.getManaCost()))//checks if you have enough mana
             {
                 playerMana -= runestoneSkill.getManaCost(); //using ability costs mana
+                audioManager.playSoundEfects(audioManager.getRunestoneSfx());//Play sound efect if ability is casted
             }
             runestoneSkill.StartCooldown(); 
         }
@@ -259,6 +251,7 @@ public class PlayerController : MonoBehaviour
             if (checkIfManaIsEnough(playerMana, electricitySkill.getManaCost()))//checks if you have enough mana
             {
                 playerMana -= electricitySkill.getManaCost(); //using ability costs mana
+                audioManager.playSoundEfects(audioManager.getElectricitySfx());//Play sound efect if ability is casted
             }
             electricitySkill.StartCooldown();
         }
@@ -267,20 +260,27 @@ public class PlayerController : MonoBehaviour
             electricitySkill.setCanUseAbility(true);
         }
     }
+  
+
     public IEnumerator placeIndicator(GameObject abilityPrefab, GameObject abilityIndicatorPrefab, float maxCastDistance,int indicatorHeight)
     {
        
         GameObject abilityIndicator = null;
         Abilities.usingAbility = true; // Doesnt let you cast any abilities
-
+       
+       
         while (true)  // Keep casting the ability
         {
+            
+           
             Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // Ray from center of screen
-
+          
             RaycastHit hit;
             int layerMask = ~(LayerMask.GetMask("Default") | LayerMask.GetMask("InvisibleWall")); // Ignore default layer
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
             {
+                usingIndicator = true;
+
                 Vector3 lookAtTower = TowerPos.position - hit.point; // Direction to tower
                 lookAtTower.y = 0; // Ignore height
 
@@ -292,10 +292,10 @@ public class PlayerController : MonoBehaviour
                     //indicator can't move y axix
                     
                 }
-
+              
                 abilityIndicator.transform.position = new Vector3(hit.point.x, 0, hit.point.z);//indicator goes to the viewport 
 
-                if (Input.GetKeyDown(KeyCode.Mouse1))//removes indicator when mouse pressed
+                if (Input.GetKeyDown(KeyCode.Mouse1)&& gameManager.getGameState() != GameStateV2.Paused)//removes indicator when mouse pressed if game is not paused
                 {
                     Destroy(abilityIndicator);
                     Abilities.setAbilityCancelled(true);//the ability was canclled
@@ -310,7 +310,7 @@ public class PlayerController : MonoBehaviour
                     SetIndicatorColor(abilityIndicator, Color.blue); // Valid placement
 
                     // Place ability on key press
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    if (Input.GetKeyDown(KeyCode.Mouse0)&& gameManager.getGameState() != GameStateV2.Paused)
                     {
                         Destroy(abilityIndicator);
                         Instantiate(abilityPrefab, hit.point, Quaternion.LookRotation(lookAtTower));
@@ -321,9 +321,11 @@ public class PlayerController : MonoBehaviour
                  
                 }
             }
+           
 
             yield return null; // Wait for next frame
         }
+        usingIndicator = false;
     }
 
     private void SetIndicatorColor(GameObject indicator, Color color) // Change indicator color
@@ -358,8 +360,47 @@ public class PlayerController : MonoBehaviour
             ability.setCanUseAbility(true); // true when player can use ability
         }
     }
+    //PLAYER MONEY GETER-SETER
+    public int getPlayerMoney()
+    {
+         return playerMoney;
+    }
+    public void setPlayerMoney(int playerMoney)
+    {
+        this.playerMoney = playerMoney;
+    }
+
+    //UNLOCK/UPGRADE ABILITIES(FUNC)
+    //if player has enough money he can upgrade or purchase an ability
+    public void upgradeAbility(Abilities ability) 
+    {
+        if (notEnoughMoneyToUpgradeAnAbility(ability)) return;
+        playerMoney -= ability.getAbilityUpgradeCost();
+        ability.setAbilityStatus(AbilityStatus.isUpgraded);
+        if (ability.getManaCost() > 0)
+        {
+            ability.setManaCost(ability.getManaCost() + 15);
+        }
+
+    }
+    public bool notEnoughMoneyToUpgradeAnAbility(Abilities ability)
+    {
+        return ability.getAbilityUpgradeCost() > playerMoney;
+    }
+    public bool notEnoughMoneyToUnlockAnAbility(Abilities ability)
+    {
+        return ability.getAbilityUnlockCost() > playerMoney;
+    }
+    public void unlockAbility(Abilities ability)
+    {
+        if (notEnoughMoneyToUnlockAnAbility(ability)) return;
+        playerMoney -= ability.getAbilityUnlockCost();
+        ability.setAbilityStatus(AbilityStatus.isUnlocked);
+
+    }
 
     //GETTERS FOR ABILITIES (UI)
+
     public Abilities getFireBallAbility()
     {
         return fireBallSkill;
@@ -386,28 +427,33 @@ public class PlayerController : MonoBehaviour
     }
     public bool isManaDepleted()
     {
-        if (getPlayerMana() <= 0) { return true; } 
-        else
-        {
-            return false;
-        }
-
+        return getPlayerMana() <= 0;
+        
     }
     public bool checkIfManaIsEnough(int myMana, int manaCost)
     {
-        if (myMana >= manaCost)  return true;
-        return false;
+        return myMana >= manaCost;
+        
     }
     public bool checkIfManaIsNotEnoughAfterPressingAnAbility(int myMana, int manaCost)
     {
-        if (myMana < manaCost && (Input.GetKeyDown(KeyCode.E)|| Input.GetKeyDown(KeyCode.Q))) { return true; }
-        else {  return false; }
+        return myMana < manaCost && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Q));
+    
     }
 
+    public void setMana (int mana)
+    {
+        playerMana += mana;
+    }
+    
 }
 
-public class Abilities
-{
+public class Abilities{  
+    public enum AbilityStatus
+    {
+        isLocked, isUnlocked, isUpgraded
+
+    }
     public static bool usingAbility;//checks if player is using an ability with an indicator
     private static bool abilityCancelled = false;//checks if ability is canclled
     // Private fields
@@ -415,17 +461,23 @@ public class Abilities
     private float cooldownTime;
     private float timer;
     private int manaCost;
-    private bool isUnlocked;
+    private int abilityUnlockCost;
+    private int abilityUpgradeCost;
 
+
+    private AbilityStatus abilityStatus;
+  
 
     // Constructor to initialize the ability
-    public Abilities(bool abilityCooldownPassed, float cooldownTime, int manaCost, bool isUnlocked)
+    public Abilities(bool abilityCooldownPassed, float cooldownTime, int manaCost,AbilityStatus abilityStatus,int abilityUnlockCost,int abilityUpgradeCost)
     {
         canUse = abilityCooldownPassed;
         this.cooldownTime = cooldownTime;
         timer = 0f;
         this.manaCost = manaCost;
-        this.isUnlocked = isUnlocked;
+        this.abilityStatus = abilityStatus;
+        this.abilityUnlockCost = abilityUnlockCost;
+        this.abilityUpgradeCost = abilityUpgradeCost;
     
     }
     public void StartCooldown()
@@ -439,6 +491,15 @@ public class Abilities
     public static bool getAbilitiesCanclled()
     {
         return abilityCancelled;
+    }
+    //Getter for abilityCost
+    public int getAbilityUpgradeCost()
+    {
+        return abilityUpgradeCost;
+    } 
+    public int getAbilityUnlockCost()
+    {
+        return abilityUnlockCost;
     }
     // Setter and Getter for canUse
     public void setCanUseAbility(bool canUse)
@@ -485,13 +546,12 @@ public class Abilities
     }
 
     // Setter and Getter for isUnlocked
-    public void setIsUnlocked(bool isUnlocked)
+   public AbilityStatus getAbilityStatus()
     {
-        this.isUnlocked = isUnlocked;
+        return abilityStatus;
     }
-
-    public bool getIsUnlocked()
+    public void setAbilityStatus(AbilityStatus abilityStatus)
     {
-        return isUnlocked;
+        this.abilityStatus = abilityStatus;
     }
 }

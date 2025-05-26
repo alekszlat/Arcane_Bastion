@@ -16,7 +16,10 @@ TagManager:
   - Camera
   - ArrowBody
   - Runestone
+  - MenuManager
   - InvisibleWall
+  - Shop
+  - AudioManager
   layers:
   - Default
   - TransparentFX

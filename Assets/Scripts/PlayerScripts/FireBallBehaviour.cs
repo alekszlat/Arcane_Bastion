@@ -4,21 +4,25 @@ public class FireBallBehaviour : MonoBehaviour
 {
 
     [SerializeField] float speed = 20f;
-    [SerializeField] float explosionRadius = 5f;
     [SerializeField] float explosionForce = 100f;
     [SerializeField] float explosionUpwardModifier = 1f;
     [SerializeField] float fbDamage = 2f;
+    private float explosionRadius;
     public LayerMask enemyLayer;
     public LayerMask groundLayer;
     private Rigidbody rb;
     private bool hasHitGround;
+    private PlayerController playerController;
+    private GameObject player;
+    private AudioManager audioManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         // Make fireball ignore collisions with invisible walls
         Physics.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("InvisibleWall"), true);
-
         rb = GetComponent<Rigidbody>();
         rb.linearVelocity = transform.forward * speed;
         hasHitGround = false;
@@ -31,12 +35,26 @@ public class FireBallBehaviour : MonoBehaviour
 
     void ApplyExplosionPhysic()
     {
+        Abilities fireballSkill = playerController.getFireBallAbility(); //gets fireball object from Abilities class in the player controler script
+        if (fireballSkill.getAbilityStatus() == Abilities.AbilityStatus.isUnlocked)//if ability is unlocked fireball stats are:
+        {
+            explosionRadius = 5;
+        }
+        else if (fireballSkill.getAbilityStatus() == Abilities.AbilityStatus.isUpgraded)
+        {
+            explosionRadius = 8;
+
+        }//we check earlier because explosion radius is used for the colider
+     
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, enemyLayer);
 
         foreach (Collider nearbyObjects in colliders)
         {
             EnemyBehaviour enemy = nearbyObjects.GetComponent<EnemyBehaviour>();
             if (enemy != null) {
+
+              
                 enemy.ExplosionPhysic(explosionForce, transform, explosionRadius, explosionUpwardModifier, fbDamage);
             }
         }
@@ -51,8 +69,9 @@ public class FireBallBehaviour : MonoBehaviour
     {
         if(other.CompareTag("Enemy") || other.CompareTag("Target") || !hasHitGround)
         {
+            audioManager.playSoundEfects(audioManager.getFireballSfx());
             ApplyExplosionPhysic();
-            Debug.Log("Hit enemy or tower");
+           // Debug.Log("Hit enemy or tower");
             Destroy(gameObject);
         }
     }
@@ -64,9 +83,10 @@ public class FireBallBehaviour : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground"))
             {
+                audioManager.playSoundEfects(audioManager.getFireballSfx());
                 hasHitGround = true;
                 ApplyExplosionPhysic();
-                Debug.Log("Ground hit");
+                //Debug.Log("Ground hit");
                 Destroy(gameObject);
             }
         }

@@ -8,12 +8,14 @@ public class TowerBehaviour : MonoBehaviour
 {
     private static float towerHealth;
     private float maxTowerHealth;
+    private MenuManager menuManager;
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        maxTowerHealth = 10f; //start tower health
+        maxTowerHealth = 200f; //start tower health
         towerHealth = maxTowerHealth;
+        menuManager = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -39,7 +41,7 @@ public class TowerBehaviour : MonoBehaviour
     {  
         if (towerHealth <= 0)
         {
-            //Debug.Log("Tower is destroyd!");
+            menuManager.showDeathScreen(); //calls deathScreen From menu Manager
         }
         else
         {
