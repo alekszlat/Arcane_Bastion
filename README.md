@@ -1,7 +1,6 @@
 # 🧙‍♂️ ARCANE BASTION
 
 **Defend your wizard tower against relentless waves of enemies!**  
-> ⚠️ _Note: This game is currently in development._
 
 ---
 
@@ -29,4 +28,4 @@
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
+   https://github.com/alekszlat/Arcane_Bastion.git
