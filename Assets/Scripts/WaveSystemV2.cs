@@ -93,6 +93,7 @@ public class WaveSystemV2 : MonoBehaviour
         yield return new WaitUntil(() => activeEnemies.Count == 0);
 
         giveReward(); // Give reward to the player
+        increasePlayerMana(10); // Increase player mana
 
         // Move to the next wave
         if (currentWaveIndex < waves.Count)
@@ -178,7 +179,12 @@ public class WaveSystemV2 : MonoBehaviour
         playerController.setPlayerMoney(playerMoney + playerReward + rewardAmount);
         percentageReward += 0.05f; // Increase reward percentage
     }
-    
+
+    public void increasePlayerMana(int manaAmount)
+    {
+        playerController.setMana(manaAmount);
+    }
+
     public int getGlobalWaveIndex()
     {
         return globalWaveIndex;

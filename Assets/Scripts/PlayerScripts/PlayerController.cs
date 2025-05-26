@@ -440,6 +440,11 @@ public class PlayerController : MonoBehaviour
         return myMana < manaCost && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Q));
     
     }
+
+    public void setMana (int mana)
+    {
+        playerMana += mana;
+    }
     
 }
 

@@ -13,7 +13,7 @@ public class TowerBehaviour : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        maxTowerHealth = 15f; //start tower health
+        maxTowerHealth = 200f; //start tower health
         towerHealth = maxTowerHealth;
         menuManager = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
     }

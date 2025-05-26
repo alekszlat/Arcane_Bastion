@@ -2624,7 +2624,7 @@ MonoBehaviour:
   canvas: {fileID: 5258065656505585462}
   healthBar: {fileID: 6181099425876511062}
   maxHealth: 8
-  attackDamage: 1.5
+  attackDamage: 3
   attackInterval: 4
   isHitCooldown: 6
   ligthningAura: {fileID: 1936488993998635378, guid: 74da14343daa0c34cb791b3dc087d738, type: 3}
